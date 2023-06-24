@@ -38,4 +38,4 @@ jobs:
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
             docker rm -f pointodo-client
-            docker run -d --rm --name pointodo-client -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
+            docker run -d --rm --name pointodo-client --network=pointodo-network -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
