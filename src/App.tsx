@@ -14,7 +14,7 @@ const App: FC = () => {
   return (
     <>
       <div>
-        <button onClick={onRequest}>서버에 요청</button>
+        <button onClick={onRequest}>서버에 메시지 요청</button>
         <div>{message}</div>
       </div>
     </>
