@@ -29,13 +29,13 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
           build-args: VITE_SERVER_HOST=${{ secrets.VITE_SERVER_HOST }}
-#       - name: Pull and restart Docker Container
-#         uses: appleboy/ssh-action@master
-#         with:
-#           key: ${{ secrets.SSH_KEY }}
-#           host: ${{ secrets.HOST }}
-#           username: ${{ secrets.USER }}
-#           script: |
-#             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my_repo
-#             docker stop my_repo
-#             docker run -d --rm --name my_repo -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/my_repo
+      - name: Pull and restart Docker Container
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.EC2_SSH_KEY }}
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
+            docker stop pointodo-client
+            docker run -d --rm --name pointodo-client -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
