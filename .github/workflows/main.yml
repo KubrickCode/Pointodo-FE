@@ -28,8 +28,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
-          build-args:
-            VITE_SERVER_HOST: ${{ secrets.VITE_SERVER_HOST }}
+          build-args: VITE_SERVER_HOST=${{ secrets.VITE_SERVER_HOST }}
 #       - name: Pull and restart Docker Container
 #         uses: appleboy/ssh-action@master
 #         with:
