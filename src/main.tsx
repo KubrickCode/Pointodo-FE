@@ -1,10 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
+import ReactQueryProvider from "./provider/ReactQueryProvider";
+import RouterProvider from "./provider/RouterProvider.tsx";
+import ErrorBoundaryProvider from "./provider/ErrorBoundaryProvider.tsx";
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+root.render(
+  <ErrorBoundaryProvider>
+    <RouterProvider>
+      <ReactQueryProvider>
+        <App />
+      </ReactQueryProvider>
+    </RouterProvider>
+  </ErrorBoundaryProvider>
+);
