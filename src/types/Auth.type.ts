@@ -1,9 +1,13 @@
 interface AuthProps {
   setTab(tab: number): void;
 }
-interface UserForm {
+interface LoginForm {
   email: string;
   password: string;
 }
 
-export type { AuthProps, UserForm };
+interface RegisterForm extends LoginForm {
+  confirmPassword: string;
+}
+
+export type { AuthProps, LoginForm, RegisterForm };
