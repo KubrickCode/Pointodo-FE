@@ -7,7 +7,7 @@ const Router: FC = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route path="/auth" element={<Auth />} />
       </Routes>
     </Suspense>
   );
