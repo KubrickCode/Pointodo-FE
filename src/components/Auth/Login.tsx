@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { AuthProps, LoginForm } from "../../types/Auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useSign } from "../../hooks/useSign";
 
 const Login: FC<AuthProps> = ({ setTab }) => {
   const {
@@ -9,8 +10,20 @@ const Login: FC<AuthProps> = ({ setTab }) => {
     formState: { errors },
   } = useForm<LoginForm>();
 
-  const onSubmitHandler: SubmitHandler<LoginForm> = (data) => {
-    console.log(data);
+  const { mutate: login } = useSign("/auth/login");
+
+  const onSubmitHandler: SubmitHandler<LoginForm> = async (formData) => {
+    login(
+      {
+        body: formData,
+      },
+      {
+        onSuccess: async (data) => {
+          const { accessToken } = data;
+          document.cookie = `accessToken=${accessToken}`;
+        },
+      }
+    );
   };
 
   return (
