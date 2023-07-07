@@ -1,8 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { AuthProps, LoginForm } from "../../types/Auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSign } from "../../hooks/useSign";
-import { useQueryMutate } from "../../hooks/useQueryApi";
+import { useQueryGet, useQueryMutate } from "../../hooks/useQueryApi";
 
 const Login: FC<AuthProps> = ({ setTab }) => {
   const {
@@ -13,6 +13,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
 
   const { mutate: login } = useSign("/auth/login");
   const { mutate: logout } = useQueryMutate("/auth/logout", "post");
+  const { data: isLogin } = useQueryGet("/auth/is-login", "isLogin");
 
   const onSubmitHandler: SubmitHandler<LoginForm> = async (formData) => {
     login(
@@ -38,6 +39,10 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       }
     );
   };
+
+  useEffect(() => {
+    console.log(isLogin);
+  }, [isLogin]);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
