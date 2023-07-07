@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { AuthProps, LoginForm } from "../../types/Auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSign } from "../../hooks/useSign";
+import { useQueryGet } from "../../hooks/useQueryApi";
 
 const Login: FC<AuthProps> = ({ setTab }) => {
   const {
@@ -11,6 +12,11 @@ const Login: FC<AuthProps> = ({ setTab }) => {
   } = useForm<LoginForm>();
 
   const { mutate: login } = useSign("/auth/login");
+  const { data } = useQueryGet("/user", "getUser");
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   const onSubmitHandler: SubmitHandler<LoginForm> = async (formData) => {
     login(
@@ -25,6 +31,10 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       }
     );
   };
+
+  useEffect(() => {
+    console.log(document.cookie);
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
@@ -72,6 +82,8 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       <button className="border px-2 py-1" onClick={() => setTab(1)}>
         회원가입 하러가기
       </button>
+      <div>로그인 상태 입니다</div>
+      <div>로그인 상태가 아닙니다</div>
     </form>
   );
 };
