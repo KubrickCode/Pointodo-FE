@@ -22,8 +22,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       },
       {
         onSuccess: async (data) => {
-          const { accessToken } = data;
-          document.cookie = `accessToken=${accessToken}`;
+          localStorage.setItem("accessToken", data.accessToken);
         },
       }
     );
