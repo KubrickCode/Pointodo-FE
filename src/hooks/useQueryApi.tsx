@@ -13,6 +13,39 @@ const api = axios.create({
   },
 });
 
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    if (!error.response || error.response.status !== 401) {
+      throw error;
+    }
+
+    if (error.config.url === "/auth/refresh") {
+      localStorage.removeItem("persistStore");
+      localStorage.removeItem("accessToken");
+      window.location.href = "/";
+      return Promise.reject(error);
+    }
+
+    try {
+      const response = await api.get("/auth/refresh");
+
+      localStorage.setItem("accessToken", response.data.accessToken);
+      error.config.headers[
+        "Authorization"
+      ] = `Bearer ${response.data.accessToken}`;
+      return api.request(error.config);
+    } catch (refreshError) {
+      localStorage.removeItem("persistStore");
+      localStorage.removeItem("accessToken");
+      window.location.href = "/";
+      throw refreshError;
+    }
+  }
+);
+
 const useQueryGet = (link: string, key: string, queryOptions = {}) => {
   const queryFunc = async () => {
     const response = await api.get(link);
