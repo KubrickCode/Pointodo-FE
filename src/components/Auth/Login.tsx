@@ -33,6 +33,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       {},
       {
         onSuccess: async (data) => {
+          localStorage.removeItem("accessToken");
           console.log(data);
         },
       }
