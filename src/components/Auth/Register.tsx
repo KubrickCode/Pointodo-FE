@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { AuthProps, RegisterForm } from "../../types/Auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useSign } from "../../hooks/useSign";
 
 const Register: FC<AuthProps> = ({ setTab }) => {
   const {
@@ -10,8 +11,34 @@ const Register: FC<AuthProps> = ({ setTab }) => {
     formState: { errors },
   } = useForm<RegisterForm>();
 
+  const { mutate: signUp } = useSign("/user/register");
+  const { mutate: login } = useSign("/auth/login");
+
   const onSubmitHandler: SubmitHandler<RegisterForm> = (data) => {
-    console.log(data);
+    const body = {
+      email: data.email,
+      password: data.password,
+    };
+    signUp(
+      {
+        body,
+      },
+      {
+        onSuccess: async () => {
+          login(
+            {
+              body,
+            },
+            {
+              onSuccess: async (data) => {
+                localStorage.setItem("accessToken", data.accessToken);
+                location.reload();
+              },
+            }
+          );
+        },
+      }
+    );
   };
 
   return (

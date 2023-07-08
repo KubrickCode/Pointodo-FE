@@ -16,9 +16,6 @@ const Login: FC<AuthProps> = ({ setTab }) => {
 
   const { mutate: login } = useSign("/auth/login");
   const { mutate: logout } = useQueryMutate("/auth/logout", "post");
-  // const { data: refresh } = useQueryGet("/auth/refresh", "refresh", {
-  //   enabled: !!isLogin,
-  // });
 
   useEffect(() => {
     setIsLogin(token ? true : false);
