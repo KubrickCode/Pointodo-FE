@@ -1,8 +1,8 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import { AuthProps, LoginForm } from "../../types/Auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSign } from "../../hooks/useSign";
-import { useQueryGet, useQueryMutate } from "../../hooks/useQueryApi";
+import { useQueryMutate } from "../../hooks/useQueryApi";
 
 const Login: FC<AuthProps> = ({ setTab }) => {
   const {
@@ -13,7 +13,14 @@ const Login: FC<AuthProps> = ({ setTab }) => {
 
   const { mutate: login } = useSign("/auth/login");
   const { mutate: logout } = useQueryMutate("/auth/logout", "post");
-  const { data: isLogin } = useQueryGet("/auth/is-login", "isLogin");
+
+  const token = localStorage.getItem("accessToken");
+
+  const [isLogin, setIsLogin] = useState(false);
+
+  useEffect(() => {
+    setIsLogin(token ? true : false);
+  }, [token]);
 
   const onSubmitHandler: SubmitHandler<LoginForm> = async (formData) => {
     login(
@@ -23,6 +30,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       {
         onSuccess: async (data) => {
           localStorage.setItem("accessToken", data.accessToken);
+          location.reload();
         },
       }
     );
@@ -32,17 +40,13 @@ const Login: FC<AuthProps> = ({ setTab }) => {
     logout(
       {},
       {
-        onSuccess: async (data) => {
+        onSuccess: async () => {
           localStorage.removeItem("accessToken");
-          console.log(data);
+          location.reload();
         },
       }
     );
   };
-
-  useEffect(() => {
-    console.log(isLogin);
-  }, [isLogin]);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)}>
@@ -87,12 +91,17 @@ const Login: FC<AuthProps> = ({ setTab }) => {
         )}
       </div>
       <button className="border px-2 py-1 mr-2">로그인</button>
-      <button className="border px-2 py-1" onClick={() => setTab(1)}>
+      <button className="border px-2 py-1 mr-2" onClick={() => setTab(1)}>
         회원가입 하러가기
       </button>
-      <div>로그인 상태 입니다</div>
-      <div>로그인 상태가 아닙니다</div>
-      <button onClick={handleLogout}>로그아웃</button>
+      <button
+        onClick={handleLogout}
+        className={`${!isLogin && "hidden"} border px-2 py-1`}
+      >
+        로그아웃
+      </button>
+      <div className={`${!isLogin && "hidden"}`}>로그인 상태 입니다</div>
+      <div className={`${isLogin && "hidden"}`}>로그인 상태가 아닙니다</div>
     </form>
   );
 };
