@@ -8,6 +8,9 @@ type MethodType = "post" | "patch" | "put" | "delete";
 const api = axios.create({
   baseURL: host,
   withCredentials: true,
+  headers: {
+    Authorization: localStorage.getItem("accessToken"),
+  },
 });
 
 const useQueryGet = (link: string, key: string, queryOptions = {}) => {
