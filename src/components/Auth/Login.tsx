@@ -93,6 +93,18 @@ const Login: FC<AuthProps> = ({ setTab }) => {
         )}
       </div>
       <button className="border px-2 py-1 mr-2">로그인</button>
+      <a
+        className="border px-2 py-1 mr-2"
+        href="http://localhost:3000/api/auth/google/callback"
+      >
+        구글 로그인
+      </a>
+      <a
+        className="border px-2 py-1 mr-2"
+        href="http://localhost:3000/api/auth/kakao/callback"
+      >
+        카카오 로그인
+      </a>
       <button className="border px-2 py-1 mr-2" onClick={() => setTab(1)}>
         회원가입 하러가기
       </button>
