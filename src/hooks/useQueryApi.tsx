@@ -22,13 +22,6 @@ api.interceptors.response.use(
       throw error;
     }
 
-    if (error.config.url === "/auth/refresh") {
-      localStorage.removeItem("persistStore");
-      localStorage.removeItem("accessToken");
-      window.location.href = "/";
-      return Promise.reject(error);
-    }
-
     try {
       const response = await api.get("/auth/refresh");
 
@@ -41,7 +34,7 @@ api.interceptors.response.use(
       localStorage.removeItem("persistStore");
       localStorage.removeItem("accessToken");
       window.location.href = "/";
-      throw refreshError;
+      return Promise.reject(error);
     }
   }
 );

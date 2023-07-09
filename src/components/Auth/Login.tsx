@@ -28,6 +28,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       },
       {
         onSuccess: async (data) => {
+          console.log("data는", data);
           localStorage.setItem("accessToken", data.accessToken);
           location.reload();
         },
@@ -89,7 +90,9 @@ const Login: FC<AuthProps> = ({ setTab }) => {
           <div>비밀번호는 6~20자 영문,숫자,특수문자 혼합입니다</div>
         )}
       </div>
-      <button className="border px-2 py-1 mr-2">로그인</button>
+      <button type="submit" className="border px-2 py-1 mr-2">
+        로그인
+      </button>
       <a
         className="border px-2 py-1 mr-2"
         href="http://localhost:3000/api/auth/google/callback"
@@ -102,16 +105,20 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       >
         카카오 로그인
       </a>
-      <button className="border px-2 py-1 mr-2" onClick={() => setTab(1)}>
+      <button
+        type="button"
+        className="border px-2 py-1 mr-2"
+        onClick={() => setTab(1)}
+      >
         회원가입 하러가기
       </button>
       <button
+        type="button"
         onClick={handleLogout}
         className={`${!isLogin && "hidden"} border px-2 py-1`}
       >
         로그아웃
       </button>
-      <button>실험</button>
       <div className={`${!isLogin && "hidden"}`}>로그인 상태 입니다</div>
       <div className={`${isLogin && "hidden"}`}>로그인 상태가 아닙니다</div>
     </form>
