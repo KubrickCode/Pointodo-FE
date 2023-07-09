@@ -22,20 +22,18 @@ api.interceptors.response.use(
       throw error;
     }
 
-    try {
-      const response = await api.get("/auth/refresh");
-
-      localStorage.setItem("accessToken", response.data.accessToken);
-      error.config.headers[
-        "Authorization"
-      ] = `Bearer ${response.data.accessToken}`;
-      return api.request(error.config);
-    } catch (refreshError) {
+    const response = await api.get("/auth/refresh");
+    if (!response.data.accessToken) {
       localStorage.removeItem("persistStore");
       localStorage.removeItem("accessToken");
       window.location.href = "/";
       return Promise.reject(error);
     }
+    localStorage.setItem("accessToken", response.data.accessToken);
+    error.config.headers[
+      "Authorization"
+    ] = `Bearer ${response.data.accessToken}`;
+    return api.request(error.config);
   }
 );
 
