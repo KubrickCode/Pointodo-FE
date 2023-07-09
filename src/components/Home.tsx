@@ -3,7 +3,10 @@ import { useQueryGet } from "../hooks/useQueryApi";
 import { Link } from "react-router-dom";
 
 const Home: FC = () => {
-  const { data } = useQueryGet("/user", "getUser");
+  const token = localStorage.getItem("accessToken");
+  const { data } = useQueryGet("/user", "getUser", {
+    enabled: !!token,
+  });
   return (
     <>
       <div>123</div>

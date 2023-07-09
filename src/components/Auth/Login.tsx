@@ -2,7 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { AuthProps, LoginForm } from "../../types/Auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSign } from "../../hooks/useSign";
-import { useQueryGet, useQueryMutate } from "../../hooks/useQueryApi";
+import { useQueryMutate } from "../../hooks/useQueryApi";
 
 const Login: FC<AuthProps> = ({ setTab }) => {
   const {
