@@ -3,7 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 const host = window.location.origin + "/api";
 
-type MethodType = "post" | "patch" | "put" | "delete";
+export type MethodType = "post" | "patch" | "put" | "delete";
 
 const api = axios.create({
   baseURL: host,
@@ -37,7 +37,7 @@ api.interceptors.response.use(
   }
 );
 
-const useQueryGet = (link: string, key: string, queryOptions = {}) => {
+export const useQueryGet = (link: string, key: string, queryOptions = {}) => {
   const queryFunc = async () => {
     const response = await api.get(link);
     return response.data;
@@ -50,7 +50,7 @@ const useQueryGet = (link: string, key: string, queryOptions = {}) => {
   });
 };
 
-const useQueryMutate = (link: string, method: MethodType) => {
+export const useQueryMutate = (link: string, method: MethodType) => {
   const mutation = useMutation(
     async (req: { body?: object; config?: AxiosRequestConfig }) => {
       const response = await api[method](link, req?.body, req?.config);
@@ -65,6 +65,3 @@ const useQueryMutate = (link: string, method: MethodType) => {
     mutate: mutation.mutate,
   };
 };
-
-export type { MethodType };
-export { useQueryGet, useQueryMutate };
