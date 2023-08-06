@@ -2,7 +2,7 @@ import { FC, ChangeEvent } from "react";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 
-interface Task {
+export interface TaskEntity {
   id: number;
   userId: string;
   taskType: string;
@@ -14,7 +14,7 @@ interface Task {
 }
 
 interface Props {
-  data: Task[];
+  data: TaskEntity[];
 }
 
 const TaskList: FC<Props> = ({ data }) => {
@@ -22,7 +22,7 @@ const TaskList: FC<Props> = ({ data }) => {
   const queryClient = useQueryClient();
 
   const handleCheckboxChange = (
-    item: Task,
+    item: TaskEntity,
     e: ChangeEvent<HTMLInputElement>
   ) => {
     if (e.target.checked) {
