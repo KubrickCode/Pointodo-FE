@@ -1,5 +1,5 @@
 import { FC, useState, useRef, useEffect } from "react";
-import { useQueryMutate } from "./../../../hooks/useQueryApi";
+import { useQueryGet, useQueryMutate } from "./../../../hooks/useQueryApi";
 import { useUserStore } from "../../../store/user.store";
 
 const ProfileDropdown: FC = () => {
@@ -7,6 +7,10 @@ const ProfileDropdown: FC = () => {
   const { mutate: logout } = useQueryMutate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useUserStore((state) => state.user);
+  const token = localStorage.getItem("accessToken");
+  const { data: currentPoints } = useQueryGet("/point/current", "getPoints", {
+    enabled: !!token,
+  });
 
   const handleLogout = async () => {
     logout(
@@ -57,6 +61,11 @@ const ProfileDropdown: FC = () => {
           <div className="px-4 py-3 text-sm text-gray-900">
             <span className="font-medium truncate">{user?.email}</span>
           </div>
+          <div className="px-4 py-3 text-sm text-gray-900">
+            <span className="font-medium truncate">
+              보유 포인트 : {currentPoints?.points}
+            </span>
+          </div>
           <ul className="py-2 text-sm text-gray-700">
             <li>
               <a href="#" className="block px-4 py-2 hover:bg-gray-100">
@@ -72,11 +81,13 @@ const ProfileDropdown: FC = () => {
                 로그아웃
               </a>
             </li>
-            <li>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-100">
-                관리자 페이지
-              </a>
-            </li>
+            {user?.role === "ADMIN" && (
+              <li>
+                <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                  관리자 페이지
+                </a>
+              </li>
+            )}
           </ul>
         </div>
       </div>

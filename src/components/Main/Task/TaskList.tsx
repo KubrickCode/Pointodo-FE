@@ -50,6 +50,7 @@ const TaskList: FC<Props> = ({ data }) => {
                 ? "getDeadlineTasks"
                 : "getFreeTasks"
             );
+            await queryClient.invalidateQueries("getPoints");
             setToastState(true, "작업이 완료되었습니다");
           },
         }
