@@ -1,19 +1,27 @@
 import { FC } from "react";
 
-interface Prop {
+interface Props {
   menu: {
     id: number;
     name: string;
   }[];
+
+  setTab: (tab: number) => void;
 }
 
-const SideBar: FC<Prop> = ({ menu }) => {
+const SideBar: FC<Props> = ({ menu, setTab }) => {
   return (
     <>
-      <nav>
+      <nav className="border-r p-8 h-screen">
         <ul>
           {menu.map((item) => (
-            <li key={item.id}>{item.name}</li>
+            <li
+              key={item.id}
+              className="cursor-pointer my-5 py-3"
+              onClick={() => setTab(item.id)}
+            >
+              {item.name}
+            </li>
           ))}
         </ul>
       </nav>

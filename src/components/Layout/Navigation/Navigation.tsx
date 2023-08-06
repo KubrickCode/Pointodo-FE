@@ -6,7 +6,9 @@ const Navigation: FC = () => {
 
   return (
     <>
-      <nav className={`${!token && "hidden"} flex justify-between p-5`}>
+      <nav
+        className={`${!token && "hidden"} flex justify-between p-5 border-b`}
+      >
         <div>
           <button
             className="flex flex-row items-center"

@@ -1,5 +1,24 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import SideBar from "../SideBar/SideBar";
+import Task from "./Task/Task";
+
+const Main: FC = () => {
+  const token = localStorage.getItem("accessToken");
+  const [tab, setTab] = useState(0);
+
+  useEffect(() => {
+    if (!token) {
+      location.href = "/auth";
+    }
+  }, [token]);
+
+  return (
+    <div className="flex flex-row">
+      <SideBar menu={menu} setTab={setTab} />
+      <Task tab={tab} />
+    </div>
+  );
+};
 
 const menu = [
   {
@@ -15,13 +34,5 @@ const menu = [
     name: "무기한 작업",
   },
 ];
-
-const Main: FC = () => {
-  return (
-    <>
-      <SideBar menu={menu} />
-    </>
-  );
-};
 
 export default Main;
