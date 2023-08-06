@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
+import { useQueryClient } from "react-query";
 
 interface Props {
   taskType: string;
@@ -16,6 +17,7 @@ interface AddTaskForm {
 
 const AddTask: FC<Props> = ({ taskType }) => {
   const setModalState = useModalStore((state) => state.setModalState);
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -23,16 +25,25 @@ const AddTask: FC<Props> = ({ taskType }) => {
     formState: { errors },
   } = useForm<AddTaskForm>();
 
-  const { mutate: addTask } = useQueryMutate("/task/create", "post");
+  const { mutate } = useQueryMutate();
 
   const onSubmitHandler: SubmitHandler<AddTaskForm> = async (formData) => {
-    addTask(
+    mutate(
       {
+        link: "/task/create",
         body: formData,
+        method: "post",
       },
       {
         onSuccess: async () => {
           setModalState(false);
+          await queryClient.invalidateQueries(
+            taskType === "매일 작업"
+              ? "getDailyTasks"
+              : taskType === "기한 작업"
+              ? "getDeadlineTasks"
+              : "getFreeTasks"
+          );
         },
       }
     );

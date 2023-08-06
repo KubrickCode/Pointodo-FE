@@ -4,13 +4,16 @@ import { useUserStore } from "../../../store/user.store";
 
 const ProfileDropdown: FC = () => {
   const [open, setOpen] = useState(false);
-  const { mutate: logout } = useQueryMutate("/auth/logout", "post");
+  const { mutate: logout } = useQueryMutate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useUserStore((state) => state.user);
 
   const handleLogout = async () => {
     logout(
-      {},
+      {
+        link: "/auth/logout",
+        method: "post",
+      },
       {
         onSuccess: async () => {
           localStorage.removeItem("accessToken");

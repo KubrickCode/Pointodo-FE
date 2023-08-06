@@ -50,10 +50,20 @@ export const useQueryGet = (link: string, key: string, queryOptions = {}) => {
   });
 };
 
-export const useQueryMutate = (link: string, method: MethodType) => {
+export const useQueryMutate = () => {
   const mutation = useMutation(
-    async (req: { body?: object; config?: AxiosRequestConfig }) => {
-      const response = await api[method](link, req?.body, req?.config);
+    async ({
+      link,
+      body,
+      method,
+      config,
+    }: {
+      link: string;
+      body?: object;
+      method: MethodType;
+      config?: AxiosRequestConfig;
+    }) => {
+      const response = await api[method](link, body, config);
       return response.data;
     }
   );

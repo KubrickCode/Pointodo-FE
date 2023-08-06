@@ -14,7 +14,7 @@ const Main: FC = () => {
 
   return (
     <div className="flex flex-row">
-      <SideBar menu={menu} setTab={setTab} />
+      <SideBar menu={menu} tab={tab} setTab={setTab} />
       <Task tab={tab} />
     </div>
   );
