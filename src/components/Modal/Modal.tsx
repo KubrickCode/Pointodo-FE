@@ -17,7 +17,9 @@ const Modal: FC = () => {
           onClick={() => setModalState(false)}
         ></div>
         <div className="relative bg-white p-10 overflow-hidden z-60 rounded-3xl">
-          {modalContent === "addTask" && <AddTask />}
+          {modalContent === "addTask0" && <AddTask taskType="매일 작업" />}
+          {modalContent === "addTask1" && <AddTask taskType="기한 작업" />}
+          {modalContent === "addTask2" && <AddTask taskType="무기한 작업" />}
         </div>
       </div>
     </>

@@ -1,13 +1,14 @@
-import { FC, useEffect } from "react";
+import { FC, useState, useEffect } from "react";
+import TaskList from "./TaskList";
+import TaskHeader from "./TaskHeader";
 import { useQueryGet } from "../../../hooks/useQueryApi";
-import { useModalStore } from "../../../store/modal.store";
 
 interface Props {
   tab: number;
 }
 
 const Task: FC<Props> = ({ tab }) => {
-  const setModalState = useModalStore((state) => state.setModalState);
+  const [data, setData] = useState([]);
 
   const { data: dailyTasks } = useQueryGet("/task/daily", "getDailyTasks", {
     enabled: tab === 0,
@@ -26,21 +27,21 @@ const Task: FC<Props> = ({ tab }) => {
   });
 
   useEffect(() => {
-    console.log(tab);
-    console.log(deadlineTasks);
-  }, [deadlineTasks, tab]);
+    if (tab === 0) {
+      setData(dailyTasks);
+    }
+    if (tab === 1) {
+      setData(deadlineTasks);
+    }
+    if (tab === 2) {
+      setData(freeTasks);
+    }
+  }, [tab, dailyTasks, deadlineTasks, freeTasks]);
 
   return (
-    <div>
-      <button
-        className="bg-neutral-200"
-        onClick={() => setModalState(true, "addTask")}
-      >
-        작업 추가
-      </button>
-      <div>{dailyTasks}</div>
-      <div>{deadlineTasks}</div>
-      <div>{freeTasks}</div>
+    <div className="w-full">
+      <TaskHeader tab={tab} />
+      <TaskList data={data} />
     </div>
   );
 };
