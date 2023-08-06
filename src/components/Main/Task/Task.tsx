@@ -77,10 +77,6 @@ const Task: FC<Props> = ({ tab }) => {
     setData(sortedData);
   }, [sorted]);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <div className="w-full">
       <TaskHeader tab={tab} setSorted={setSorted} />

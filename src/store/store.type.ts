@@ -17,3 +17,9 @@ export interface ModalStoreType {
   modalContent: string;
   setModalState(modalState: boolean, modalContent?: string): void;
 }
+
+export interface ToastStoreType {
+  toastState: boolean;
+  toastContent: string;
+  setToastState(toastState: boolean, toastContent: string): void;
+}

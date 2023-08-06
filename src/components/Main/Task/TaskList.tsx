@@ -1,6 +1,7 @@
-import { FC, ChangeEvent } from "react";
+import { FC, ChangeEvent, useState } from "react";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
+import { useToastStore } from "../../../store/toast.store";
 
 export interface TaskEntity {
   id: number;
@@ -21,6 +22,15 @@ const TaskList: FC<Props> = ({ data }) => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
 
+  const setToastState = useToastStore((state) => state.setToastState);
+
+  const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
+  const [updatedBody, setUpdatedBody] = useState({
+    name: "",
+    description: "",
+    importance: 0,
+  });
+
   const handleCheckboxChange = (
     item: TaskEntity,
     e: ChangeEvent<HTMLInputElement>
@@ -40,6 +50,7 @@ const TaskList: FC<Props> = ({ data }) => {
                 ? "getDeadlineTasks"
                 : "getFreeTasks"
             );
+            setToastState(true, "작업이 완료되었습니다");
           },
         }
       );
@@ -59,10 +70,64 @@ const TaskList: FC<Props> = ({ data }) => {
                 ? "getDeadlineTasks"
                 : "getFreeTasks"
             );
+            setToastState(true, "작업 완료가 취소되었습니다");
           },
         }
       );
     }
+  };
+
+  const handleUpdate = async (id: number, taskType: string) => {
+    mutate(
+      {
+        link: "/task/update",
+        method: "patch",
+        body: {
+          id,
+          name: updatedBody.name,
+          description: updatedBody.description,
+          importance: updatedBody.importance,
+        },
+      },
+      {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries(
+            taskType === "매일 작업"
+              ? "getDailyTasks"
+              : taskType === "기한 작업"
+              ? "getDeadlineTasks"
+              : "getFreeTasks"
+          );
+          setUpdatedState({
+            ...updatedState,
+            state: false,
+            id: 0,
+          });
+          setToastState(true, "작업이 수정되었습니다");
+        },
+      }
+    );
+  };
+
+  const handleDelete = async (id: number, taskType: string) => {
+    mutate(
+      {
+        link: `/task/${id}`,
+        method: "delete",
+      },
+      {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries(
+            taskType === "매일 작업"
+              ? "getDailyTasks"
+              : taskType === "기한 작업"
+              ? "getDeadlineTasks"
+              : "getFreeTasks"
+          );
+          setToastState(true, "작업이 삭제되었습니다");
+        },
+      }
+    );
   };
 
   return (
@@ -71,14 +136,18 @@ const TaskList: FC<Props> = ({ data }) => {
         <tr>
           <th className="p-5 text-center border-r w-[10%]">완료</th>
           <th className="p-5 text-center border-r w-[30%]">작업명</th>
-          <th className="p-5 text-center border-r w-[40%]">작업 설명</th>
-          <th className="p-5 text-center border-l w-[20%]">중요도</th>
+          <th className="p-5 text-center border-r w-[30%]">작업 설명</th>
+          <th className="p-5 text-center border-l w-[10%]">중요도</th>
+          <th className="p-5 text-center border-l w-[20%]">수정/삭제</th>
         </tr>
       </thead>
       <tbody>
         {data?.map((item) => (
-          <tr key={item.id}>
-            <td className="p-5 text-center border-r w-[10%]">
+          <tr
+            key={item.id}
+            className={item.completion === 1 ? "line-through" : ""}
+          >
+            <td className="p-5 text-center border-r w-[10%] ">
               <div className="flex items-center justify-center mb-4">
                 <input
                   type="checkbox"
@@ -88,12 +157,117 @@ const TaskList: FC<Props> = ({ data }) => {
                 />
               </div>
             </td>
-            <td className="p-5 text-center border-r w-[30%]">{item.name}</td>
-            <td className="p-5 text-center border-r w-[40%]">
-              {item.description || "설명이 없습니다"}
+            <td className="p-5 text-center border-r w-[30%]">
+              {updatedState.state && updatedState.id === item.id ? (
+                <input
+                  type="text"
+                  className="border rounded p-1"
+                  value={updatedBody.name}
+                  required
+                  minLength={1}
+                  maxLength={20}
+                  onChange={(e) =>
+                    setUpdatedBody({ ...updatedBody, name: e.target.value })
+                  }
+                />
+              ) : (
+                <span>{item.name}</span>
+              )}
+            </td>
+
+            <td className="p-5 text-center border-r w-[30%]">
+              {updatedState.state && updatedState.id === item.id ? (
+                <textarea
+                  className="border rounded p-1"
+                  value={updatedBody.description || ""}
+                  maxLength={500}
+                  onChange={(e) =>
+                    setUpdatedBody({
+                      ...updatedBody,
+                      description: e.target.value,
+                    })
+                  }
+                />
+              ) : (
+                <span>{item.description || "설명이 없습니다"}</span>
+              )}
+            </td>
+            <td className="p-5 text-center border-l w-[10%]">
+              {updatedState.state && updatedState.id === item.id ? (
+                <select
+                  className="w-full border p-1 rounded outline-neutral-400"
+                  value={updatedBody.importance}
+                  onChange={(e) =>
+                    setUpdatedBody({
+                      ...updatedBody,
+                      importance: Number(e.target.value),
+                    })
+                  }
+                >
+                  <option value={3}>덜 중요</option>
+                  <option value={2}>보통</option>
+                  <option value={1}>매우 중요</option>
+                </select>
+              ) : (
+                <span>
+                  {item.importance === 1
+                    ? "매우 중요"
+                    : item.importance === 2
+                    ? "보통"
+                    : "덜 중요"}
+                </span>
+              )}
             </td>
             <td className="p-5 text-center border-l w-[20%]">
-              {item.importance}
+              {updatedState.state && updatedState.id === item.id ? (
+                <>
+                  <button
+                    className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500"
+                    onClick={() => handleUpdate(item.id, item.taskType)}
+                  >
+                    완료
+                  </button>
+                  <button
+                    className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500"
+                    onClick={() => {
+                      setUpdatedState({
+                        ...updatedState,
+                        state: false,
+                        id: 0,
+                      });
+                    }}
+                  >
+                    취소
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400"
+                    onClick={() => {
+                      setUpdatedState({
+                        ...updatedState,
+                        state: true,
+                        id: item.id,
+                      });
+                      setUpdatedBody({
+                        ...updatedBody,
+                        name: item.name,
+                        description: item.description,
+                        importance: item.importance,
+                      });
+                    }}
+                  >
+                    수정
+                  </button>
+                  <button
+                    className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400"
+                    onClick={() => handleDelete(item.id, item.taskType)}
+                  >
+                    삭제
+                  </button>
+                </>
+              )}
             </td>
           </tr>
         ))}

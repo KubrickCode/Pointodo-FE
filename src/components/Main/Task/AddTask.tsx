@@ -3,6 +3,7 @@ import { useModalStore } from "../../../store/modal.store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
+import { useToastStore } from "../../../store/toast.store";
 
 interface Props {
   taskType: string;
@@ -17,6 +18,7 @@ interface AddTaskForm {
 
 const AddTask: FC<Props> = ({ taskType }) => {
   const setModalState = useModalStore((state) => state.setModalState);
+  const setToastState = useToastStore((state) => state.setToastState);
   const queryClient = useQueryClient();
 
   const {
@@ -44,6 +46,7 @@ const AddTask: FC<Props> = ({ taskType }) => {
               ? "getDeadlineTasks"
               : "getFreeTasks"
           );
+          setToastState(true, "작업이 추가되었습니다");
         },
       }
     );
