@@ -1,9 +1,13 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
+import DatePicker from "react-datepicker";
+import { ko } from "date-fns/esm/locale";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 interface Props {
   taskType: string;
@@ -21,6 +25,16 @@ const AddTask: FC<Props> = ({ taskType }) => {
   const setToastState = useToastStore((state) => state.setToastState);
   const queryClient = useQueryClient();
 
+  console.log(moment(new Date()).format("YYYY-MM-DD"));
+
+  const [dueDate, setDueDate] = useState(new Date());
+
+  useEffect(() => {
+    if (dueDate < new Date()) {
+      setDueDate(new Date());
+    }
+  }, [dueDate]);
+
   const {
     register,
     handleSubmit,
@@ -30,6 +44,12 @@ const AddTask: FC<Props> = ({ taskType }) => {
   const { mutate } = useQueryMutate();
 
   const onSubmitHandler: SubmitHandler<AddTaskForm> = async (formData) => {
+    if (taskType === "DUE") {
+      formData = Object.assign(formData, {
+        dueDate: moment(dueDate).format("YYYY-MM-DD"),
+      });
+    }
+
     mutate(
       {
         link: "/task/create",
@@ -40,10 +60,10 @@ const AddTask: FC<Props> = ({ taskType }) => {
         onSuccess: async () => {
           setModalState(false);
           await queryClient.invalidateQueries(
-            taskType === "매일 작업"
+            taskType === "DAILY"
               ? "getDailyTasks"
-              : taskType === "기한 작업"
-              ? "getDeadlineTasks"
+              : taskType === "DUE"
+              ? "getDueTasks"
               : "getFreeTasks"
           );
           setToastState(true, "작업이 추가되었습니다");
@@ -55,7 +75,14 @@ const AddTask: FC<Props> = ({ taskType }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <h1 className="text-xl text-center mb-5">{taskType} 추가</h1>
+        <h1 className="text-xl text-center mb-5">
+          {taskType === "DAILY"
+            ? "매일 작업"
+            : taskType === "DUE"
+            ? "기한 작업"
+            : "무기한 작업"}{" "}
+          추가
+        </h1>
         <div className="my-2">
           <label className="block my-2 text-sm">작업명</label>
           <input type="hidden" value={taskType} {...register("taskType")} />
@@ -95,6 +122,19 @@ const AddTask: FC<Props> = ({ taskType }) => {
             <div>작업명은 20자리 이내로 입력하세요.</div>
           )}
         </div>
+        {taskType === "DUE" && (
+          <div className="my-2">
+            <label className="block my-2 text-sm">작업 기한</label>
+            <div className="border p-1 rounded">
+              <DatePicker
+                locale={ko}
+                selected={dueDate}
+                onChange={(date) => setDueDate(date!)}
+                dateFormat="yyyy-MM-dd"
+              />
+            </div>
+          </div>
+        )}
         <div className="my-2">
           <label className="block my-2 text-sm">작업 우선도</label>
           <select

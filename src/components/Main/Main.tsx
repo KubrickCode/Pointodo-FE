@@ -23,15 +23,15 @@ const Main: FC = () => {
 const menu = [
   {
     id: 0,
-    name: "매일 작업",
+    name: "DAILY",
   },
   {
     id: 1,
-    name: "기한 작업",
+    name: "DUE",
   },
   {
     id: 2,
-    name: "무기한 작업",
+    name: "FREE",
   },
 ];
 

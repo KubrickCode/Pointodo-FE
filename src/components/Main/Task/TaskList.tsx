@@ -44,10 +44,10 @@ const TaskList: FC<Props> = ({ data }) => {
         {
           onSuccess: async () => {
             await queryClient.invalidateQueries(
-              item.taskType === "매일 작업"
+              item.taskType === "DAILY"
                 ? "getDailyTasks"
-                : item.taskType === "기한 작업"
-                ? "getDeadlineTasks"
+                : item.taskType === "DUE"
+                ? "getDueTasks"
                 : "getFreeTasks"
             );
             await queryClient.invalidateQueries("getPoints");
@@ -65,10 +65,10 @@ const TaskList: FC<Props> = ({ data }) => {
         {
           onSuccess: async () => {
             await queryClient.invalidateQueries(
-              item.taskType === "매일 작업"
+              item.taskType === "DAILY"
                 ? "getDailyTasks"
-                : item.taskType === "기한 작업"
-                ? "getDeadlineTasks"
+                : item.taskType === "DUE"
+                ? "getDueTasks"
                 : "getFreeTasks"
             );
             setToastState(true, "작업 완료가 취소되었습니다");
@@ -93,10 +93,10 @@ const TaskList: FC<Props> = ({ data }) => {
       {
         onSuccess: async () => {
           await queryClient.invalidateQueries(
-            taskType === "매일 작업"
+            taskType === "DAILY"
               ? "getDailyTasks"
-              : taskType === "기한 작업"
-              ? "getDeadlineTasks"
+              : taskType === "DUE"
+              ? "getDueTasks"
               : "getFreeTasks"
           );
           setUpdatedState({
@@ -119,10 +119,10 @@ const TaskList: FC<Props> = ({ data }) => {
       {
         onSuccess: async () => {
           await queryClient.invalidateQueries(
-            taskType === "매일 작업"
+            taskType === "DAILY"
               ? "getDailyTasks"
-              : taskType === "기한 작업"
-              ? "getDeadlineTasks"
+              : taskType === "DUE"
+              ? "getDueTasks"
               : "getFreeTasks"
           );
           setToastState(true, "작업이 삭제되었습니다");

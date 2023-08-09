@@ -15,13 +15,9 @@ const Task: FC<Props> = ({ tab }) => {
     enabled: tab === 0,
   });
 
-  const { data: deadlineTasks } = useQueryGet(
-    "/task/deadline",
-    "getDeadlineTasks",
-    {
-      enabled: tab === 1,
-    }
-  );
+  const { data: dueTasks } = useQueryGet("/task/due", "getDueTasks", {
+    enabled: tab === 1,
+  });
 
   const { data: freeTasks } = useQueryGet("/task/free", "getFreeTasks", {
     enabled: tab === 2,
@@ -32,12 +28,12 @@ const Task: FC<Props> = ({ tab }) => {
       setData(dailyTasks);
     }
     if (tab === 1) {
-      setData(deadlineTasks);
+      setData(dueTasks);
     }
     if (tab === 2) {
       setData(freeTasks);
     }
-  }, [tab, dailyTasks, deadlineTasks, freeTasks]);
+  }, [tab, dailyTasks, dueTasks, freeTasks]);
 
   useEffect(() => {
     let sortedData = [...data];

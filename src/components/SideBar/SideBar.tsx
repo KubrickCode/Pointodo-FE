@@ -23,7 +23,11 @@ const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
               }`}
               onClick={() => setTab(item.id)}
             >
-              {item.name}
+              {item.name === "DAILY"
+                ? "매일 작업"
+                : item.name === "DUE"
+                ? "기한 작업"
+                : "무기한 작업"}
             </li>
           ))}
         </ul>
