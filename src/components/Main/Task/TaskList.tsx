@@ -134,7 +134,7 @@ const TaskList: FC<Props> = ({ tab, data }) => {
   const handleDelete = async (id: number, taskType: string) => {
     mutate(
       {
-        link: `/task/${id}`,
+        link: `/task?id=${id}&taskType=${taskType}`,
         method: "delete",
       },
       {

@@ -1,6 +1,7 @@
 import { FC, useState, useRef, useEffect } from "react";
 import { useQueryGet, useQueryMutate } from "./../../../hooks/useQueryApi";
 import { useUserStore } from "../../../store/user.store";
+import { Link } from "react-router-dom";
 
 const ProfileDropdown: FC = () => {
   const [open, setOpen] = useState(false);
@@ -81,11 +82,11 @@ const ProfileDropdown: FC = () => {
                 로그아웃
               </a>
             </li>
-            {user?.role === "ADMIN" && (
+            {(user?.role === "ADMIN" || "MASTER") && (
               <li>
-                <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                <Link to="admin" className="block px-4 py-2 hover:bg-gray-100">
                   관리자 페이지
-                </a>
+                </Link>
               </li>
             )}
           </ul>

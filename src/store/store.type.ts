@@ -2,7 +2,7 @@ interface User {
   id: string;
   email: string;
   provider: "LOCAL" | "GOOGLE" | "KAKAO";
-  role: "USER" | "ADMIN";
+  role: "USER" | "ADMIN" | "MASTER";
   selectedBadge: string;
   createdAt: string;
 }
