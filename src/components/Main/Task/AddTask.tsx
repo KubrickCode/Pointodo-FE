@@ -124,7 +124,7 @@ const AddTask: FC<Props> = ({ taskType }) => {
         </div>
         {taskType === "DUE" && (
           <div className="my-2">
-            <label className="block my-2 text-sm">작업 기한</label>
+            <label className="block my-2 text-sm">만료 기한</label>
             <div className="border p-1 rounded">
               <DatePicker
                 locale={ko}

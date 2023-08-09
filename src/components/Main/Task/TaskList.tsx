@@ -2,6 +2,7 @@ import { FC, ChangeEvent, useState } from "react";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
+import moment from "moment";
 
 export interface TaskEntity {
   id: number;
@@ -12,13 +13,15 @@ export interface TaskEntity {
   completion: number;
   importance: number;
   occurredAt: string;
+  dueDate?: string;
 }
 
 interface Props {
+  tab: number;
   data: TaskEntity[];
 }
 
-const TaskList: FC<Props> = ({ data }) => {
+const TaskList: FC<Props> = ({ tab, data }) => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
 
@@ -136,9 +139,24 @@ const TaskList: FC<Props> = ({ data }) => {
       <thead className="border-b p-5">
         <tr>
           <th className="p-5 text-center border-r w-[10%]">완료</th>
-          <th className="p-5 text-center border-r w-[30%]">작업명</th>
-          <th className="p-5 text-center border-r w-[30%]">작업 설명</th>
+          <th
+            className={`p-5 text-center border-r w-[${
+              tab === 1 ? "20" : "30"
+            }%]`}
+          >
+            작업명
+          </th>
+          <th
+            className={`p-5 text-center border-r w-[${
+              tab === 1 ? "20" : "30"
+            }%]`}
+          >
+            작업 설명
+          </th>
           <th className="p-5 text-center border-l w-[10%]">중요도</th>
+          {tab === 1 && (
+            <th className="p-5 text-center border-l w-[20%]">작업 기한</th>
+          )}
           <th className="p-5 text-center border-l w-[20%]">수정/삭제</th>
         </tr>
       </thead>
@@ -158,7 +176,11 @@ const TaskList: FC<Props> = ({ data }) => {
                 />
               </div>
             </td>
-            <td className="p-5 text-center border-r w-[30%]">
+            <td
+              className={`p-5 text-center border-r w-[${
+                tab === 1 ? "20" : "30"
+              }%]`}
+            >
               {updatedState.state && updatedState.id === item.id ? (
                 <input
                   type="text"
@@ -172,11 +194,15 @@ const TaskList: FC<Props> = ({ data }) => {
                   }
                 />
               ) : (
-                <span>{item.name}</span>
+                <span className="break-all">{item.name}</span>
               )}
             </td>
 
-            <td className="p-5 text-center border-r w-[30%]">
+            <td
+              className={`p-5 text-center border-r w-[${
+                tab === 1 ? "20" : "30"
+              }%]`}
+            >
               {updatedState.state && updatedState.id === item.id ? (
                 <textarea
                   className="border rounded p-1"
@@ -190,7 +216,9 @@ const TaskList: FC<Props> = ({ data }) => {
                   }
                 />
               ) : (
-                <span>{item.description || "설명이 없습니다"}</span>
+                <span className="break-all">
+                  {item.description || "설명이 없습니다"}
+                </span>
               )}
             </td>
             <td className="p-5 text-center border-l w-[10%]">
@@ -219,6 +247,30 @@ const TaskList: FC<Props> = ({ data }) => {
                 </span>
               )}
             </td>
+            {tab === 1 && (
+              <td className="p-5 text-center border-l w-[10%]">
+                {updatedState.state && updatedState.id === item.id ? (
+                  <select
+                    className="w-full border p-1 rounded outline-neutral-400"
+                    value={updatedBody.importance}
+                    onChange={(e) =>
+                      setUpdatedBody({
+                        ...updatedBody,
+                        importance: Number(e.target.value),
+                      })
+                    }
+                  >
+                    <option value={3}>덜 중요</option>
+                    <option value={2}>보통</option>
+                    <option value={1}>매우 중요</option>
+                  </select>
+                ) : (
+                  <span>{`${moment
+                    .utc(item.occurredAt)
+                    .format("YYYY-MM-DD")} ~ ${item.dueDate}`}</span>
+                )}
+              </td>
+            )}
             <td className="p-5 text-center border-l w-[20%]">
               {updatedState.state && updatedState.id === item.id ? (
                 <>

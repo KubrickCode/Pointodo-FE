@@ -76,7 +76,7 @@ const Task: FC<Props> = ({ tab }) => {
   return (
     <div className="w-full">
       <TaskHeader tab={tab} setSorted={setSorted} />
-      <TaskList data={data} />
+      <TaskList tab={tab} data={data} />
     </div>
   );
 };
