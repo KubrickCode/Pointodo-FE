@@ -25,8 +25,6 @@ const AddTask: FC<Props> = ({ taskType }) => {
   const setToastState = useToastStore((state) => state.setToastState);
   const queryClient = useQueryClient();
 
-  console.log(moment(new Date()).format("YYYY-MM-DD"));
-
   const [dueDate, setDueDate] = useState(new Date());
 
   useEffect(() => {

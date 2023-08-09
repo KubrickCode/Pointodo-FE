@@ -1,8 +1,11 @@
-import { FC, ChangeEvent, useState } from "react";
+import { FC, ChangeEvent, useState, useEffect } from "react";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
 import moment from "moment";
+import DatePicker from "react-datepicker";
+import { ko } from "date-fns/esm/locale";
+import "react-datepicker/dist/react-datepicker.css";
 
 export interface TaskEntity {
   id: number;
@@ -24,6 +27,14 @@ interface Props {
 const TaskList: FC<Props> = ({ tab, data }) => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
+
+  const [dueDate, setDueDate] = useState(new Date());
+
+  useEffect(() => {
+    if (dueDate < new Date()) {
+      setDueDate(new Date());
+    }
+  }, [dueDate]);
 
   const setToastState = useToastStore((state) => state.setToastState);
 
@@ -82,16 +93,23 @@ const TaskList: FC<Props> = ({ tab, data }) => {
   };
 
   const handleUpdate = async (id: number, taskType: string) => {
+    let body = {
+      id,
+      name: updatedBody.name,
+      description: updatedBody.description,
+      importance: updatedBody.importance,
+    };
+    if (taskType === "DUE") {
+      body = Object.assign(body, {
+        dueDate: moment(dueDate).format("YYYY-MM-DD"),
+      });
+    }
+
     mutate(
       {
         link: "/task/update",
         method: "patch",
-        body: {
-          id,
-          name: updatedBody.name,
-          description: updatedBody.description,
-          importance: updatedBody.importance,
-        },
+        body,
       },
       {
         onSuccess: async () => {
@@ -250,20 +268,14 @@ const TaskList: FC<Props> = ({ tab, data }) => {
             {tab === 1 && (
               <td className="p-5 text-center border-l w-[10%]">
                 {updatedState.state && updatedState.id === item.id ? (
-                  <select
-                    className="w-full border p-1 rounded outline-neutral-400"
-                    value={updatedBody.importance}
-                    onChange={(e) =>
-                      setUpdatedBody({
-                        ...updatedBody,
-                        importance: Number(e.target.value),
-                      })
-                    }
-                  >
-                    <option value={3}>덜 중요</option>
-                    <option value={2}>보통</option>
-                    <option value={1}>매우 중요</option>
-                  </select>
+                  <div className="border p-1 rounded">
+                    <DatePicker
+                      locale={ko}
+                      selected={dueDate}
+                      onChange={(date) => setDueDate(date!)}
+                      dateFormat="yyyy-MM-dd"
+                    />
+                  </div>
                 ) : (
                   <span>{`${moment
                     .utc(item.occurredAt)
