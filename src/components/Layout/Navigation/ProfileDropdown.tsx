@@ -69,18 +69,17 @@ const ProfileDropdown: FC = () => {
           </div>
           <ul className="py-2 text-sm text-gray-700">
             <li>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+              <Link to="my-page" className="block px-4 py-2 hover:bg-gray-100">
                 마이페이지
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100"
+              <button
+                className="w-full px-4 py-2 hover:bg-gray-100"
                 onClick={handleLogout}
               >
                 로그아웃
-              </a>
+              </button>
             </li>
             {(user?.role === "ADMIN" || user?.role === "MASTER") && (
               <li>
