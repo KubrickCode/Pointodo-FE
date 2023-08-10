@@ -44,12 +44,16 @@ const ProfileDropdown: FC = () => {
     };
   }, [setOpen]);
 
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   return (
     <>
       <div className="relative">
         <img
           className="w-10 h-10 rounded-full cursor-pointer"
-          src="/badge/헵타포드.jpg"
+          src={user?.iconLink}
           onClick={() => setOpen(!open)}
         />
 
