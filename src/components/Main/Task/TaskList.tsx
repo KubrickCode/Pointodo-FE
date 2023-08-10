@@ -24,6 +24,12 @@ interface Props {
   data: TaskEntity[];
 }
 
+const initialUpdatedBody = {
+  name: "",
+  description: "",
+  importance: 0,
+};
+
 const TaskList: FC<Props> = ({ tab, data }) => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
@@ -39,11 +45,7 @@ const TaskList: FC<Props> = ({ tab, data }) => {
   const setToastState = useToastStore((state) => state.setToastState);
 
   const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
-  const [updatedBody, setUpdatedBody] = useState({
-    name: "",
-    description: "",
-    importance: 0,
-  });
+  const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
 
   const handleCheckboxChange = (
     item: TaskEntity,

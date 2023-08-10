@@ -27,7 +27,9 @@ const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
                 ? "매일 작업"
                 : item.name === "DUE"
                 ? "기한 작업"
-                : "무기한 작업"}
+                : item.name === "FREE"
+                ? "무기한 작업"
+                : item.name}
             </li>
           ))}
         </ul>
