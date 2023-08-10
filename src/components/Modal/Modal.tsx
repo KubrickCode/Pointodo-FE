@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useModalStore } from "../../store/modal.store";
 import AddTask from "../Main/Task/AddTask";
 import AdminAddBadge from "../Admin/Badge/AdminAddBadge";
+import DeleteTask from "../Main/Task/deleteTask";
 
 const Modal: FC = () => {
   const modalState = useModalStore((state) => state.modalState);
@@ -30,6 +31,7 @@ const Modal: FC = () => {
           {modalContent === "addAdminBadge2" && (
             <AdminAddBadge badgeType="SPECIAL" />
           )}
+          {modalContent === "deleteTask" && <DeleteTask />}
         </div>
       </div>
     </>

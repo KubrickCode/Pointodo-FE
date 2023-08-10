@@ -1,8 +1,12 @@
 import { FC } from "react";
 import ProfileDropdown from "./ProfileDropdown";
+import { useQueryGet } from "../../../hooks/useQueryApi";
 
 const Navigation: FC = () => {
   const token = localStorage.getItem("accessToken");
+  const { data: currentPoints } = useQueryGet("/point/current", "getPoints", {
+    enabled: !!token,
+  });
 
   return (
     <>
@@ -17,7 +21,10 @@ const Navigation: FC = () => {
             <h1 className="text-2xl mx-5 font-bold">Pointodo</h1>
           </button>
         </div>
-        <ProfileDropdown />
+        <div className="flex flex-row items-center">
+          <div className="mr-2">보유 포인트: {currentPoints?.points}</div>
+          <ProfileDropdown />
+        </div>
       </nav>
     </>
   );

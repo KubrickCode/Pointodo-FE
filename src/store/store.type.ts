@@ -16,7 +16,14 @@ export interface UserStoreType {
 export interface ModalStoreType {
   modalState: boolean;
   modalContent: string;
-  setModalState(modalState: boolean, modalContent?: string): void;
+  modalTaskId: number;
+  modalTaskType: string;
+  setModalState(
+    modalState: boolean,
+    modalContent?: string,
+    modalTaskId?: number,
+    modalTaskType?: string
+  ): void;
 }
 
 export interface ToastStoreType {

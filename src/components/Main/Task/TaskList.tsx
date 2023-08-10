@@ -6,6 +6,7 @@ import moment from "moment";
 import DatePicker from "react-datepicker";
 import { ko } from "date-fns/esm/locale";
 import "react-datepicker/dist/react-datepicker.css";
+import { useModalStore } from "../../../store/modal.store";
 
 export interface TaskEntity {
   id: number;
@@ -43,6 +44,7 @@ const TaskList: FC<Props> = ({ tab, data }) => {
   }, [dueDate]);
 
   const setToastState = useToastStore((state) => state.setToastState);
+  const setModalState = useModalStore((state) => state.setModalState);
 
   const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
   const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
@@ -128,27 +130,6 @@ const TaskList: FC<Props> = ({ tab, data }) => {
             id: 0,
           });
           setToastState(true, "작업이 수정되었습니다");
-        },
-      }
-    );
-  };
-
-  const handleDelete = async (id: number, taskType: string) => {
-    mutate(
-      {
-        link: `/task?id=${id}&taskType=${taskType}`,
-        method: "delete",
-      },
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(
-            taskType === "DAILY"
-              ? "getDailyTasks"
-              : taskType === "DUE"
-              ? "getDueTasks"
-              : "getFreeTasks"
-          );
-          setToastState(true, "작업이 삭제되었습니다");
         },
       }
     );
@@ -329,7 +310,9 @@ const TaskList: FC<Props> = ({ tab, data }) => {
                   </button>
                   <button
                     className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400"
-                    onClick={() => handleDelete(item.id, item.taskType)}
+                    onClick={() =>
+                      setModalState(true, "deleteTask", item.id, item.taskType)
+                    }
                   >
                     삭제
                   </button>

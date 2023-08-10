@@ -1,5 +1,5 @@
 import { FC, useState, useRef, useEffect } from "react";
-import { useQueryGet, useQueryMutate } from "./../../../hooks/useQueryApi";
+import { useQueryMutate } from "./../../../hooks/useQueryApi";
 import { useUserStore } from "../../../store/user.store";
 import { Link } from "react-router-dom";
 
@@ -8,10 +8,6 @@ const ProfileDropdown: FC = () => {
   const { mutate: logout } = useQueryMutate();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useUserStore((state) => state.user);
-  const token = localStorage.getItem("accessToken");
-  const { data: currentPoints } = useQueryGet("/point/current", "getPoints", {
-    enabled: !!token,
-  });
 
   const handleLogout = async () => {
     logout(
@@ -46,7 +42,7 @@ const ProfileDropdown: FC = () => {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative border border-neutral-400 rounded-full">
         <img
           className="w-10 h-10 rounded-full cursor-pointer"
           src={user?.iconLink}
@@ -61,11 +57,6 @@ const ProfileDropdown: FC = () => {
         >
           <div className="px-4 py-3 text-sm text-gray-900">
             <span className="font-medium truncate">{user?.email}</span>
-          </div>
-          <div className="px-4 py-3 text-sm text-gray-900">
-            <span className="font-medium truncate">
-              보유 포인트 : {currentPoints?.points}
-            </span>
           </div>
           <ul className="py-2 text-sm text-gray-700">
             <li>
