@@ -22,7 +22,7 @@ const ProfileDropdown: FC = () => {
       {
         onSuccess: async () => {
           localStorage.removeItem("accessToken");
-          location.reload();
+          location.href = "/";
         },
       }
     );
@@ -43,10 +43,6 @@ const ProfileDropdown: FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setOpen]);
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   return (
     <>

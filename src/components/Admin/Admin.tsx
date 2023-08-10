@@ -1,17 +1,9 @@
-import { FC, useEffect, useState } from "react";
-import { useUserStore } from "../../store/user.store";
+import { FC, useState } from "react";
 import SideBar from "../SideBar/SideBar";
 import AdminBadge from "./Badge/AdminBadge";
 
 const Admin: FC = () => {
-  const user = useUserStore((state) => state.user);
   const [tab, setTab] = useState(0);
-
-  useEffect(() => {
-    if (user?.role !== "MASTER" && user?.role !== "ADMIN") {
-      location.href = "/";
-    }
-  }, [user]);
 
   return (
     <>
