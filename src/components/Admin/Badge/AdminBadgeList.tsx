@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
@@ -22,10 +22,21 @@ const initialUpdatedBody = {
   price: 0,
 };
 
+const initialPreview = {
+  id: 0,
+  url: "",
+};
+
 const AdminBadgeList: FC<Props> = ({ tab }) => {
   const [badgeList, setBadgeList] = useState<BadgeEntity[]>([]);
   const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
   const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
+
+  const inputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
+
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const [previewUrl, setPreviewUrl] = useState(initialPreview);
 
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
@@ -43,15 +54,75 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
     setBadgeList(data);
   }, [data]);
 
-  const handleUpdate = async (id: number) => {
+  const handleUpdate = async (
+    id: number,
+    name: string,
+    description: string,
+    price: number
+  ) => {
+    let body = {};
+
+    if (name !== updatedBody.name)
+      Object.assign(body, { name: updatedBody.name });
+
+    if (description !== updatedBody.description)
+      Object.assign(body, { description: updatedBody.description });
+
+    if (price !== updatedBody.price)
+      Object.assign(body, { price: updatedBody.price });
+
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+
+      mutate(
+        {
+          link: "/admin/badge/upload",
+          method: "post",
+          body: formData,
+        },
+        {
+          onSuccess: async (data) => {
+            Object.assign(body, { iconLink: data.filePath });
+            mutate(
+              {
+                link: `/admin/badge/update/${id}`,
+                method: "patch",
+                body,
+              },
+              {
+                onSuccess: async () => {
+                  await queryClient.invalidateQueries("getAdminBadgeList");
+                  setUpdatedState({
+                    ...updatedState,
+                    state: false,
+                    id: 0,
+                  });
+                  setToastState(true, "뱃지가 수정되었습니다");
+                },
+              }
+            );
+          },
+        }
+      );
+
+      return;
+    }
+
+    if (Object.keys(body).length === 0) {
+      setUpdatedState({
+        ...updatedState,
+        state: false,
+        id: 0,
+      });
+      return;
+    }
+
     mutate(
       {
         link: `/admin/badge/update/${id}`,
         method: "patch",
-        body:
-          updatedBody.price !== 0
-            ? updatedBody
-            : { name: updatedBody.name, description: updatedBody.description },
+        body,
       },
       {
         onSuccess: async () => {
@@ -82,6 +153,29 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
     );
   };
 
+  const onUploadImage = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    id: number
+  ) => {
+    if (!e.target.files) {
+      return;
+    }
+    setImageFile(e.target.files[0]);
+
+    setPreviewUrl({
+      ...previewUrl,
+      id,
+      url: URL.createObjectURL(e.target.files[0]),
+    });
+  };
+
+  const onUploadImageButtonClick = useCallback((id: number) => {
+    const currentInputRef = inputRefs.current[id];
+    if (currentInputRef) {
+      currentInputRef.click();
+    }
+  }, []);
+
   return (
     <>
       <table className="table-fixed w-full">
@@ -104,7 +198,33 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                 <span className="break-all">{item.id}</span>
               </td>
               <td className="p-5 text-center border-r w-[20%] ">
-                <span className="break-all">{item.iconLink}</span>
+                {updatedState.state && updatedState.id === item.id ? (
+                  <>
+                    <img
+                      className="w-20 h-20"
+                      src={
+                        previewUrl.id === item.id && previewUrl.url
+                          ? previewUrl.url
+                          : item.iconLink
+                      }
+                    />
+                    <input
+                      className="hidden"
+                      type="file"
+                      accept="image/*"
+                      ref={(el) => (inputRefs.current[item.id] = el)}
+                      onChange={(e) => onUploadImage(e, item.id)}
+                    />
+                    <button
+                      className="border p-2 rounded"
+                      onClick={() => onUploadImageButtonClick(item.id)}
+                    >
+                      이미지 업로드
+                    </button>
+                  </>
+                ) : (
+                  <img className="w-20 h-20" src={item.iconLink} />
+                )}
               </td>
               <td className="p-5 text-center border-r w-[20%] ">
                 {updatedState.state && updatedState.id === item.id ? (
@@ -154,7 +274,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                       onChange={(e) =>
                         setUpdatedBody({
                           ...updatedBody,
-                          price: Number(e.target.value),
+                          price: Number(e.target.value) || 0,
                         })
                       }
                     />
@@ -169,7 +289,14 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                   <>
                     <button
                       className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500"
-                      onClick={() => handleUpdate(item.id)}
+                      onClick={() =>
+                        handleUpdate(
+                          item.id,
+                          item.name,
+                          item.description,
+                          item.price!
+                        )
+                      }
                     >
                       완료
                     </button>
@@ -202,6 +329,8 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                           description: item.description,
                           price: item.price ?? 0,
                         });
+                        setPreviewUrl(initialPreview);
+                        setImageFile(null);
                       }}
                     >
                       수정

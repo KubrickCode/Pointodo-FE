@@ -82,7 +82,7 @@ const ProfileDropdown: FC = () => {
                 로그아웃
               </a>
             </li>
-            {(user?.role === "ADMIN" || "MASTER") && (
+            {(user?.role === "ADMIN" || user?.role === "MASTER") && (
               <li>
                 <Link to="admin" className="block px-4 py-2 hover:bg-gray-100">
                   관리자 페이지

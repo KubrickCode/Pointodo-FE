@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useModalStore } from "../../store/modal.store";
 import AddTask from "../Main/Task/AddTask";
+import AdminAddBadge from "../Admin/Badge/AdminAddBadge";
 
 const Modal: FC = () => {
   const modalState = useModalStore((state) => state.modalState);
@@ -20,6 +21,15 @@ const Modal: FC = () => {
           {modalContent === "addTask0" && <AddTask taskType="DAILY" />}
           {modalContent === "addTask1" && <AddTask taskType="DUE" />}
           {modalContent === "addTask2" && <AddTask taskType="FREE" />}
+          {modalContent === "addAdminBadge0" && (
+            <AdminAddBadge badgeType="NORMAL" />
+          )}
+          {modalContent === "addAdminBadge1" && (
+            <AdminAddBadge badgeType="ACHIEVEMENT" />
+          )}
+          {modalContent === "addAdminBadge2" && (
+            <AdminAddBadge badgeType="SPECIAL" />
+          )}
         </div>
       </div>
     </>

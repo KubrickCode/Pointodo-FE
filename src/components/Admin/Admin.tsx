@@ -8,7 +8,7 @@ const Admin: FC = () => {
   const [tab, setTab] = useState(0);
 
   useEffect(() => {
-    if (user?.role !== ("MASTER" || "ADMIN")) {
+    if (user?.role !== "MASTER" && user?.role !== "ADMIN") {
       location.href = "/";
     }
   }, [user]);
