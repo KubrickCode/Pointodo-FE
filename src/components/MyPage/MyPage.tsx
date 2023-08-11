@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import SideBar from "../SideBar/SideBar";
 import MyBadge from "./Badge/MyBadge";
 import MySetting from "./Setting/MySetting";
+import PointsLogs from "./Point/Point";
 
 const MyPage: FC = () => {
   const [tab, setTab] = useState(0);
@@ -12,6 +13,7 @@ const MyPage: FC = () => {
         <SideBar menu={menu} tab={tab} setTab={setTab} />
         {tab === 0 && <MyBadge />}
         {tab === 1 && <MySetting setTab={setTab} />}
+        {tab === 2 && <PointsLogs />}
       </div>
     </>
   );
