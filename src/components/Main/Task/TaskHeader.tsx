@@ -3,10 +3,10 @@ import { useModalStore } from "../../../store/modal.store";
 
 interface Props {
   tab: number;
-  setSorted: (sorted: string) => void;
+  setOrder: (sorted: string) => void;
 }
 
-const TaskHeader: FC<Props> = ({ tab, setSorted }) => {
+const TaskHeader: FC<Props> = ({ tab, setOrder }) => {
   const setModalState = useModalStore((state) => state.setModalState);
 
   return (
@@ -20,7 +20,7 @@ const TaskHeader: FC<Props> = ({ tab, setSorted }) => {
         </button>
         <select
           className="border px-3 py-2 ml-2 rounded outline-neutral-400"
-          onChange={(e) => setSorted(e.target.value)}
+          onChange={(e) => setOrder(e.target.value)}
         >
           <option value="importance">중요도 순</option>
           <option value="newest">최신 순</option>

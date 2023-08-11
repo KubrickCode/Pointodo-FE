@@ -1,9 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import moment from "moment";
+import Pagination from "../../Pagination/Pagination";
 
 interface Props {
   tab: number;
+  order: string;
 }
 
 interface PointLog {
@@ -17,11 +19,14 @@ interface PointLog {
   badgeName?: string;
 }
 
-const PointsLogs: FC<Props> = ({ tab }) => {
+const PointsLogs: FC<Props> = ({ tab, order }) => {
   const [logs, setLogs] = useState<PointLog[]>();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+
   const { data: earnedPointsLogs } = useQueryGet(
-    "/point/logs/earned",
+    `/point/logs/earned?page=${currentPage}&order=${order}`,
     "getEarnedPointsLogs",
     {
       enabled: tab === 0,
@@ -29,8 +34,24 @@ const PointsLogs: FC<Props> = ({ tab }) => {
   );
 
   const { data: spentPointsLogs } = useQueryGet(
-    "/point/logs/spent",
+    `/point/logs/spent?page=${currentPage}&order=${order}`,
     "getSpentPointsLogs",
+    {
+      enabled: tab === 1,
+    }
+  );
+
+  const { data: earnedPointTotalPage } = useQueryGet(
+    `/point/count/earned`,
+    "getEarnedPointTotalPage",
+    {
+      enabled: tab === 0,
+    }
+  );
+
+  const { data: spentPointTotalPage } = useQueryGet(
+    `/point/count/spent`,
+    "getSpentPointTotalPage",
     {
       enabled: tab === 1,
     }
@@ -39,11 +60,19 @@ const PointsLogs: FC<Props> = ({ tab }) => {
   useEffect(() => {
     if (tab === 0) {
       setLogs(earnedPointsLogs);
+      setTotalPage(earnedPointTotalPage?.totalPages);
     }
     if (tab === 1) {
       setLogs(spentPointsLogs);
+      setTotalPage(spentPointTotalPage?.totalPages);
     }
-  }, [tab, earnedPointsLogs, spentPointsLogs]);
+  }, [
+    tab,
+    earnedPointsLogs,
+    spentPointsLogs,
+    earnedPointTotalPage,
+    spentPointTotalPage,
+  ]);
 
   return (
     <>
@@ -83,6 +112,13 @@ const PointsLogs: FC<Props> = ({ tab }) => {
           ))}
         </tbody>
       </table>
+      <div className="my-5 w-full flex justify-center">
+        <Pagination
+          totalPage={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
     </>
   );
 };

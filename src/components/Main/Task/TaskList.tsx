@@ -23,7 +23,7 @@ export interface TaskEntity {
 
 interface Props {
   tab: number;
-  sorted: string;
+  order: string;
 }
 
 const initialUpdatedBody = {
@@ -32,7 +32,7 @@ const initialUpdatedBody = {
   importance: 0,
 };
 
-const TaskList: FC<Props> = ({ tab, sorted }) => {
+const TaskList: FC<Props> = ({ tab, order }) => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
 
@@ -40,7 +40,7 @@ const TaskList: FC<Props> = ({ tab, sorted }) => {
   const [totalPage, setTotalPage] = useState(1);
 
   const { data: dailyTasks } = useQueryGet(
-    `/task?taskType=DAILY&page=${currentPage}&order=${sorted}`,
+    `/task?taskType=DAILY&page=${currentPage}&order=${order}`,
     "getDailyTasks",
     {
       enabled: tab === 0,
@@ -48,7 +48,7 @@ const TaskList: FC<Props> = ({ tab, sorted }) => {
   );
 
   const { data: dueTasks } = useQueryGet(
-    `/task?taskType=DUE&page=${currentPage}&order=${sorted}`,
+    `/task?taskType=DUE&page=${currentPage}&order=${order}`,
     "getDueTasks",
     {
       enabled: tab === 1,
@@ -56,7 +56,7 @@ const TaskList: FC<Props> = ({ tab, sorted }) => {
   );
 
   const { data: freeTasks } = useQueryGet(
-    `/task?taskType=FREE&page=${currentPage}&order=${sorted}`,
+    `/task?taskType=FREE&page=${currentPage}&order=${order}`,
     "getFreeTasks",
     {
       enabled: tab === 2,

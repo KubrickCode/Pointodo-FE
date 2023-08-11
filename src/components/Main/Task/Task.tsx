@@ -7,12 +7,12 @@ interface Props {
 }
 
 const Task: FC<Props> = ({ tab }) => {
-  const [sorted, setSorted] = useState("importance");
+  const [order, setOrder] = useState("importance");
 
   return (
     <div className="w-full">
-      <TaskHeader tab={tab} setSorted={setSorted} />
-      <TaskList tab={tab} sorted={sorted} />
+      <TaskHeader tab={tab} setOrder={setOrder} />
+      <TaskList tab={tab} order={order} />
     </div>
   );
 };
