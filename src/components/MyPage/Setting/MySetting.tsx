@@ -41,7 +41,10 @@ const MySetting: FC<Props> = ({ setTab }) => {
         >
           비밀번호 변경
         </button>
-        <button className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white">
+        <button
+          className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white"
+          onClick={() => setModalState(true, "unregister")}
+        >
           회원 탈퇴
         </button>
       </div>
