@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import SideBar from "../SideBar/SideBar";
 import MyBadge from "./Badge/MyBadge";
+import MySetting from "./Setting/MySetting";
 
 const MyPage: FC = () => {
   const [tab, setTab] = useState(0);
@@ -10,6 +11,7 @@ const MyPage: FC = () => {
       <div className="flex flex-row">
         <SideBar menu={menu} tab={tab} setTab={setTab} />
         {tab === 0 && <MyBadge />}
+        {tab === 1 && <MySetting setTab={setTab} />}
       </div>
     </>
   );

@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from "react";
-import { useQueryGet } from "../../../hooks/useQueryApi";
+import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { BadgeEntity } from "../../Admin/Badge/AdminBadgeList";
 import { useUserStore } from "../../../store/user.store";
 import { useModalStore } from "../../../store/modal.store";
 import { useToastStore } from "../../../store/toast.store";
+import { useQueryClient } from "react-query";
 
 interface Props {
   tab: number;
@@ -16,6 +17,9 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
   const user = useUserStore((state) => state.user);
   const setModalState = useModalStore((state) => state.setModalState);
   const setToastState = useToastStore((state) => state.setToastState);
+
+  const queryClient = useQueryClient();
+  const { mutate } = useQueryMutate();
 
   const { data: currentPoints } = useQueryGet("/point/current", "getPoints");
 
@@ -54,6 +58,23 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
     } else {
       setModalState(true, "buyBadge", undefined, undefined, id);
     }
+  };
+
+  const handleSelect = async (badgeId: number) => {
+    mutate(
+      {
+        link: "/badge/selected",
+        method: "patch",
+        body: { badgeId },
+      },
+      {
+        onSuccess: async () => {
+          setToastState(true, "대표 뱃지가 변경되었습니다", "success");
+          await queryClient.invalidateQueries("getUser");
+          await queryClient.invalidateQueries("getUserBadgeList");
+        },
+      }
+    );
   };
 
   return (
@@ -96,7 +117,10 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
                   선택됨
                 </button>
               ) : (
-                <button className="border px-2 py-1 mx-1 rounded bg-pink-500 text-white">
+                <button
+                  className="border px-2 py-1 mx-1 rounded bg-pink-500 text-white"
+                  onClick={() => handleSelect(item.id)}
+                >
                   선택
                 </button>
               ))}
