@@ -60,8 +60,13 @@ const ProfileDropdown: FC = () => {
           </div>
           <ul className="py-2 text-sm text-gray-700">
             <li>
+              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
+                작업 페이지
+              </Link>
+            </li>
+            <li>
               <Link to="my-page" className="block px-4 py-2 hover:bg-gray-100">
-                마이페이지
+                마이 페이지
               </Link>
             </li>
             <li>

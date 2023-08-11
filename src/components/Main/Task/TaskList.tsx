@@ -1,5 +1,5 @@
 import { FC, ChangeEvent, useState, useEffect } from "react";
-import { useQueryMutate } from "../../../hooks/useQueryApi";
+import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
 import moment from "moment";
@@ -22,7 +22,6 @@ export interface TaskEntity {
 
 interface Props {
   tab: number;
-  data: TaskEntity[];
 }
 
 const initialUpdatedBody = {
@@ -31,9 +30,23 @@ const initialUpdatedBody = {
   importance: 0,
 };
 
-const TaskList: FC<Props> = ({ tab, data }) => {
+const TaskList: FC<Props> = ({ tab }) => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
+
+  const { data: dailyTasks } = useQueryGet("/task/daily", "getDailyTasks", {
+    enabled: tab === 0,
+  });
+
+  const { data: dueTasks } = useQueryGet("/task/due", "getDueTasks", {
+    enabled: tab === 1,
+  });
+
+  const { data: freeTasks } = useQueryGet("/task/free", "getFreeTasks", {
+    enabled: tab === 2,
+  });
+
+  const [taskList, setTaskList] = useState<TaskEntity[]>();
 
   const [dueDate, setDueDate] = useState(new Date());
 
@@ -48,6 +61,18 @@ const TaskList: FC<Props> = ({ tab, data }) => {
 
   const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
   const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
+
+  useEffect(() => {
+    if (tab === 0) {
+      setTaskList(dailyTasks);
+    }
+    if (tab === 1) {
+      setTaskList(dueTasks);
+    }
+    if (tab === 2) {
+      setTaskList(freeTasks);
+    }
+  }, [tab]);
 
   const handleCheckboxChange = (
     item: TaskEntity,
@@ -162,7 +187,7 @@ const TaskList: FC<Props> = ({ tab, data }) => {
         </tr>
       </thead>
       <tbody>
-        {data?.map((item) => (
+        {taskList?.map((item) => (
           <tr
             key={item.id}
             className={item.completion === 1 ? "line-through" : ""}

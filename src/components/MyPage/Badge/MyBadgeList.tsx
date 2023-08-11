@@ -10,9 +10,19 @@ interface Props {
   tab: number;
 }
 
+type UserBadgeList = number[];
+
+interface UserBadgeProgress {
+  badgeId: number;
+  progress: number;
+}
+
 const MyBadgeList: FC<Props> = ({ tab }) => {
   const [data, setData] = useState<BadgeEntity[]>([]);
-  const [userBadgeList, setUserBadgeList] = useState<Array<number>>([]);
+  const [userBadgeList, setUserBadgeList] = useState<UserBadgeList>([]);
+  const [userBadgeProgress, setUserBadgeProgress] = useState<
+    UserBadgeProgress[]
+  >([]);
 
   const user = useUserStore((state) => state.user);
   const setModalState = useModalStore((state) => state.setModalState);
@@ -28,6 +38,14 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
     "/badge/list",
     "getUserBadgeList"
   );
+  const { data: userBadgeProgressData } = useQueryGet(
+    "/badge/progress",
+    "getUserBadgeProgress"
+  );
+
+  useEffect(() => {
+    setUserBadgeProgress(userBadgeProgressData);
+  }, [userBadgeProgressData]);
 
   useEffect(() => {
     setUserBadgeList(
@@ -88,6 +106,25 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
             <h2 className="text-2xl my-3">{item.name}</h2>
           </div>
           <div className="mb-2">{item.description}</div>
+          {item.type === "ACHIEVEMENT" ? (
+            <div className="h-8">
+              진척도:{" "}
+              {userBadgeProgress?.filter((el) => el.badgeId === item.id)[0]
+                ?.progress || 0}{" "}
+              /{" "}
+              {(item.name === "일관성 뱃지1" && 7) ||
+                (item.name === "일관성 뱃지2" && 30) ||
+                (item.name === "일관성 뱃지3" && 365) ||
+                (item.name === "다양성 뱃지1" && 100) ||
+                (item.name === "다양성 뱃지2" && 100) ||
+                (item.name === "다양성 뱃지3" && 100) ||
+                (item.name === "생산성 뱃지1" && 10) ||
+                (item.name === "생산성 뱃지2" && 100) ||
+                (item.name === "생산성 뱃지3" && 500)}
+            </div>
+          ) : (
+            <div className="h-8 ">{"  "}</div>
+          )}
           <div>가격: {item?.price || "구매 불가"}</div>
           <div className="mt-2">
             {userBadgeList?.includes(item.id) || item.id === 1 ? (
