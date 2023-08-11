@@ -22,10 +22,10 @@ const TaskHeader: FC<Props> = ({ tab, setSorted }) => {
           className="border px-3 py-2 ml-2 rounded outline-neutral-400"
           onChange={(e) => setSorted(e.target.value)}
         >
-          <option value="중요도 순">중요도 순</option>
-          <option value="최신 순">최신 순</option>
-          <option value="오래된 순">오래된 순</option>
-          <option value="이름 순">이름 순</option>
+          <option value="importance">중요도 순</option>
+          <option value="newest">최신 순</option>
+          <option value="old">오래된 순</option>
+          <option value="name">이름 순</option>
         </select>
       </div>
     </>

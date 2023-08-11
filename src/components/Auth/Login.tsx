@@ -27,10 +27,10 @@ const Login: FC<AuthProps> = ({ setTab }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmitHandler)}>
-      <h1 className="text-xl">로그인</h1>
-      <div className="my-2">
-        <label className="block my-2">이메일</label>
+    <form onSubmit={handleSubmit(onSubmitHandler)} className="p-10">
+      <h1 className="text-xl text-center mb-5">로그인</h1>
+      <div className="my-4">
+        <label className="block my-2 text-sm">이메일</label>
         <input
           type="email"
           {...register("email", {
@@ -38,7 +38,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             maxLength: 255,
           })}
-          className="border p-1 rounded"
+          className="border p-1 rounded w-full outline-neutral-300"
         />
         {errors.email && errors.email.type === "required" && (
           <div>이메일을 입력해 주세요</div>
@@ -50,8 +50,8 @@ const Login: FC<AuthProps> = ({ setTab }) => {
           <div>이메일 허용길이를 초과하였습니다</div>
         )}
       </div>
-      <div className="my-2">
-        <label className="block my-2">비밀번호</label>
+      <div className="my-4">
+        <label className="block my-2 text-sm">비밀번호</label>
         <input
           type="password"
           {...register("password", {
@@ -59,7 +59,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
             pattern:
               /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,20}$/,
           })}
-          className="border p-1 rounded"
+          className="border p-1 rounded w-full outline-neutral-300"
         />
         {errors.password && errors.password.type === "required" && (
           <div>비밀번호를 입력해 주세요</div>
@@ -68,27 +68,32 @@ const Login: FC<AuthProps> = ({ setTab }) => {
           <div>비밀번호는 6~20자 영문,숫자,특수문자 혼합입니다</div>
         )}
       </div>
-      <button type="submit" className="border px-2 py-1 mr-2">
+      <button
+        type="submit"
+        className="border py-2 py-1 block w-full my-5 rounded-lg shadow-lg hover:bg-neutral-100 transition-all duration-500"
+      >
         로그인
       </button>
       <a
-        className="border px-2 py-1 mr-2"
+        className="border w-full my-5 rounded-lg py-2 shadow-lg bg-white hover:bg-neutral-100 transition-all duration-500 block text-center"
         href="http://localhost:3000/api/auth/google/callback"
       >
-        구글 로그인
+        <img src="/social/google.png" className="w-6 mr-2 inline" />
+        <span>Google 계정으로 로그인</span>
       </a>
       <a
-        className="border px-2 py-1 mr-2"
+        className="w-full my-5 rounded-lg py-2 shadow-lg bg-[#FEE500] hover:brightness-90 transition-all duration-500 block text-center"
         href="http://localhost:3000/api/auth/kakao/callback"
       >
-        카카오 로그인
+        <img src="/social/kakao.png" className="w-5 mr-2 mb-1 inline" />
+        <span>카카오 로그인</span>
       </a>
       <button
         type="button"
-        className="border px-2 py-1 mr-2"
+        className="text-blue-500 hover:text-blue-700 transition-all duration-500 float-right"
         onClick={() => setTab(1)}
       >
-        회원가입 하러가기
+        아직 계정이 없으신가요? 회원가입 하러가기
       </button>
     </form>
   );

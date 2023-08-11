@@ -13,7 +13,19 @@ const Auth: FC = () => {
     }
   }, [isLoggedIn]);
 
-  return tab === 0 ? <Login setTab={setTab} /> : <Register setTab={setTab} />;
+  return (
+    <div className="flex flex-row">
+      <div className="basis-1/2">
+        <video autoPlay muted playsInline>
+          <source src="/intro.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div className="basis-1/2">
+        {tab === 0 ? <Login setTab={setTab} /> : <Register setTab={setTab} />}
+      </div>
+    </div>
+  );
 };
 
 export default Auth;

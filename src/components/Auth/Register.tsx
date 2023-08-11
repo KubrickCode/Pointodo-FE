@@ -42,10 +42,10 @@ const Register: FC<AuthProps> = ({ setTab }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmitHandler)}>
-      <h1 className="text-xl">회원가입</h1>
-      <div className="my-2">
-        <label className="block my-2">이메일</label>
+    <form onSubmit={handleSubmit(onSubmitHandler)} className="p-10">
+      <h1 className="text-xl text-center mb-5">회원가입</h1>
+      <div className="my-4">
+        <label className="block my-2 text-sm">이메일</label>
         <input
           type="email"
           {...register("email", {
@@ -53,7 +53,7 @@ const Register: FC<AuthProps> = ({ setTab }) => {
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             maxLength: 255,
           })}
-          className="border p-1 rounded"
+          className="border p-1 rounded w-full outline-neutral-300"
         />
         {errors.email && errors.email.type === "required" && (
           <div>이메일을 입력해 주세요</div>
@@ -65,8 +65,8 @@ const Register: FC<AuthProps> = ({ setTab }) => {
           <div>이메일 허용길이를 초과하였습니다</div>
         )}
       </div>
-      <div className="my-2">
-        <label className="block my-2">비밀번호</label>
+      <div className="my-4">
+        <label className="block my-2 text-sm">비밀번호</label>
         <input
           type="password"
           {...register("password", {
@@ -74,7 +74,7 @@ const Register: FC<AuthProps> = ({ setTab }) => {
             pattern:
               /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,20}$/,
           })}
-          className="border p-1 rounded"
+          className="border p-1 rounded w-full outline-neutral-300"
         />
         {errors.password && errors.password.type === "required" && (
           <div>비밀번호를 입력해 주세요</div>
@@ -83,15 +83,15 @@ const Register: FC<AuthProps> = ({ setTab }) => {
           <div>비밀번호는 6~20자 영문,숫자,특수문자 혼합입니다</div>
         )}
       </div>
-      <div className="my-2">
-        <label className="block my-2">비밀번호 확인</label>
+      <div className="my-4">
+        <label className="block my-2 text-sm">비밀번호 확인</label>
         <input
           type="password"
           {...register("confirmPassword", {
             required: true,
             validate: (value) => value === watch("password"),
           })}
-          className="border p-1 rounded"
+          className="border p-1 rounded w-full outline-neutral-300"
         />
         {errors.confirmPassword &&
           errors.confirmPassword.type === "required" && (
@@ -102,9 +102,14 @@ const Register: FC<AuthProps> = ({ setTab }) => {
             <div>비밀번호가 일치하지 않습니다</div>
           )}
       </div>
-      <button className="border px-2 py-1 mr-2">회원가입</button>
-      <button className="border px-2 py-1" onClick={() => setTab(0)}>
-        로그인 하러가기
+      <button className="border py-2 py-1 block w-full my-5 rounded-lg shadow-lg hover:bg-neutral-100 transition-all duration-500">
+        회원가입
+      </button>
+      <button
+        className="text-blue-500 hover:text-blue-700 transition-all duration-500 float-right"
+        onClick={() => setTab(0)}
+      >
+        이미 계정이 있으신가요? 로그인 하러가기
       </button>
     </form>
   );

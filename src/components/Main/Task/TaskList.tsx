@@ -7,6 +7,7 @@ import DatePicker from "react-datepicker";
 import { ko } from "date-fns/esm/locale";
 import "react-datepicker/dist/react-datepicker.css";
 import { useModalStore } from "../../../store/modal.store";
+import Pagination from "../../Pagination/Pagination";
 
 export interface TaskEntity {
   id: number;
@@ -22,6 +23,7 @@ export interface TaskEntity {
 
 interface Props {
   tab: number;
+  sorted: string;
 }
 
 const initialUpdatedBody = {
@@ -30,21 +32,60 @@ const initialUpdatedBody = {
   importance: 0,
 };
 
-const TaskList: FC<Props> = ({ tab }) => {
+const TaskList: FC<Props> = ({ tab, sorted }) => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
 
-  const { data: dailyTasks } = useQueryGet("/task/daily", "getDailyTasks", {
-    enabled: tab === 0,
-  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
 
-  const { data: dueTasks } = useQueryGet("/task/due", "getDueTasks", {
-    enabled: tab === 1,
-  });
+  const { data: dailyTasks } = useQueryGet(
+    `/task?taskType=DAILY&page=${currentPage}&order=${sorted}`,
+    "getDailyTasks",
+    {
+      enabled: tab === 0,
+    }
+  );
 
-  const { data: freeTasks } = useQueryGet("/task/free", "getFreeTasks", {
-    enabled: tab === 2,
-  });
+  const { data: dueTasks } = useQueryGet(
+    `/task?taskType=DUE&page=${currentPage}&order=${sorted}`,
+    "getDueTasks",
+    {
+      enabled: tab === 1,
+    }
+  );
+
+  const { data: freeTasks } = useQueryGet(
+    `/task?taskType=FREE&page=${currentPage}&order=${sorted}`,
+    "getFreeTasks",
+    {
+      enabled: tab === 2,
+    }
+  );
+
+  const { data: dailyTotalPage } = useQueryGet(
+    "/task/count/daily",
+    "getDailyTotalPage",
+    {
+      enabled: tab === 0,
+    }
+  );
+
+  const { data: dueTotalPage } = useQueryGet(
+    "/task/count/due",
+    "getDueTotalPage",
+    {
+      enabled: tab === 1,
+    }
+  );
+
+  const { data: freeTotalPage } = useQueryGet(
+    "/task/count/free",
+    "getFreeTotalPage",
+    {
+      enabled: tab === 2,
+    }
+  );
 
   const [taskList, setTaskList] = useState<TaskEntity[]>();
 
@@ -65,14 +106,25 @@ const TaskList: FC<Props> = ({ tab }) => {
   useEffect(() => {
     if (tab === 0) {
       setTaskList(dailyTasks);
+      setTotalPage(dailyTotalPage?.totalPages);
     }
     if (tab === 1) {
       setTaskList(dueTasks);
+      setTotalPage(dueTotalPage?.totalPages);
     }
     if (tab === 2) {
       setTaskList(freeTasks);
+      setTotalPage(freeTotalPage?.totalPages);
     }
-  }, [tab, dailyTasks, dueTasks, freeTasks]);
+  }, [
+    tab,
+    dailyTasks,
+    dueTasks,
+    freeTasks,
+    dailyTotalPage,
+    dueTotalPage,
+    freeTotalPage,
+  ]);
 
   const handleCheckboxChange = (
     item: TaskEntity,
@@ -164,193 +216,207 @@ const TaskList: FC<Props> = ({ tab }) => {
   };
 
   return (
-    <table className="table-fixed w-full">
-      <thead className="border-b p-5">
-        <tr>
-          <th className="p-5 text-center border-r w-[10%]">완료</th>
-          <th
-            className={`p-5 text-center border-r w-[${
-              tab === 1 ? "20" : "30"
-            }%]`}
-          >
-            작업명
-          </th>
-          <th
-            className={`p-5 text-center border-r w-[${
-              tab === 1 ? "20" : "30"
-            }%]`}
-          >
-            작업 설명
-          </th>
-          <th className="p-5 text-center border-l w-[10%]">중요도</th>
-          {tab === 1 && (
-            <th className="p-5 text-center border-l w-[20%]">작업 기한</th>
-          )}
-          <th className="p-5 text-center border-l w-[20%]">수정/삭제</th>
-        </tr>
-      </thead>
-      <tbody>
-        {taskList?.map((item) => (
-          <tr
-            key={item.id}
-            className={item.completion === 1 ? "line-through" : ""}
-          >
-            <td className="p-5 text-center border-r w-[10%] ">
-              <div className="flex items-center justify-center mb-4">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
-                  defaultChecked={item.completion === 0 ? false : true}
-                  onChange={(e) => handleCheckboxChange(item, e)}
-                />
-              </div>
-            </td>
-            <td
+    <div>
+      <table className="table-fixed w-full">
+        <thead className="border-b p-5">
+          <tr>
+            <th className="p-5 text-center border-r w-[10%]">완료</th>
+            <th
               className={`p-5 text-center border-r w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
-              {updatedState.state && updatedState.id === item.id ? (
-                <input
-                  type="text"
-                  className="border rounded p-1"
-                  value={updatedBody.name}
-                  required
-                  minLength={1}
-                  maxLength={20}
-                  onChange={(e) =>
-                    setUpdatedBody({ ...updatedBody, name: e.target.value })
-                  }
-                />
-              ) : (
-                <span className="break-all">{item.name}</span>
-              )}
-            </td>
-
-            <td
+              작업명
+            </th>
+            <th
               className={`p-5 text-center border-r w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
-              {updatedState.state && updatedState.id === item.id ? (
-                <textarea
-                  className="border rounded p-1"
-                  value={updatedBody.description || ""}
-                  maxLength={500}
-                  onChange={(e) =>
-                    setUpdatedBody({
-                      ...updatedBody,
-                      description: e.target.value,
-                    })
-                  }
-                />
-              ) : (
-                <span className="break-all">
-                  {item.description || "설명이 없습니다"}
-                </span>
-              )}
-            </td>
-            <td className="p-5 text-center border-l w-[10%]">
-              {updatedState.state && updatedState.id === item.id ? (
-                <select
-                  className="w-full border p-1 rounded outline-neutral-400"
-                  value={updatedBody.importance}
-                  onChange={(e) =>
-                    setUpdatedBody({
-                      ...updatedBody,
-                      importance: Number(e.target.value),
-                    })
-                  }
-                >
-                  <option value={3}>덜 중요</option>
-                  <option value={2}>보통</option>
-                  <option value={1}>매우 중요</option>
-                </select>
-              ) : (
-                <span>
-                  {item.importance === 1
-                    ? "매우 중요"
-                    : item.importance === 2
-                    ? "보통"
-                    : "덜 중요"}
-                </span>
-              )}
-            </td>
+              작업 설명
+            </th>
+            <th className="p-5 text-center border-l w-[10%]">중요도</th>
             {tab === 1 && (
-              <td className="p-5 text-center border-l w-[10%]">
+              <th className="p-5 text-center border-l w-[20%]">작업 기한</th>
+            )}
+            <th className="p-5 text-center border-l w-[20%]">수정/삭제</th>
+          </tr>
+        </thead>
+        <tbody>
+          {taskList?.map((item) => (
+            <tr
+              key={item.id}
+              className={item.completion === 1 ? "line-through" : ""}
+            >
+              <td className="p-5 text-center border-r w-[10%] ">
+                <div className="flex items-center justify-center mb-4">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    defaultChecked={item.completion === 0 ? false : true}
+                    onChange={(e) => handleCheckboxChange(item, e)}
+                  />
+                </div>
+              </td>
+              <td
+                className={`p-5 text-center border-r w-[${
+                  tab === 1 ? "20" : "30"
+                }%]`}
+              >
                 {updatedState.state && updatedState.id === item.id ? (
-                  <div className="border p-1 rounded">
-                    <DatePicker
-                      locale={ko}
-                      selected={dueDate}
-                      onChange={(date) => setDueDate(date!)}
-                      dateFormat="yyyy-MM-dd"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    className="border rounded p-1"
+                    value={updatedBody.name}
+                    required
+                    minLength={1}
+                    maxLength={20}
+                    onChange={(e) =>
+                      setUpdatedBody({ ...updatedBody, name: e.target.value })
+                    }
+                  />
                 ) : (
-                  <span>{`${moment
-                    .utc(item.occurredAt)
-                    .format("YYYY-MM-DD")} ~ ${item.dueDate}`}</span>
+                  <span className="break-all">{item.name}</span>
                 )}
               </td>
-            )}
-            <td className="p-5 text-center border-l w-[20%]">
-              {updatedState.state && updatedState.id === item.id ? (
-                <>
-                  <button
-                    className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500"
-                    onClick={() => handleUpdate(item.id, item.taskType)}
-                  >
-                    완료
-                  </button>
-                  <button
-                    className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500"
-                    onClick={() => {
-                      setUpdatedState({
-                        ...updatedState,
-                        state: false,
-                        id: 0,
-                      });
-                    }}
-                  >
-                    취소
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400"
-                    onClick={() => {
-                      setUpdatedState({
-                        ...updatedState,
-                        state: true,
-                        id: item.id,
-                      });
+
+              <td
+                className={`p-5 text-center border-r w-[${
+                  tab === 1 ? "20" : "30"
+                }%]`}
+              >
+                {updatedState.state && updatedState.id === item.id ? (
+                  <textarea
+                    className="border rounded p-1"
+                    value={updatedBody.description || ""}
+                    maxLength={500}
+                    onChange={(e) =>
                       setUpdatedBody({
                         ...updatedBody,
-                        name: item.name,
-                        description: item.description,
-                        importance: item.importance,
-                      });
-                    }}
-                  >
-                    수정
-                  </button>
-                  <button
-                    className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400"
-                    onClick={() =>
-                      setModalState(true, "deleteTask", item.id, item.taskType)
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                ) : (
+                  <span className="break-all">
+                    {item.description || "설명이 없습니다"}
+                  </span>
+                )}
+              </td>
+              <td className="p-5 text-center border-l w-[10%]">
+                {updatedState.state && updatedState.id === item.id ? (
+                  <select
+                    className="w-full border p-1 rounded outline-neutral-400"
+                    value={updatedBody.importance}
+                    onChange={(e) =>
+                      setUpdatedBody({
+                        ...updatedBody,
+                        importance: Number(e.target.value),
+                      })
                     }
                   >
-                    삭제
-                  </button>
-                </>
+                    <option value={3}>덜 중요</option>
+                    <option value={2}>보통</option>
+                    <option value={1}>매우 중요</option>
+                  </select>
+                ) : (
+                  <span>
+                    {item.importance === 1
+                      ? "매우 중요"
+                      : item.importance === 2
+                      ? "보통"
+                      : "덜 중요"}
+                  </span>
+                )}
+              </td>
+              {tab === 1 && (
+                <td className="p-5 text-center border-l w-[10%]">
+                  {updatedState.state && updatedState.id === item.id ? (
+                    <div className="border p-1 rounded">
+                      <DatePicker
+                        locale={ko}
+                        selected={dueDate}
+                        onChange={(date) => setDueDate(date!)}
+                        dateFormat="yyyy-MM-dd"
+                      />
+                    </div>
+                  ) : (
+                    <span>{`${moment
+                      .utc(item.occurredAt)
+                      .format("YYYY-MM-DD")} ~ ${item.dueDate}`}</span>
+                  )}
+                </td>
               )}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+              <td className="p-5 text-center border-l w-[20%]">
+                {updatedState.state && updatedState.id === item.id ? (
+                  <>
+                    <button
+                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500"
+                      onClick={() => handleUpdate(item.id, item.taskType)}
+                    >
+                      완료
+                    </button>
+                    <button
+                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500"
+                      onClick={() => {
+                        setUpdatedState({
+                          ...updatedState,
+                          state: false,
+                          id: 0,
+                        });
+                      }}
+                    >
+                      취소
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400"
+                      onClick={() => {
+                        setUpdatedState({
+                          ...updatedState,
+                          state: true,
+                          id: item.id,
+                        });
+                        setUpdatedBody({
+                          ...updatedBody,
+                          name: item.name,
+                          description: item.description,
+                          importance: item.importance,
+                        });
+                      }}
+                    >
+                      수정
+                    </button>
+                    <button
+                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400"
+                      onClick={() =>
+                        setModalState(
+                          true,
+                          "deleteTask",
+                          item.id,
+                          item.taskType
+                        )
+                      }
+                    >
+                      삭제
+                    </button>
+                  </>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div className="my-5 w-full flex justify-center">
+        <Pagination
+          totalPage={totalPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
+    </div>
   );
 };
 
