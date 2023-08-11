@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { useUserStore } from "../../../store/user.store";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import { BadgeEntity } from "../../Admin/Badge/AdminBadgeList";
+import { useModalStore } from "../../../store/modal.store";
 
 interface Props {
   setTab(tab: number): void;
@@ -11,6 +12,8 @@ const MySetting: FC<Props> = ({ setTab }) => {
   const [myBadge, setMyBadge] = useState("");
 
   const user = useUserStore((state) => state.user);
+  const setModalState = useModalStore((state) => state.setModalState);
+
   const { data: badgeList } = useQueryGet("/badge/all", "getAllBadges");
 
   useEffect(() => {
@@ -32,7 +35,10 @@ const MySetting: FC<Props> = ({ setTab }) => {
         >
           대표 뱃지 수정
         </button>
-        <button className="border rounded px-2 py-1 my-2 w-40">
+        <button
+          className="border rounded px-2 py-1 my-2 w-40"
+          onClick={() => setModalState(true, "changePassword")}
+        >
           비밀번호 변경
         </button>
         <button className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white">
