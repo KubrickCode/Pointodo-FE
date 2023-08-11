@@ -15,7 +15,7 @@ const DeleteTask: FC = () => {
   const handleDelete = async () => {
     mutate(
       {
-        link: `/task?id=${modalTaskId}&taskType=${modalTaskType}`,
+        link: `/task/${modalTaskId}`,
         method: "delete",
       },
       {

@@ -43,7 +43,7 @@ const PointsLogs: FC<Props> = ({ tab }) => {
     if (tab === 1) {
       setLogs(spentPointsLogs);
     }
-  }, [tab]);
+  }, [tab, earnedPointsLogs, spentPointsLogs]);
 
   return (
     <>

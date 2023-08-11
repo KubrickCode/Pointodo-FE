@@ -21,7 +21,7 @@ const MySetting: FC<Props> = ({ setTab }) => {
       (item: BadgeEntity) => item.id === user?.selectedBadge
     );
 
-    setMyBadge(filteredBadgeList[0].iconLink);
+    setMyBadge(filteredBadgeList[0]?.iconLink);
   }, [user, badgeList]);
 
   return (
