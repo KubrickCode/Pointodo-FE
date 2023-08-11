@@ -27,7 +27,7 @@ const DeleteTask: FC = () => {
               ? "getDueTasks"
               : "getFreeTasks"
           );
-          setToastState(true, "작업이 삭제되었습니다");
+          setToastState(true, "작업이 삭제되었습니다", "danger");
           setModalState(false);
         },
       }

@@ -5,8 +5,12 @@ import { ToastStoreType } from "./store.type";
 const toastStore: StateCreator<ToastStoreType> = (set) => ({
   toastState: false,
   toastContent: "",
-  setToastState: (toastState: boolean, toastContent: string) =>
-    set((state) => ({ ...state, toastState, toastContent })),
+  toastType: "string",
+  setToastState: (
+    toastState: boolean,
+    toastContent: string,
+    toastType: string
+  ) => set((state) => ({ ...state, toastState, toastContent, toastType })),
 });
 
 export const useToastStore = create<ToastStoreType>(

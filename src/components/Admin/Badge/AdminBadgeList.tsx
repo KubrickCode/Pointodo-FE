@@ -98,7 +98,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                     state: false,
                     id: 0,
                   });
-                  setToastState(true, "뱃지가 수정되었습니다");
+                  setToastState(true, "뱃지가 수정되었습니다", "success");
                 },
               }
             );
@@ -132,7 +132,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
             state: false,
             id: 0,
           });
-          setToastState(true, "뱃지가 수정되었습니다");
+          setToastState(true, "뱃지가 수정되었습니다", "success");
         },
       }
     );
@@ -147,7 +147,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
       {
         onSuccess: async () => {
           await queryClient.invalidateQueries("getAdminBadgeList");
-          setToastState(true, "뱃지가 삭제되었습니다");
+          setToastState(true, "뱃지가 삭제되었습니다", "danger");
         },
       }
     );

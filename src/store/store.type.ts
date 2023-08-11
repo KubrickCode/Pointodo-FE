@@ -10,7 +10,9 @@ interface User {
 
 export interface UserStoreType {
   user: User;
+  isLoggedIn: boolean;
   setUser: (user: User) => void;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
 export interface ModalStoreType {
@@ -18,16 +20,23 @@ export interface ModalStoreType {
   modalContent: string;
   modalTaskId: number;
   modalTaskType: string;
+  modalBadgeId: number;
   setModalState(
     modalState: boolean,
     modalContent?: string,
     modalTaskId?: number,
-    modalTaskType?: string
+    modalTaskType?: string,
+    modalBadgeId?: number
   ): void;
 }
 
 export interface ToastStoreType {
   toastState: boolean;
   toastContent: string;
-  setToastState(toastState: boolean, toastContent: string): void;
+  toastType: string;
+  setToastState(
+    toastState: boolean,
+    toastContent: string,
+    toasType: string
+  ): void;
 }

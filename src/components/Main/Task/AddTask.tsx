@@ -64,7 +64,7 @@ const AddTask: FC<Props> = ({ taskType }) => {
               ? "getDueTasks"
               : "getFreeTasks"
           );
-          setToastState(true, "작업이 추가되었습니다");
+          setToastState(true, "작업이 추가되었습니다", "success");
         },
       }
     );

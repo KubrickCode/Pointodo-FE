@@ -66,7 +66,7 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
               {
                 onSuccess: async () => {
                   await queryClient.invalidateQueries("getAdminBadgeList");
-                  setToastState(true, "뱃지가 추가되었습니다");
+                  setToastState(true, "뱃지가 추가되었습니다", "success");
                 },
               }
             );

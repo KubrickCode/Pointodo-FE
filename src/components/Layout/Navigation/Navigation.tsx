@@ -1,17 +1,20 @@
 import { FC } from "react";
 import ProfileDropdown from "./ProfileDropdown";
 import { useQueryGet } from "../../../hooks/useQueryApi";
+import { useUserStore } from "../../../store/user.store";
 
 const Navigation: FC = () => {
-  const token = localStorage.getItem("accessToken");
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const { data: currentPoints } = useQueryGet("/point/current", "getPoints", {
-    enabled: !!token,
+    enabled: !!isLoggedIn,
   });
 
   return (
     <>
       <nav
-        className={`${!token && "hidden"} flex justify-between p-5 border-b`}
+        className={`${
+          !isLoggedIn && "hidden"
+        } flex justify-between p-5 border-b`}
       >
         <div>
           <button

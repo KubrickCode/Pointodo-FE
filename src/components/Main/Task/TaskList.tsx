@@ -69,7 +69,7 @@ const TaskList: FC<Props> = ({ tab, data }) => {
                 : "getFreeTasks"
             );
             await queryClient.invalidateQueries("getPoints");
-            setToastState(true, "작업이 완료되었습니다");
+            setToastState(true, "작업이 완료되었습니다", "success");
           },
         }
       );
@@ -89,7 +89,7 @@ const TaskList: FC<Props> = ({ tab, data }) => {
                 ? "getDueTasks"
                 : "getFreeTasks"
             );
-            setToastState(true, "작업 완료가 취소되었습니다");
+            setToastState(true, "작업 완료가 취소되었습니다", "success");
           },
         }
       );
@@ -129,7 +129,7 @@ const TaskList: FC<Props> = ({ tab, data }) => {
             state: false,
             id: 0,
           });
-          setToastState(true, "작업이 수정되었습니다");
+          setToastState(true, "작업이 수정되었습니다", "success");
         },
       }
     );

@@ -1,16 +1,17 @@
 import { FC, useEffect, useState } from "react";
 import SideBar from "../SideBar/SideBar";
 import Task from "./Task/Task";
+import { useUserStore } from "../../store/user.store";
 
 const Main: FC = () => {
-  const token = localStorage.getItem("accessToken");
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const [tab, setTab] = useState(0);
 
   useEffect(() => {
-    if (!token) {
+    if (!isLoggedIn) {
       location.href = "/auth";
     }
-  }, [token]);
+  }, [isLoggedIn]);
 
   return (
     <div className="flex flex-row">

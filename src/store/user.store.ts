@@ -12,7 +12,10 @@ const userStore: StateCreator<UserStoreType> = (set) => ({
     iconLink: "",
     createdAt: "",
   },
+  isLoggedIn: false,
   setUser: (user) => set((state) => ({ ...state, user })),
+  setIsLoggedIn: (isLoggedIn: boolean) =>
+    set((state) => ({ ...state, isLoggedIn })),
 });
 
 export const useUserStore = create<UserStoreType>(
