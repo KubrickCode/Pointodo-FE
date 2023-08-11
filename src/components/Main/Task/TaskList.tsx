@@ -72,7 +72,7 @@ const TaskList: FC<Props> = ({ tab }) => {
     if (tab === 2) {
       setTaskList(freeTasks);
     }
-  }, [tab]);
+  }, [tab, dailyTasks, dueTasks, freeTasks]);
 
   const handleCheckboxChange = (
     item: TaskEntity,
@@ -94,6 +94,9 @@ const TaskList: FC<Props> = ({ tab }) => {
                 : "getFreeTasks"
             );
             await queryClient.invalidateQueries("getPoints");
+            await queryClient.invalidateQueries("getAllBadges");
+            await queryClient.invalidateQueries("getUserBadgeProgress");
+            await queryClient.invalidateQueries("getEarnedPointsLogs");
             setToastState(true, "작업이 완료되었습니다", "success");
           },
         }
