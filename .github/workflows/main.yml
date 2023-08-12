@@ -24,7 +24,5 @@ jobs:
             git config --global user.email "kubrickcode@gmail.com"
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
-            export NVM_DIR="/root/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            /root/.nvm/versions/node/v18.17.1/bin/yarn install --immutable --immutable-cache --check-cache
-            /root/.nvm/versions/node/v18.17.1/bin/yarn build
+            yarn install --immutable --immutable-cache --check-cache
+            yarn build
