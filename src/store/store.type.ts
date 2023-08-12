@@ -21,12 +21,14 @@ export interface ModalStoreType {
   modalTaskId: number;
   modalTaskType: string;
   modalBadgeId: number;
+  modaluserId: string;
   setModalState(
     modalState: boolean,
     modalContent?: string,
     modalTaskId?: number,
     modalTaskType?: string,
-    modalBadgeId?: number
+    modalBadgeId?: number,
+    modaluserId?: string
   ): void;
 }
 

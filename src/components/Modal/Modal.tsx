@@ -6,6 +6,7 @@ import DeleteTask from "../Main/Task/DeleteTask";
 import BuyBadge from "../MyPage/Badge/BuyBadge";
 import ChangePassword from "../MyPage/Setting/ChangePassword";
 import Unregister from "../MyPage/Setting/Unregister";
+import AdminUserBadge from "../Admin/User/UserBadge/AdminUserBadge";
 
 const Modal: FC = () => {
   const modalState = useModalStore((state) => state.modalState);
@@ -38,6 +39,7 @@ const Modal: FC = () => {
           {modalContent === "buyBadge" && <BuyBadge />}
           {modalContent === "changePassword" && <ChangePassword />}
           {modalContent === "unregister" && <Unregister />}
+          {modalContent === "userBadgeList" && <AdminUserBadge />}
         </div>
       </div>
     </>

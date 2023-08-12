@@ -8,12 +8,14 @@ const modalStore: StateCreator<ModalStoreType> = (set) => ({
   modalTaskId: 0,
   modalTaskType: "",
   modalBadgeId: 0,
+  modaluserId: "",
   setModalState: (
     modalState: boolean,
     modalContent?: string,
     modalTaskId?: number,
     modalTaskType?: string,
-    modalBadgeId?: number
+    modalBadgeId?: number,
+    modaluserId?: string
   ) =>
     set((state) => ({
       ...state,
@@ -22,6 +24,7 @@ const modalStore: StateCreator<ModalStoreType> = (set) => ({
       modalTaskId,
       modalTaskType,
       modalBadgeId,
+      modaluserId,
     })),
 });
 

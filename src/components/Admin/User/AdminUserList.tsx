@@ -2,6 +2,7 @@ import { FC, useState, useEffect } from "react";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import moment from "moment";
 import Pagination from "../../Pagination/Pagination";
+import { useModalStore } from "../../../store/modal.store";
 
 interface Props {
   tab: number;
@@ -23,6 +24,8 @@ const AdminUserList: FC<Props> = ({ tab }) => {
   const [totalPage, setTotalPage] = useState(1);
   const [provider, setProvider] = useState("ALL");
   const [dropDownState, setDropDownState] = useState<boolean[]>([]);
+
+  const setModalState = useModalStore((state) => state.setModalState);
 
   const { data: userListData } = useQueryGet(
     `/admin/user/list?page=${currentPage}&order=${order}&provider=${provider}`,
@@ -123,14 +126,26 @@ const AdminUserList: FC<Props> = ({ tab }) => {
                   </svg>
                 </button>
                 <ul
-                  className={`absolute right-18 top-14 border bg-white z-50 ${
+                  className={`absolute right-18 top-14 border bg-white z-10 ${
                     dropDownState[index] ? "block" : "hidden"
                   }`}
                 >
                   <li className="px-4 py-1 border-b cursor-pointer text-red-500 hover:bg-neutral-100">
                     유저 삭제
                   </li>
-                  <li className="px-4 py-1 border-b cursor-pointer hover:bg-neutral-100">
+                  <li
+                    className="px-4 py-1 border-b cursor-pointer hover:bg-neutral-100"
+                    onClick={() =>
+                      setModalState(
+                        true,
+                        "userBadgeList",
+                        undefined,
+                        undefined,
+                        undefined,
+                        item.id
+                      )
+                    }
+                  >
                     뱃지 목록
                   </li>
                   <li className="px-4 py-1 border-b cursor-pointer hover:bg-neutral-100">
