@@ -19,9 +19,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           script: |
+            sudo su
             cd /home/ubuntu/Pointodo-FE
-            git config user.name "KubrickCode"
-            git config user.email "kubrickcode@gmail.com"
             git pull origin main
             yarn install --immutable --immutable-cache --check-cache
             yarn build
