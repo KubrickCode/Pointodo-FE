@@ -19,7 +19,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           script: |
-            sudo su
+            git config --global --add safe.directory /home/ubuntu/Pointodo-FE
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
             yarn install --immutable --immutable-cache --check-cache
