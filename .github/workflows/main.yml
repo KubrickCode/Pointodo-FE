@@ -25,5 +25,5 @@ jobs:
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
             sudo ln -s "$NVM_DIR/versions/node/v18.17.1/bin/yarn" "/usr/local/bin/yarn"
-            yarn install --immutable --immutable-cache --check-cache
-            yarn build
+            /usr/local/bin/yarn install --immutable --immutable-cache --check-cache
+            /usr/local/bin/yarn build
