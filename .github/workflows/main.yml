@@ -24,6 +24,9 @@ jobs:
             git config --global user.email "kubrickcode@gmail.com"
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
-            source ~/.nvm/nvm.sh
-            npm install
-            npm run build
+
+      - name: Install dependencies
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Build
+        run: yarn build
