@@ -1,5 +1,5 @@
-import { FC, useState, useEffect } from "react";
-import TaskList, { TaskEntity } from "./TaskList";
+import { FC, useState } from "react";
+import TaskList from "./TaskList";
 import TaskHeader from "./TaskHeader";
 
 interface Props {
