@@ -12,9 +12,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.5.2
 
-      - name: Setup yarn
-        run: npm install -g yarn
-
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -27,5 +24,6 @@ jobs:
             git config --global user.email "kubrickcode@gmail.com"
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
+            source ~/.nvm/nvm.sh
             yarn install --immutable --immutable-cache --check-cache
             yarn build
