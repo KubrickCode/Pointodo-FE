@@ -24,5 +24,6 @@ jobs:
             git config --global user.email "kubrickcode@gmail.com"
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
+            sudo ln -s "$NVM_DIR/versions/node/v18.17.1/bin/yarn" "/usr/local/bin/yarn"
             yarn install --immutable --immutable-cache --check-cache
             yarn build
