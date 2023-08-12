@@ -25,5 +25,5 @@ jobs:
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
             source ~/.nvm/nvm.sh
-            yarn install --immutable --immutable-cache --check-cache
-            yarn build
+            npm install
+            npm run build
