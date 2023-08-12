@@ -22,8 +22,7 @@ jobs:
             git config --global --add safe.directory /home/ubuntu/Pointodo-FE
             git config --global user.name "KubrickCode"
             git config --global user.email "kubrickcode@gmail.com"
-            npm install -g yarn
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
-            yarn install --immutable --immutable-cache --check-cache
-            yarn build
+            /root/.nvm/versions/node/v18.17.1/bin/yarn install --immutable --immutable-cache --check-cache
+            /root/.nvm/versions/node/v18.17.1/bin/yarn build
