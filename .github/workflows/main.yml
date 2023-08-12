@@ -24,13 +24,5 @@ jobs:
             git config --global user.email "kubrickcode@gmail.com"
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
-
-      - name: Install dependencies
-        run: |
-          cd /home/ubuntu/Pointodo-FE
-          yarn install --immutable --immutable-cache --check-cache
-
-      - name: Build
-        run: |
-          cd /home/ubuntu/Pointodo-FE
-          yarn build
+            yarn install --immutable --immutable-cache --check-cache
+            yarn build
