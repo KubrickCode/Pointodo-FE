@@ -12,6 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.5.2
 
+      - name: Setup yarn
+        run: npm install -g yarn
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
