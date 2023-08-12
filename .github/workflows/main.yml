@@ -26,7 +26,11 @@ jobs:
             git pull origin main
 
       - name: Install dependencies
-        run: yarn install --immutable --immutable-cache --check-cache
+        run: |
+          cd /home/ubuntu/Pointodo-FE
+          yarn install --immutable --immutable-cache --check-cache
 
       - name: Build
-        run: yarn build
+        run: |
+          cd /home/ubuntu/Pointodo-FE
+          yarn build
