@@ -20,6 +20,9 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           script: |
             git config --global --add safe.directory /home/ubuntu/Pointodo-FE
+            git config --global user.name "KubrickCode"
+            git config --global user.email "kubrickcode@gmail.com"
+            npm install -g yarn
             cd /home/ubuntu/Pointodo-FE
             git pull origin main
             yarn install --immutable --immutable-cache --check-cache
