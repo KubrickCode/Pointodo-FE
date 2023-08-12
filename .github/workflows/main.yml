@@ -12,29 +12,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3.5.2
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
-      - name: Pull and restart Docker Container
+      - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           key: ${{ secrets.EC2_SSH_KEY }}
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
-            docker rm -f pointodo-client
-            docker run -d --rm --name pointodo-client --network=pointodo-network -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/pointodo-client
+            cd /home/ubuntu/Pointodo-FE
+            git pull origin main
+            yarn install --immutable --immutable-cache --check-cache
+            yarn build
