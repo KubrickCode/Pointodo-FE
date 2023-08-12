@@ -18,7 +18,11 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (!error.response || error.response.status !== 401) {
+    if (
+      !error.response ||
+      (error.response.data.message !== "유효하지 않은 토큰입니다" &&
+        error.response.data.message !== "만료된 토큰입니다")
+    ) {
       throw error;
     }
 
@@ -50,10 +54,20 @@ export const useQueryGet = (link: string, key: string, queryOptions = {}) => {
   });
 };
 
-export const useQueryMutate = (link: string, method: MethodType) => {
+export const useQueryMutate = () => {
   const mutation = useMutation(
-    async (req: { body?: object; config?: AxiosRequestConfig }) => {
-      const response = await api[method](link, req?.body, req?.config);
+    async ({
+      link,
+      body,
+      method,
+      config,
+    }: {
+      link: string;
+      body?: object;
+      method: MethodType;
+      config?: AxiosRequestConfig;
+    }) => {
+      const response = await api[method](link, body, config);
       return response.data;
     }
   );

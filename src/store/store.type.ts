@@ -2,42 +2,43 @@ interface User {
   id: string;
   email: string;
   provider: "LOCAL" | "GOOGLE" | "KAKAO";
-  role: "USER" | "ADMIN";
-  selectedBadge: string;
+  role: "USER" | "ADMIN" | "MASTER";
+  selectedBadge: number;
+  iconLink: string;
   createdAt: string;
 }
 
 export interface UserStoreType {
   user: User;
+  isLoggedIn: boolean;
   setUser: (user: User) => void;
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
-export interface SurveyStoreType {
-  surveyState: boolean | "complete";
-  surveyType: "FrontEnd" | "BackEnd";
-  surveyResponse: number[];
-  setSurveyState(surveyState: boolean | "complete"): void;
-  setSurveyType(surveyType: "FrontEnd" | "BackEnd"): void;
-  setSurveyResponse(surveyResponse: number[]): void;
+export interface ModalStoreType {
+  modalState: boolean;
+  modalContent: string;
+  modalTaskId: number;
+  modalTaskType: string;
+  modalBadgeId: number;
+  modaluserId: string;
+  setModalState(
+    modalState: boolean,
+    modalContent?: string,
+    modalTaskId?: number,
+    modalTaskType?: string,
+    modalBadgeId?: number,
+    modaluserId?: string
+  ): void;
 }
 
-export interface AuthModalStoreType {
-  authModalState: boolean;
-  setAuthModalState(authModalState: boolean): void;
-}
-
-export interface SettingModalStoreType {
-  settingModalState: boolean;
-  setSettingModalState(settingModalState: boolean): void;
-}
-
-export interface ConfirmModalStoreType {
-  confirmModalState: boolean;
-  confirmType: string;
-  selectedSurvey: number;
-  setConfirmModalState(
-    confirmModalState: boolean,
-    confirmType: string,
-    selectedSurvey?: number
+export interface ToastStoreType {
+  toastState: boolean;
+  toastContent: string;
+  toastType: string;
+  setToastState(
+    toastState: boolean,
+    toastContent: string,
+    toasType: string
   ): void;
 }

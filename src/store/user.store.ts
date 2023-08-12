@@ -8,10 +8,14 @@ const userStore: StateCreator<UserStoreType> = (set) => ({
     email: "",
     provider: "LOCAL",
     role: "USER",
-    selectedBadge: "",
+    selectedBadge: 1,
+    iconLink: "",
     createdAt: "",
   },
+  isLoggedIn: false,
   setUser: (user) => set((state) => ({ ...state, user })),
+  setIsLoggedIn: (isLoggedIn: boolean) =>
+    set((state) => ({ ...state, isLoggedIn })),
 });
 
 export const useUserStore = create<UserStoreType>(
