@@ -8,6 +8,7 @@ import { ko } from "date-fns/esm/locale";
 import "react-datepicker/dist/react-datepicker.css";
 import { useModalStore } from "../../../store/modal.store";
 import Pagination from "../../Pagination/Pagination";
+import { useUserStore } from "../../../store/user.store";
 
 export interface TaskEntity {
   id: number;
@@ -34,6 +35,7 @@ const initialUpdatedBody = {
 
 const TaskList: FC<Props> = ({ tab, order }) => {
   const { mutate } = useQueryMutate();
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const queryClient = useQueryClient();
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,7 +45,7 @@ const TaskList: FC<Props> = ({ tab, order }) => {
     `/task?taskType=DAILY&page=${currentPage}&order=${order}`,
     "getDailyTasks",
     {
-      enabled: tab === 0,
+      enabled: tab === 0 && isLoggedIn,
     }
   );
 
@@ -51,7 +53,7 @@ const TaskList: FC<Props> = ({ tab, order }) => {
     `/task?taskType=DUE&page=${currentPage}&order=${order}`,
     "getDueTasks",
     {
-      enabled: tab === 1,
+      enabled: tab === 1 && isLoggedIn,
     }
   );
 
@@ -59,7 +61,7 @@ const TaskList: FC<Props> = ({ tab, order }) => {
     `/task?taskType=FREE&page=${currentPage}&order=${order}`,
     "getFreeTasks",
     {
-      enabled: tab === 2,
+      enabled: tab === 2 && isLoggedIn,
     }
   );
 
@@ -67,7 +69,7 @@ const TaskList: FC<Props> = ({ tab, order }) => {
     "/task/count/daily",
     "getDailyTotalPage",
     {
-      enabled: tab === 0,
+      enabled: tab === 0 && isLoggedIn,
     }
   );
 
@@ -75,7 +77,7 @@ const TaskList: FC<Props> = ({ tab, order }) => {
     "/task/count/due",
     "getDueTotalPage",
     {
-      enabled: tab === 1,
+      enabled: tab === 1 && isLoggedIn,
     }
   );
 
@@ -83,7 +85,7 @@ const TaskList: FC<Props> = ({ tab, order }) => {
     "/task/count/free",
     "getFreeTotalPage",
     {
-      enabled: tab === 2,
+      enabled: tab === 2 && isLoggedIn,
     }
   );
 
