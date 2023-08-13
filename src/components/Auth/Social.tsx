@@ -9,11 +9,7 @@ const Social: FC = () => {
       location.href = "/";
     }
   }, [data]);
-  return (
-    <>
-      <div>123</div>
-    </>
-  );
+  return <></>;
 };
 
 export default Social;
