@@ -76,14 +76,14 @@ const Login: FC<AuthProps> = ({ setTab }) => {
       </button>
       <a
         className="border w-full my-5 rounded-lg py-2 shadow-lg bg-white hover:bg-neutral-100 transition-all duration-500 block text-center"
-        href="http://localhost:3000/api/auth/google/callback"
+        href="/api/auth/google/callback"
       >
         <img src="/social/google.png" className="w-6 mr-2 inline" />
         <span>Google 계정으로 로그인</span>
       </a>
       <a
         className="w-full my-5 rounded-lg py-2 shadow-lg bg-[#FEE500] hover:brightness-90 transition-all duration-500 block text-center"
-        href="http://localhost:3000/api/auth/kakao/callback"
+        href="/api/auth/kakao/callback"
       >
         <img src="/social/kakao.png" className="w-5 mr-2 mb-1 inline" />
         <span>카카오 로그인</span>
