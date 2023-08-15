@@ -38,6 +38,7 @@ const AdminUserBadge: FC = () => {
       );
 
       setFilteredBadgeList(filteredList);
+      setSelectedBadge(filteredList[0].id);
     }
   }, [allBadgeList, userBadgeList]);
 
@@ -105,7 +106,7 @@ const AdminUserBadge: FC = () => {
             <div className="float-right">
               <button
                 className={`rounded px-1 bg-red-500 text-white ${
-                  item.badgeId === 1 && "bg-red-100"
+                  item.badgeId === 1 && "hidden"
                 }`}
                 onClick={() => handleDeleteUserBadge(item.badgeId!)}
                 disabled={item.badgeId === 1}
