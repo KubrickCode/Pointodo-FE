@@ -5,12 +5,12 @@ import Toast from "../Toast/Toast";
 
 const Layout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <>
+    <div className="h-screen">
       <Navigation />
       <Modal />
       <Toast />
       {children}
-    </>
+    </div>
   );
 };
 
