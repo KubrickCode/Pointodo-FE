@@ -26,6 +26,10 @@ api.interceptors.response.use(
       throw error;
     }
 
+    if (error.response.status === 500) {
+      alert("서버 내부 오류 발생");
+    }
+
     const response = await api.get("/auth/refresh");
     if (!response.data.accessToken) {
       localStorage.removeItem("persistStore");
