@@ -272,7 +272,13 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
           {taskList?.map((item) => (
             <tr
               key={item.id}
-              className={item.completion === 1 ? "line-through" : ""}
+              className={
+                item.completion === 1 ||
+                (new Date(moment.utc(item.dueDate).format("YYYY-MM-DD")) ||
+                  new Date()) < new Date()
+                  ? "line-through"
+                  : ""
+              }
             >
               <td className="p-2 sm:p-5 text-center border-r w-[10%] ">
                 <div className="flex items-center justify-center mb-4">
@@ -281,6 +287,11 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                     defaultChecked={item.completion === 0 ? false : true}
                     onChange={(e) => handleCheckboxChange(item, e)}
+                    disabled={
+                      (new Date(
+                        moment.utc(item.dueDate).format("YYYY-MM-DD")
+                      ) || new Date()) < new Date()
+                    }
                   />
                 </div>
               </td>
