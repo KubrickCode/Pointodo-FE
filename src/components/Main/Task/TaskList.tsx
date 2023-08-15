@@ -25,6 +25,7 @@ export interface TaskEntity {
 interface Props {
   tab: number;
   order: string;
+  checkedCompletion: boolean;
 }
 
 const initialUpdatedBody = {
@@ -33,7 +34,7 @@ const initialUpdatedBody = {
   importance: 0,
 };
 
-const TaskList: FC<Props> = ({ tab, order }) => {
+const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   const { mutate } = useQueryMutate();
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const queryClient = useQueryClient();
@@ -107,16 +108,34 @@ const TaskList: FC<Props> = ({ tab, order }) => {
 
   useEffect(() => {
     if (tab === 0) {
-      setTaskList(dailyTasks);
       setTotalPage(dailyTotalPage?.totalPages);
+      if (checkedCompletion) {
+        setTaskList(
+          dailyTasks?.filter((item: TaskEntity) => item.completion !== 1)
+        );
+      } else {
+        setTaskList(dailyTasks);
+      }
     }
     if (tab === 1) {
-      setTaskList(dueTasks);
       setTotalPage(dueTotalPage?.totalPages);
+      if (checkedCompletion) {
+        setTaskList(
+          dueTasks?.filter((item: TaskEntity) => item.completion !== 1)
+        );
+      } else {
+        setTaskList(dueTasks);
+      }
     }
     if (tab === 2) {
-      setTaskList(freeTasks);
       setTotalPage(freeTotalPage?.totalPages);
+      if (checkedCompletion) {
+        setTaskList(
+          freeTasks?.filter((item: TaskEntity) => item.completion !== 1)
+        );
+      } else {
+        setTaskList(freeTasks);
+      }
     }
   }, [
     tab,
@@ -126,6 +145,7 @@ const TaskList: FC<Props> = ({ tab, order }) => {
     dailyTotalPage,
     dueTotalPage,
     freeTotalPage,
+    checkedCompletion,
   ]);
 
   const handleCheckboxChange = (
