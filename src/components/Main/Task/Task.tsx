@@ -8,10 +8,16 @@ interface Props {
 
 const Task: FC<Props> = ({ tab }) => {
   const [order, setOrder] = useState("importance");
+  const [checkedCompletion, setCheckedCompletion] = useState(true);
 
   return (
     <div className="w-full">
-      <TaskHeader tab={tab} setOrder={setOrder} />
+      <TaskHeader
+        tab={tab}
+        setOrder={setOrder}
+        checkedCompletion={checkedCompletion}
+        setCheckedCompletion={setCheckedCompletion}
+      />
       <TaskList tab={tab} order={order} />
     </div>
   );
