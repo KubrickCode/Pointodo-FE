@@ -18,7 +18,7 @@ const Task: FC<Props> = ({ tab }) => {
         checkedCompletion={checkedCompletion}
         setCheckedCompletion={setCheckedCompletion}
       />
-      <TaskList tab={tab} order={order} />
+      <TaskList tab={tab} order={order} checkedCompletion={checkedCompletion} />
     </div>
   );
 };
