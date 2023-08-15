@@ -240,28 +240,32 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   return (
     <div>
       <table className="table-fixed w-full">
-        <thead className="border-b p-5">
+        <thead className="border-b p-2 sm:p-5">
           <tr>
-            <th className="p-5 text-center border-r w-[10%]">완료</th>
+            <th className="p-2 sm:p-5 text-center border-r w-[10%]">완료</th>
             <th
-              className={`p-5 text-center border-r w-[${
+              className={`p-2 sm:p-5 text-center border-r w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업명
             </th>
             <th
-              className={`p-5 text-center border-r w-[${
+              className={`p-2 sm:p-5 text-center border-r w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업 설명
             </th>
-            <th className="p-5 text-center border-l w-[10%]">중요도</th>
+            <th className="p-2 sm:p-5 text-center border-l w-[10%]">중요도</th>
             {tab === 1 && (
-              <th className="p-5 text-center border-l w-[20%]">작업 기한</th>
+              <th className="p-2 sm:p-5 text-center border-l w-[20%]">
+                작업 기한
+              </th>
             )}
-            <th className="p-5 text-center border-l w-[20%]">수정/삭제</th>
+            <th className="p-2 sm:p-5 text-center border-l w-[20%]">
+              수정/삭제
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -270,7 +274,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
               key={item.id}
               className={item.completion === 1 ? "line-through" : ""}
             >
-              <td className="p-5 text-center border-r w-[10%] ">
+              <td className="p-2 sm:p-5 text-center border-r w-[10%] ">
                 <div className="flex items-center justify-center mb-4">
                   <input
                     type="checkbox"
@@ -281,14 +285,14 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 </div>
               </td>
               <td
-                className={`p-5 text-center border-r w-[${
+                className={`p-2 sm:p-5 text-center border-r w-[${
                   tab === 1 ? "20" : "30"
                 }%]`}
               >
                 {updatedState.state && updatedState.id === item.id ? (
                   <input
                     type="text"
-                    className="border rounded p-1"
+                    className="border rounded p-1 w-full"
                     value={updatedBody.name}
                     required
                     minLength={1}
@@ -303,13 +307,13 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
               </td>
 
               <td
-                className={`p-5 text-center border-r w-[${
+                className={`p-2 sm:p-5 text-center border-r w-[${
                   tab === 1 ? "20" : "30"
                 }%]`}
               >
                 {updatedState.state && updatedState.id === item.id ? (
                   <textarea
-                    className="border rounded p-1"
+                    className="border rounded p-1 w-full"
                     value={updatedBody.description || ""}
                     maxLength={500}
                     onChange={(e) =>
@@ -325,7 +329,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                   </span>
                 )}
               </td>
-              <td className="p-5 text-center border-l w-[10%]">
+              <td className="p-2 sm:p-5 text-center border-l w-[10%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <select
                     className="w-full border p-1 rounded outline-neutral-400"
@@ -337,22 +341,28 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                       })
                     }
                   >
-                    <option value={3}>덜 중요</option>
-                    <option value={2}>보통</option>
-                    <option value={1}>매우 중요</option>
+                    <option className="w-10" value={3}>
+                      하
+                    </option>
+                    <option className="w-10" value={2}>
+                      중
+                    </option>
+                    <option className="w-10" value={1}>
+                      상
+                    </option>
                   </select>
                 ) : (
                   <span>
                     {item.importance === 1
-                      ? "매우 중요"
+                      ? "상"
                       : item.importance === 2
-                      ? "보통"
-                      : "덜 중요"}
+                      ? "중"
+                      : "하"}
                   </span>
                 )}
               </td>
               {tab === 1 && (
-                <td className="p-5 text-center border-l w-[10%]">
+                <td className="p-2 sm:p-5 text-center border-l w-[10%]">
                   {updatedState.state && updatedState.id === item.id ? (
                     <div className="border p-1 rounded">
                       <DatePicker
@@ -369,7 +379,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                   )}
                 </td>
               )}
-              <td className="p-5 text-center border-l w-[20%]">
+              <td className="p-2 sm:p-5 text-center border-l w-[20%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <button

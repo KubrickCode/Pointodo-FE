@@ -20,7 +20,7 @@ const Navigation: FC = () => {
       >
         <div>
           <button
-            className="flex flex-row items-center"
+            className="flex flex-row items-center h-full"
             onClick={() => (location.href = "/")}
           >
             <h1 className="text-2xl mx-5 font-bold">Pointodo</h1>
@@ -48,7 +48,7 @@ const Navigation: FC = () => {
                 />
               </svg>
               <div
-                className={`absolute border bg-white p-4 rounded w-fit right-0 top-8 ${
+                className={`absolute border bg-white p-4 rounded w-fit right-[-50px] top-10 ${
                   !pointInfo && "hidden"
                 }`}
               >

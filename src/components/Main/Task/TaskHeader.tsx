@@ -40,7 +40,11 @@ const TaskHeader: FC<Props> = ({
           className="ml-2 flex items-center"
           onClick={() => setCheckedCompletion(!checkedCompletion)}
         >
-          <input type="checkbox" checked={checkedCompletion} />
+          <input
+            type="checkbox"
+            checked={checkedCompletion}
+            onChange={() => setCheckedCompletion(!checkedCompletion)}
+          />
           <label className="ml-1">완료 작업 숨기기</label>
         </div>
       </div>
