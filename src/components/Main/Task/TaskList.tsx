@@ -274,8 +274,9 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
               key={item.id}
               className={
                 item.completion === 1 ||
-                (new Date(moment.utc(item.dueDate).format("YYYY-MM-DD")) ||
-                  new Date()) < new Date()
+                moment(item.dueDate).isBefore(
+                  moment(new Date()).format("YYYY-MM-DD")
+                )
                   ? "line-through"
                   : ""
               }
@@ -287,11 +288,9 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                     defaultChecked={item.completion === 0 ? false : true}
                     onChange={(e) => handleCheckboxChange(item, e)}
-                    disabled={
-                      (new Date(
-                        moment.utc(item.dueDate).format("YYYY-MM-DD")
-                      ) || new Date()) < new Date()
-                    }
+                    disabled={moment(item.dueDate).isBefore(
+                      moment(new Date()).format("YYYY-MM-DD")
+                    )}
                   />
                 </div>
               </td>
