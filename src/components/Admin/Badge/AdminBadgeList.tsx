@@ -179,25 +179,29 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
   return (
     <>
       <table className="table-fixed w-full">
-        <thead className="border-b p-5">
+        <thead className="border-b p-1 sm:p-5">
           <tr>
-            <th className="p-5 text-center border-r w-[10%]">ID</th>
-            <th className="p-5 text-center border-r w-[20%]">아이콘</th>
-            <th className={`p-5 text-center border-r w-[20%]`}>뱃지명</th>
-            <th className={`p-5 text-center border-r w-[20%]`}>설명</th>
+            <th className="p-1 sm:p-5 text-center border-r w-[10%]">ID</th>
+            <th className="p-1 sm:p-5 text-center border-r w-[20%]">아이콘</th>
+            <th className={`p-1 sm:p-5 text-center border-r w-[20%]`}>
+              뱃지명
+            </th>
+            <th className={`p-1 sm:p-5 text-center border-r w-[20%]`}>설명</th>
             {tab !== 2 && (
-              <th className="p-5 text-center border-r w-[10%]">가격</th>
+              <th className="p-1 sm:p-5 text-center border-r w-[10%]">가격</th>
             )}
-            <th className="p-5 text-center border-l w-[20%]">수정/삭제</th>
+            <th className="p-1 sm:p-5 text-center border-l w-[20%]">
+              수정/삭제
+            </th>
           </tr>
         </thead>
         <tbody>
           {badgeList?.map((item) => (
             <tr key={item.id}>
-              <td className="p-5 text-center border-r w-[10%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[10%] ">
                 <span className="break-all">{item.id}</span>
               </td>
-              <td className="p-5 text-center border-r w-[20%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[20%] ">
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <img
@@ -226,11 +230,11 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                   <img className="w-20 h-20" src={item.iconLink} />
                 )}
               </td>
-              <td className="p-5 text-center border-r w-[20%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[20%] ">
                 {updatedState.state && updatedState.id === item.id ? (
                   <input
                     type="text"
-                    className="border rounded p-1"
+                    className="border rounded p-1 w-full"
                     value={updatedBody.name}
                     required
                     minLength={1}
@@ -243,10 +247,10 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                   <span className="break-all">{item.name}</span>
                 )}
               </td>
-              <td className="p-5 text-center border-r w-[20%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[20%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <textarea
-                    className="border rounded p-1"
+                    className="border rounded p-1 w-full"
                     value={updatedBody.description || ""}
                     required
                     minLength={1}
@@ -263,7 +267,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                 )}
               </td>
               {tab !== 2 && (
-                <td className="p-5 text-center border-r w-[10%] ">
+                <td className="p-1 sm:p-5 text-center border-r w-[10%]">
                   {updatedState.state && updatedState.id === item.id ? (
                     <input
                       type="text"
@@ -284,7 +288,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                 </td>
               )}
 
-              <td className="p-5 text-center border-l w-[20%]">
+              <td className="p-1 sm:p-5 text-center border-l w-[20%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <button

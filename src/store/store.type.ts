@@ -3,8 +3,8 @@ interface User {
   email: string;
   provider: "LOCAL" | "GOOGLE" | "KAKAO";
   role: "USER" | "ADMIN" | "MASTER";
-  selectedBadge: number;
-  iconLink: string;
+  selectedBadgeId: number;
+  selectedBadge: { iconLink: string };
   createdAt: string;
 }
 

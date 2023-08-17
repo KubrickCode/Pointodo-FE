@@ -9,7 +9,7 @@ const MyPage: FC = () => {
 
   return (
     <>
-      <div className="flex flex-row">
+      <div className="sm:flex sm:flex-row">
         <SideBar menu={menu} tab={tab} setTab={setTab} />
         {tab === 0 && <MyBadge />}
         {tab === 1 && <MySetting setTab={setTab} />}

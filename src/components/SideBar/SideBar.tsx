@@ -13,8 +13,8 @@ interface Props {
 const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
   return (
     <>
-      <nav className="border-r py-8 h-screen w-[15%]">
-        <ul>
+      <nav className="border-r sm:py-8 sm:h-screen sm:w-[15%]">
+        <ul className="grid grid-cols-3 sm:flex sm:flex-col">
           {menu.map((item) => (
             <li
               key={item.id}

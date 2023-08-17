@@ -18,7 +18,7 @@ const MySetting: FC<Props> = ({ setTab }) => {
 
   useEffect(() => {
     const filteredBadgeList = badgeList?.filter(
-      (item: BadgeEntity) => item.id === user?.selectedBadge
+      (item: BadgeEntity) => item.id === user?.selectedBadgeId
     );
 
     setMyBadge(filteredBadgeList[0]?.iconLink);

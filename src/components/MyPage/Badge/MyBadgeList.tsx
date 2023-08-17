@@ -96,7 +96,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
   };
 
   return (
-    <ul className="grid grid-cols-4 gap-4 p-5">
+    <ul className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
       {data?.map((item) => (
         <li key={item.id} className="border text-center rounded-lg p-3">
           <div className="flex justify-center">

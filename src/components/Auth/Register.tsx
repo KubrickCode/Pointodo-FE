@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { AuthProps, RegisterForm } from "../../types/Auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSign } from "../../hooks/useSign";
@@ -13,6 +13,8 @@ const Register: FC<AuthProps> = ({ setTab }) => {
 
   const { mutate: signUp } = useSign("/user/register");
   const { mutate: login } = useSign("/auth/login");
+
+  const [errMsg, setErrMsg] = useState("");
 
   const onSubmitHandler: SubmitHandler<RegisterForm> = (data) => {
     const body = {
@@ -36,6 +38,9 @@ const Register: FC<AuthProps> = ({ setTab }) => {
               },
             }
           );
+        },
+        onError: async (err: any) => {
+          setErrMsg(err.response.data.message);
         },
       }
     );
@@ -102,6 +107,21 @@ const Register: FC<AuthProps> = ({ setTab }) => {
             <div>비밀번호가 일치하지 않습니다</div>
           )}
       </div>
+      {errMsg.length > 0 && (
+        <div className="flex items-center p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50">
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 mr-3"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <div>
+            <span className="font-medium">{errMsg}</span>
+          </div>
+        </div>
+      )}
       <button className="border py-2 py-1 block w-full my-5 rounded-lg shadow-lg hover:bg-neutral-100 transition-all duration-500">
         회원가입
       </button>
