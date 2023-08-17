@@ -14,7 +14,7 @@ const Main: FC = () => {
   }, [isLoggedIn]);
 
   return (
-    <div className="flex flex-row">
+    <div className="sm:flex sm:flex-row">
       <SideBar menu={menu} tab={tab} setTab={setTab} />
       <Task tab={tab} />
     </div>

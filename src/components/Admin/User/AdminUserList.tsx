@@ -70,37 +70,41 @@ const AdminUserList: FC<Props> = ({ tab }) => {
         </select>
       </div>
       <table className="table-fixed w-full">
-        <thead className="border-b p-5">
+        <thead className="border-b p-1 sm:p-5">
           <tr>
-            <th className="p-5 text-center border-r w-[10%]">순번</th>
-            <th className="p-5 text-center border-r w-[25%]">이메일</th>
-            <th className={`p-5 text-center border-r w-[10%]`}>공급 업체</th>
-            <th className={`p-5 text-center border-r w-[10%]`}>권한</th>
-            <th className="p-5 text-center border-l w-[25%]">가입 날짜</th>
-            <th className="p-5 text-center border-l w-[20%]">작업</th>
+            <th className="p-1 sm:p-5 text-center border-r w-[10%]">순번</th>
+            <th className="p-1 sm:p-5 text-center border-r w-[25%]">이메일</th>
+            <th className={`p-1 sm:p-5 text-center border-r w-[10%]`}>
+              공급 업체
+            </th>
+            <th className={`p-1 sm:p-5 text-center border-r w-[10%]`}>권한</th>
+            <th className="p-1 sm:p-5 text-center border-l w-[25%]">
+              가입 날짜
+            </th>
+            <th className="p-1 sm:p-5 text-center border-l w-[20%]">작업</th>
           </tr>
         </thead>
         <tbody>
           {userList?.map((item, index) => (
             <tr key={item.id}>
-              <td className="p-5 text-center border-r w-[10%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[10%] ">
                 <span className="break-all">{index + 1}</span>
               </td>
-              <td className="p-5 text-center border-r w-[25%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[25%] ">
                 <span className="break-all">{item.email}</span>
               </td>
-              <td className="p-5 text-center border-r w-[10%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[10%] ">
                 <span className="break-all">{item.provider}</span>
               </td>
-              <td className="p-5 text-center border-r w-[10%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[10%] ">
                 <span className="break-all">{item.role}</span>
               </td>
-              <td className="p-5 text-center border-r w-[25%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[25%] ">
                 <span className="break-all">
                   {moment.utc(item.createdAt).format("YYYY-MM-DD")}
                 </span>
               </td>
-              <td className="p-5 text-center border-r w-[20%] relative w-full flex justify-center">
+              <td className="p-1 sm:p-5 text-center border-r w-[20%] relative w-full flex justify-center">
                 <button
                   className="border px-2 py-1 rounded flex flex-row "
                   onClick={() => {

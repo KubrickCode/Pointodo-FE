@@ -14,11 +14,11 @@ const Auth: FC = () => {
   }, [isLoggedIn]);
 
   return (
-    <div className="flex flex-row">
-      <div className="basis-1/2">
-        <video autoPlay muted playsInline>
+    <div className="md:flex md:flex-row h-full">
+      <div className="hidden md:block basis-1/2">
+        <video autoPlay muted playsInline className="h-full object-fill">
           <source src="/intro.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
+          영상을 지원하지 않는 브라우저 입니다
         </video>
       </div>
       <div className="basis-1/2">
