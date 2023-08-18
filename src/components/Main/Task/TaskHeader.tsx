@@ -27,7 +27,7 @@ const TaskHeader: FC<Props> = ({
             작업 추가
           </button>
           <select
-            className="border px-3 py-2 ml-2 rounded outline-neutral-400"
+            className="border px-3 py-2 ml-2 rounded outline-neutral-400 cursor-pointer"
             onChange={(e) => setOrder(e.target.value)}
           >
             <option value="importance">중요도 순</option>
@@ -37,15 +37,16 @@ const TaskHeader: FC<Props> = ({
           </select>
         </div>
         <div
-          className="ml-2 flex items-center"
+          className="ml-2 flex items-center cursor-pointer"
           onClick={() => setCheckedCompletion(!checkedCompletion)}
         >
           <input
             type="checkbox"
             checked={checkedCompletion}
             onChange={() => setCheckedCompletion(!checkedCompletion)}
+            className="cursor-pointer"
           />
-          <label className="ml-1">완료 작업 숨기기</label>
+          <label className="ml-1 cursor-pointer">완료 작업 숨기기</label>
         </div>
       </div>
     </>

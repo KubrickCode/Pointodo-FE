@@ -146,7 +146,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
             )}
 
             {(userBadgeList?.includes(item.id) || item.id === 1) &&
-              (user?.selectedBadge === item.id ? (
+              (user?.selectedBadgeId === item.id ? (
                 <button
                   className="border px-2 py-1 mx-1 rounded bg-pink-300 text-white"
                   disabled
