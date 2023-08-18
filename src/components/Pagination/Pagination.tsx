@@ -17,6 +17,10 @@ const Pagination: FC<Props> = ({ totalPage, currentPage, setCurrentPage }) => {
     setCurrentPage(pageNum);
   };
 
+  if (!totalPage) {
+    return;
+  }
+
   return (
     <div className="flex flex-row">
       <button

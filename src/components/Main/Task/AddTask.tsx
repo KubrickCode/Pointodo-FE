@@ -64,6 +64,13 @@ const AddTask: FC<Props> = ({ taskType }) => {
               ? "getDueTasks"
               : "getFreeTasks"
           );
+          await queryClient.invalidateQueries(
+            taskType === "DAILY"
+              ? "getDailyTotalPage"
+              : taskType === "DUE"
+              ? "getDueTotalPage"
+              : "getFreeTotalPage"
+          );
           setToastState(true, "작업이 추가되었습니다", "success");
         },
       }
