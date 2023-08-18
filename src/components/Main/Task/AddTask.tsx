@@ -139,9 +139,9 @@ const AddTask: FC<Props> = ({ taskType }) => {
             className="w-full border p-1 rounded outline-neutral-400"
             {...register("importance")}
           >
-            <option value={3}>덜 중요</option>
-            <option value={2}>보통</option>
-            <option value={1}>매우 중요</option>
+            <option value={3}>하</option>
+            <option value={2}>중</option>
+            <option value={1}>상</option>
           </select>
         </div>
         <div className="text-center mt-5">
