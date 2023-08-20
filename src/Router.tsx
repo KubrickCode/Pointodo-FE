@@ -7,12 +7,13 @@ const Social = lazy(() => import("./components/Auth/Social"));
 const Main = lazy(() => import("./components/Main/Main"));
 const Admin = lazy(() => import("./components/Admin/Admin"));
 const MyPage = lazy(() => import("./components/MyPage/MyPage"));
+const Loading = lazy(() => import("./components/Loading/Loading"));
 
 const Router: FC = () => {
   const user = useUserStore((state) => state.user);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/auth" element={<Auth />} />

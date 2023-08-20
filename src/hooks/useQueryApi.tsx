@@ -45,7 +45,7 @@ api.interceptors.response.use(
   }
 );
 
-export const useQueryGet = (link: string, key: string, queryOptions = {}) => {
+export const useQueryGet = (link: string, key: string, queryOptions?: {}) => {
   const queryFunc = async () => {
     const response = await api.get(link);
     return response.data;

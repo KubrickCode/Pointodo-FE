@@ -94,12 +94,6 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
 
   const [dueDate, setDueDate] = useState(new Date());
 
-  useEffect(() => {
-    if (dueDate < new Date()) {
-      setDueDate(new Date());
-    }
-  }, [dueDate]);
-
   const setToastState = useToastStore((state) => state.setToastState);
   const setModalState = useModalStore((state) => state.setModalState);
 
@@ -147,6 +141,10 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
     freeTotalPage,
     checkedCompletion,
   ]);
+
+  useEffect(() => {
+    if (totalPage === 1) setCurrentPage(1);
+  }, [totalPage]);
 
   const handleCheckboxChange = (
     item: TaskEntity,
@@ -378,7 +376,12 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                       <DatePicker
                         locale={ko}
                         selected={dueDate}
-                        onChange={(date) => setDueDate(date!)}
+                        onChange={(date) => {
+                          if (date! < new Date()) {
+                            setDueDate(new Date());
+                          }
+                          setDueDate(date!);
+                        }}
                         dateFormat="yyyy-MM-dd"
                       />
                     </div>
