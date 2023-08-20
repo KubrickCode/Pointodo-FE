@@ -11,12 +11,12 @@ const Loading = lazy(() => import("./components/Loading/Loading"));
 
 const Router: FC = () => {
   const user = useUserStore((state) => state.user);
+  const isLoggedIn = useUserStore((state) => state.isLoggedIn);
 
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/auth" element={<Auth />} />
+        <Route path="/" element={isLoggedIn ? <Main /> : <Auth />} />
         <Route path="/social-login" element={<Social />} />
         <Route path="/my-page" element={<MyPage />} />
         {(user?.role === "MASTER" || user?.role === "ADMIN") && (
