@@ -22,6 +22,7 @@ const BuyBadge: FC = () => {
         onSuccess: async () => {
           await queryClient.invalidateQueries("getUserBadgeList");
           await queryClient.invalidateQueries("getSpentPointsLogs");
+          await queryClient.invalidateQueries("getPoints");
           setToastState(true, "뱃지를 구매하였습니다", "success");
           setModalState(false);
         },

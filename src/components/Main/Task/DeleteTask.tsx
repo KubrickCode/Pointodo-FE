@@ -27,6 +27,13 @@ const DeleteTask: FC = () => {
               ? "getDueTasks"
               : "getFreeTasks"
           );
+          await queryClient.invalidateQueries(
+            modalTaskType === "DAILY"
+              ? "getDailyTotalPage"
+              : modalTaskType === "DUE"
+              ? "getDueTotalPage"
+              : "getFreeTotalPage"
+          );
           setToastState(true, "작업이 삭제되었습니다", "danger");
           setModalState(false);
         },
