@@ -12,6 +12,8 @@ import {
 } from "../../shared/messages/auth.error";
 
 const Login: FC<AuthProps> = ({ setTab }) => {
+  const [errMsg, setErrMsg] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -19,8 +21,6 @@ const Login: FC<AuthProps> = ({ setTab }) => {
   } = useForm<LoginForm>();
 
   const { mutate: login } = useSign(LOGIN_LINK);
-
-  const [errMsg, setErrMsg] = useState("");
 
   const onSubmitHandler: SubmitHandler<LoginForm> = async (formData) => {
     login(

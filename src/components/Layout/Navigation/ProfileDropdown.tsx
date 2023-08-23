@@ -4,25 +4,13 @@ import { useUserStore } from "../../../store/user.store";
 import { Link } from "react-router-dom";
 
 const ProfileDropdown: FC = () => {
-  const [open, setOpen] = useState(false);
-  const { mutate: logout } = useQueryMutate();
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const user = useUserStore((state) => state.user);
 
-  const handleLogout = async () => {
-    logout(
-      {
-        link: "/auth/logout",
-        method: "post",
-      },
-      {
-        onSuccess: async () => {
-          localStorage.removeItem("accessToken");
-          location.href = "/";
-        },
-      }
-    );
-  };
+  const [open, setOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const { mutate: logout } = useQueryMutate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,6 +27,21 @@ const ProfileDropdown: FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setOpen]);
+
+  const handleLogout = async () => {
+    logout(
+      {
+        link: "/auth/logout",
+        method: "post",
+      },
+      {
+        onSuccess: async () => {
+          localStorage.removeItem("accessToken");
+          location.href = "/";
+        },
+      }
+    );
+  };
 
   return (
     <>

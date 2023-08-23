@@ -26,6 +26,9 @@ const AdminUserBadge: FC = () => {
   const modaluserId = useModalStore((state) => state.modaluserId);
   const setToastState = useToastStore((state) => state.setToastState);
 
+  const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeEntity[]>([]);
+  const [selectedBadge, setSelectedBadge] = useState(0);
+
   const queryClient = useQueryClient();
 
   const { data: userBadgeList } = useQueryGet(
@@ -38,9 +41,6 @@ const AdminUserBadge: FC = () => {
     QUERY_KEY_GET_ALL_BADGE_LIST
   );
   const { mutate } = useQueryMutate();
-
-  const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeEntity[]>([]);
-  const [selectedBadge, setSelectedBadge] = useState(0);
 
   useEffect(() => {
     if (allBadgeList && userBadgeList) {

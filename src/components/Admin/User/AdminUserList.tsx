@@ -18,14 +18,14 @@ interface Props {
 }
 
 const AdminUserList: FC<Props> = ({ tab }) => {
+  const setModalState = useModalStore((state) => state.setModalState);
+
   const [userList, setUserList] = useState<UserEntity[]>([]);
   const [order, setOrder] = useState("old");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [provider, setProvider] = useState("ALL");
   const [dropDownState, setDropDownState] = useState<boolean[]>([]);
-
-  const setModalState = useModalStore((state) => state.setModalState);
 
   const { data: userListData } = useQueryGet(
     GET_USER_LIST_LINK(currentPage, order, provider),

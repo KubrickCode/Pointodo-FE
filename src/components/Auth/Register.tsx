@@ -16,6 +16,8 @@ import {
 } from "../../shared/constants/auth.constant";
 
 const Register: FC<AuthProps> = ({ setTab }) => {
+  const [errMsg, setErrMsg] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -25,8 +27,6 @@ const Register: FC<AuthProps> = ({ setTab }) => {
 
   const { mutate: signUp } = useSign(REGISTER_LINK);
   const { mutate: login } = useSign(LOGIN_LINK);
-
-  const [errMsg, setErrMsg] = useState("");
 
   const onSubmitHandler: SubmitHandler<RegisterForm> = (data) => {
     const body = {

@@ -7,6 +7,9 @@ import { QUERY_KEY_GET_CURRENT_POINTS } from "../../../shared/constants/query.co
 
 const Navigation: FC = () => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
+
+  const [pointInfo, setPointInfo] = useState(false);
+
   const { data: currentPoints } = useQueryGet(
     GET_CURRENT_POINTS_LINK,
     QUERY_KEY_GET_CURRENT_POINTS,
@@ -14,8 +17,6 @@ const Navigation: FC = () => {
       enabled: !!isLoggedIn,
     }
   );
-
-  const [pointInfo, setPointInfo] = useState(false);
 
   return (
     <>
