@@ -14,18 +14,14 @@ import {
 } from "../../../shared/constants/admin.constant";
 import { QUERY_KEY_GET_ADMIN_BADGE_LIST } from "../../../shared/constants/query.constant";
 import { CREATE_BADGE_MESSAGE } from "../../../shared/messages/admin.message";
+import { BadgeEntity } from "./AdminBadgeList";
+import { BadgeType } from "../../../entities/badge.entity";
 
 interface Props {
-  badgeType: string;
+  badgeType: BadgeType;
 }
 
-interface AdminAddBadgeForm {
-  name: string;
-  description: string;
-  iconLink: string;
-  type: string;
-  price?: number;
-}
+type AdminAddBadgeForm = Omit<BadgeEntity, "id">;
 
 const AdminAddBadge: FC<Props> = ({ badgeType }) => {
   const setModalState = useModalStore((state) => state.setModalState);
@@ -98,9 +94,9 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
     <>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <h1 className="text-xl text-center mb-5">
-          {badgeType === "NORMAL"
+          {badgeType === BadgeType.NORMAL
             ? NORMAL_BADGE
-            : badgeType === "ACHIEVEMENT"
+            : badgeType === BadgeType.ACHIEVEMENT
             ? ACHIEVEMENT_BADGE
             : SPECIAL_BADGE}{" "}
           추가
@@ -149,7 +145,7 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
             <div>뱃지 설명명은 100자리 이내로 입력하세요.</div>
           )}
         </div>
-        {badgeType !== "SPECIAL" && (
+        {badgeType !== BadgeType.SPECIAL && (
           <div className="my-2">
             <label className="block my-2 text-sm">뱃지 가격</label>
             <input
