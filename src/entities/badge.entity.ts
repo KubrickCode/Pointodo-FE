@@ -8,7 +8,7 @@ export interface BadgeEntity {
 }
 
 export enum BadgeType {
-  NORMAL,
-  ACHIEVEMENT,
-  SPECIAL,
+  NORMAL = "NORMAL",
+  ACHIEVEMENT = "ACHIEVEMENT",
+  SPECIAL = "SPECIAL",
 }

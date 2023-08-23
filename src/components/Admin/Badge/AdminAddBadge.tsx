@@ -14,8 +14,14 @@ import {
 } from "../../../shared/constants/admin.constant";
 import { QUERY_KEY_GET_ADMIN_BADGE_LIST } from "../../../shared/constants/query.constant";
 import { CREATE_BADGE_MESSAGE } from "../../../shared/messages/admin.message";
-import { BadgeEntity } from "./AdminBadgeList";
-import { BadgeType } from "../../../entities/badge.entity";
+import { BadgeEntity, BadgeType } from "../../../entities/badge.entity";
+import {
+  BADGE_DESC_FORM_EMPTY_ERROR,
+  BADGE_DESC_FORM_LENGTH_ERROR,
+  BADGE_NAME_FORM_EMPTY_ERROR,
+  BADGE_NAME_FORM_LENGTH_ERROR,
+  BADGE_PRICE_FORM_LENGTH_ERROR,
+} from "../../../shared/messages/admin.error";
 
 interface Props {
   badgeType: BadgeType;
@@ -110,18 +116,18 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
             maxLength={20}
             required
             {...register("name", {
-              required: "뱃지명은 필수 입력 필드입니다.",
+              required: BADGE_NAME_FORM_EMPTY_ERROR,
               maxLength: {
                 value: 20,
-                message: "뱃지명은 20자 이내로 입력하세요.",
+                message: BADGE_NAME_FORM_LENGTH_ERROR,
               },
             })}
           />
           {errors.name && errors.name.type === "required" && (
-            <div>뱃지명을 입력해 주세요</div>
+            <div>{errors.name.message}</div>
           )}
           {errors.name && errors.name.type === "maxLength" && (
-            <div>뱃지명은 20자리 이내로 입력하세요.</div>
+            <div>{errors.name.message}</div>
           )}
         </div>
         <div className="my-2">
@@ -131,18 +137,18 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
             maxLength={500}
             required
             {...register("description", {
-              required: "뱃지 설명은 필수 입력 필드입니다.",
+              required: BADGE_DESC_FORM_EMPTY_ERROR,
               maxLength: {
                 value: 100,
-                message: "뱃지 설명은 100자 이내로 입력하세요.",
+                message: BADGE_DESC_FORM_LENGTH_ERROR,
               },
             })}
           />
           {errors.description && errors.description.type === "required" && (
-            <div>뱃지 설명을 입력해 주세요</div>
+            <div>{errors.description.message}</div>
           )}
           {errors.description && errors.description.type === "maxLength" && (
-            <div>뱃지 설명명은 100자리 이내로 입력하세요.</div>
+            <div>{errors.description.message}</div>
           )}
         </div>
         {badgeType !== BadgeType.SPECIAL && (
@@ -152,20 +158,15 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
               type="text"
               className="border p-1 rounded outline-neutral-400"
               maxLength={10}
-              required
               {...register("price", {
-                required: "뱃지 가격은 필수 입력 필드입니다.",
                 maxLength: {
                   value: 10,
-                  message: "뱃지 가격은 10자 이내로 입력하세요.",
+                  message: BADGE_PRICE_FORM_LENGTH_ERROR,
                 },
               })}
             />
-            {errors.name && errors.name.type === "required" && (
-              <div>뱃지 가격을 입력해 주세요</div>
-            )}
-            {errors.name && errors.name.type === "maxLength" && (
-              <div>뱃지 가격은 10자리 이내로 입력하세요.</div>
+            {errors.price && errors.price.type === "maxLength" && (
+              <div>{errors.price?.message}</div>
             )}
           </div>
         )}

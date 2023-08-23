@@ -2,15 +2,7 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
-
-export interface BadgeEntity {
-  id: number;
-  name: string;
-  description: string;
-  price?: number;
-  iconLink: string;
-  type: "NORMAL" | "ACHIEVEMENT" | "SPECIAL";
-}
+import { BadgeEntity } from "../../../entities/badge.entity";
 
 interface Props {
   tab: number;
@@ -22,6 +14,8 @@ const initialUpdatedBody = {
   price: 0,
 };
 
+const initialUpdatedState = { state: false, id: 0 };
+
 const initialPreview = {
   id: 0,
   url: "",
@@ -29,7 +23,7 @@ const initialPreview = {
 
 const AdminBadgeList: FC<Props> = ({ tab }) => {
   const [badgeList, setBadgeList] = useState<BadgeEntity[]>([]);
-  const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
+  const [updatedState, setUpdatedState] = useState(initialUpdatedState);
   const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
 
   const inputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
