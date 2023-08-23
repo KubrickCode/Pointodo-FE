@@ -7,6 +7,11 @@ export interface BadgeEntity {
   type: BadgeType;
 }
 
+export interface UserBadgeListWithName {
+  badgeId: number;
+  name: string;
+}
+
 export enum BadgeType {
   NORMAL = "NORMAL",
   ACHIEVEMENT = "ACHIEVEMENT",
