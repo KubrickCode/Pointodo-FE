@@ -2,12 +2,18 @@ import { FC, useState } from "react";
 import ProfileDropdown from "./ProfileDropdown";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import { useUserStore } from "../../../store/user.store";
+import { GET_CURRENT_POINTS_LINK } from "../../../shared/constants/point.constant";
+import { QUERY_KEY_GET_CURRENT_POINTS } from "../../../shared/constants/query.constant";
 
 const Navigation: FC = () => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const { data: currentPoints } = useQueryGet("/point/current", "getPoints", {
-    enabled: !!isLoggedIn,
-  });
+  const { data: currentPoints } = useQueryGet(
+    GET_CURRENT_POINTS_LINK,
+    QUERY_KEY_GET_CURRENT_POINTS,
+    {
+      enabled: !!isLoggedIn,
+    }
+  );
 
   const [pointInfo, setPointInfo] = useState(false);
 

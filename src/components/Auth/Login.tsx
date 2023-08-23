@@ -2,6 +2,14 @@ import { FC, useState } from "react";
 import { AuthProps, LoginForm } from "../../types/auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSign } from "../../hooks/useSign";
+import { LOGIN_LINK } from "../../shared/constants/auth.constant";
+import {
+  AUTH_EMAIL_EMPTY_ERROR,
+  AUTH_EMAIL_FORM_ERROR,
+  AUTH_EMAIL_LENGTH_EMPTY_ERROR,
+  AUTH_PASSWORD_EMPTY_ERROR,
+  AUTH_PASSWORD_FORM_ERROR,
+} from "../../shared/messages/auth.error";
 
 const Login: FC<AuthProps> = ({ setTab }) => {
   const {
@@ -10,7 +18,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
     formState: { errors },
   } = useForm<LoginForm>();
 
-  const { mutate: login } = useSign("/auth/login");
+  const { mutate: login } = useSign(LOGIN_LINK);
 
   const [errMsg, setErrMsg] = useState("");
 
@@ -46,13 +54,13 @@ const Login: FC<AuthProps> = ({ setTab }) => {
           className="border p-1 rounded w-full outline-neutral-300"
         />
         {errors.email && errors.email.type === "required" && (
-          <div>이메일을 입력해 주세요</div>
+          <div>{AUTH_EMAIL_EMPTY_ERROR}</div>
         )}
         {errors.email && errors.email.type === "pattern" && (
-          <div>이메일 양식을 확인하세요</div>
+          <div>{AUTH_EMAIL_FORM_ERROR}</div>
         )}
         {errors.email && errors.email.type === "maxLength" && (
-          <div>이메일 허용길이를 초과하였습니다</div>
+          <div>{AUTH_EMAIL_LENGTH_EMPTY_ERROR}</div>
         )}
       </div>
       <div className="my-4">
@@ -67,10 +75,10 @@ const Login: FC<AuthProps> = ({ setTab }) => {
           className="border p-1 rounded w-full outline-neutral-300"
         />
         {errors.password && errors.password.type === "required" && (
-          <div>비밀번호를 입력해 주세요</div>
+          <div>{AUTH_PASSWORD_EMPTY_ERROR}</div>
         )}
         {errors.password && errors.password.type === "pattern" && (
-          <div>비밀번호는 6~20자 영문,숫자,특수문자 혼합입니다</div>
+          <div>{AUTH_PASSWORD_FORM_ERROR}</div>
         )}
       </div>
       {errMsg.length > 0 && (
