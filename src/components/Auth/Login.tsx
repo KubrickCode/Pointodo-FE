@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { AuthProps, LoginForm } from "../../types/Auth.type";
+import { AuthProps, LoginForm } from "../../types/auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useSign } from "../../hooks/useSign";
 

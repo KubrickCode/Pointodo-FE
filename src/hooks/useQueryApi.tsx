@@ -1,5 +1,11 @@
 import { useMutation, useQuery } from "react-query";
 import axios, { AxiosRequestConfig } from "axios";
+import {
+  EXPIRED_ACCESS_TOKEN,
+  INVALID_ACCESS_TOKEN,
+} from "../shared/messages/auth.error";
+import { INTERNAL_SERVER_ERROR } from "../shared/messages/global.error";
+import { QUERY_STALE_TIME } from "../shared/constants/query.constant";
 
 const host = window.location.origin + "/api";
 
@@ -20,14 +26,14 @@ api.interceptors.response.use(
   async (error) => {
     if (
       !error.response ||
-      (error.response.data.message !== "유효하지 않은 토큰입니다" &&
-        error.response.data.message !== "만료된 토큰입니다")
+      (error.response.data.message !== INVALID_ACCESS_TOKEN &&
+        error.response.data.message !== EXPIRED_ACCESS_TOKEN)
     ) {
       throw error;
     }
 
     if (error.response.status === 500) {
-      alert("서버 내부 오류 발생");
+      alert(INTERNAL_SERVER_ERROR);
     }
 
     const response = await api.get("/auth/refresh");
@@ -52,7 +58,7 @@ export const useQueryGet = (link: string, key: string, queryOptions?: {}) => {
   };
 
   return useQuery([key, host + link], queryFunc, {
-    staleTime: 1000 * 60 * 5,
+    staleTime: QUERY_STALE_TIME,
     refetchOnWindowFocus: false,
     ...queryOptions,
   });

@@ -5,6 +5,15 @@ import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
 import "react-datepicker/dist/react-datepicker.css";
+import {
+  ACHIEVEMENT_BADGE,
+  CREATE_BADGE_LINK,
+  NORMAL_BADGE,
+  SPECIAL_BADGE,
+  UPLOAD_BADGE_LINK,
+} from "../../../shared/constants/admin.constant";
+import { QUERY_KEY_GET_ADMIN_BADGE_LIST } from "../../../shared/constants/query.constant";
+import { CREATE_BADGE_MESSAGE } from "../../../shared/messages/admin.message";
 
 interface Props {
   badgeType: string;
@@ -21,19 +30,10 @@ interface AdminAddBadgeForm {
 const AdminAddBadge: FC<Props> = ({ badgeType }) => {
   const setModalState = useModalStore((state) => state.setModalState);
   const setToastState = useToastStore((state) => state.setToastState);
-  const queryClient = useQueryClient();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-
   const [previewUrl, setPreviewUrl] = useState("");
-
   const [dueDate, setDueDate] = useState(new Date());
-
-  useEffect(() => {
-    if (dueDate < new Date()) {
-      setDueDate(new Date());
-    }
-  }, [dueDate]);
 
   const {
     register,
@@ -41,7 +41,14 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
     formState: { errors },
   } = useForm<AdminAddBadgeForm>();
 
+  const queryClient = useQueryClient();
   const { mutate } = useQueryMutate();
+
+  useEffect(() => {
+    if (dueDate < new Date()) {
+      setDueDate(new Date());
+    }
+  }, [dueDate]);
 
   const onSubmitHandler: SubmitHandler<AdminAddBadgeForm> = async (body) => {
     if (imageFile) {
@@ -50,7 +57,7 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
 
       mutate(
         {
-          link: "/admin/badge/upload",
+          link: UPLOAD_BADGE_LINK,
           method: "post",
           body: formData,
         },
@@ -59,14 +66,16 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
             Object.assign(body, { iconLink: data.filePath });
             mutate(
               {
-                link: "/admin/badge/create",
+                link: CREATE_BADGE_LINK,
                 method: "post",
                 body,
               },
               {
                 onSuccess: async () => {
-                  await queryClient.invalidateQueries("getAdminBadgeList");
-                  setToastState(true, "뱃지가 추가되었습니다", "success");
+                  await queryClient.invalidateQueries(
+                    QUERY_KEY_GET_ADMIN_BADGE_LIST
+                  );
+                  setToastState(true, CREATE_BADGE_MESSAGE, "success");
                 },
               }
             );
@@ -90,10 +99,10 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <h1 className="text-xl text-center mb-5">
           {badgeType === "NORMAL"
-            ? "일반 뱃지"
+            ? NORMAL_BADGE
             : badgeType === "ACHIEVEMENT"
-            ? "업적 뱃지"
-            : "특별 뱃지"}{" "}
+            ? ACHIEVEMENT_BADGE
+            : SPECIAL_BADGE}{" "}
           추가
         </h1>
         <div className="my-2">
