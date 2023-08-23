@@ -3,18 +3,18 @@ import { useQueryGet } from "../../../hooks/useQueryApi";
 import moment from "moment";
 import Pagination from "../../Pagination/Pagination";
 import { useModalStore } from "../../../store/modal.store";
+import { UserEntity } from "../../../entities/user.entity";
+import {
+  GET_USER_LIST_LINK,
+  GET_USER_LIST_TOTAL_PAGE_LINK,
+} from "../../../shared/constants/admin.constant";
+import {
+  QUERY_KEY_GET_USER_LIST,
+  QUERY_KEY_GET_USER_LIST_TOTAL_PAGE,
+} from "../../../shared/constants/query.constant";
 
 interface Props {
   tab: number;
-}
-
-interface UserEntity {
-  id: string;
-  selectedBadge: number;
-  email: string;
-  provider: string;
-  role: string;
-  createdAt: Date;
 }
 
 const AdminUserList: FC<Props> = ({ tab }) => {
@@ -28,14 +28,14 @@ const AdminUserList: FC<Props> = ({ tab }) => {
   const setModalState = useModalStore((state) => state.setModalState);
 
   const { data: userListData } = useQueryGet(
-    `/admin/user/list?page=${currentPage}&order=${order}&provider=${provider}`,
-    "getUserList",
+    GET_USER_LIST_LINK(currentPage, order, provider),
+    QUERY_KEY_GET_USER_LIST,
     { enabled: tab === 0 }
   );
 
   const { data: userListTotalPages } = useQueryGet(
-    `/admin/user/count/${provider}`,
-    "getUserListTotalPages",
+    GET_USER_LIST_TOTAL_PAGE_LINK(provider),
+    QUERY_KEY_GET_USER_LIST_TOTAL_PAGE,
     {
       enabled: tab === 0,
     }

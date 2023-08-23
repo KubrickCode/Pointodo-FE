@@ -17,3 +17,10 @@ export const GET_ALL_BADGE_LIST_LINK = "/badge/all";
 export const PUT_BADGE_TO_USER_LINK = "/admin/user/badge/put";
 export const DELETE_USER_BADGE_LINK = (modaluserId: string, badgeId: number) =>
   `/admin/user/badge?userId=${modaluserId}&badgeId=${badgeId}`;
+export const GET_USER_LIST_LINK = (
+  currentPage: number,
+  order: string,
+  provider: string
+) => `/admin/user/list?page=${currentPage}&order=${order}&provider=${provider}`;
+export const GET_USER_LIST_TOTAL_PAGE_LINK = (provider: string) =>
+  `/admin/user/count/${provider}`;
