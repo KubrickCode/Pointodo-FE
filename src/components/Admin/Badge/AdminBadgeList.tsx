@@ -2,15 +2,18 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
-
-export interface BadgeEntity {
-  id: number;
-  name: string;
-  description: string;
-  price?: number;
-  iconLink: string;
-  type: "NORMAL" | "ACHIEVEMENT" | "SPECIAL";
-}
+import { BadgeEntity } from "../../../entities/badge.entity";
+import {
+  DELETE_BADGE_LINK,
+  GET_ADMIN_BADGE_LIST_LINK,
+  UPDATE_BADGE_LINK,
+  UPLOAD_BADGE_LINK,
+} from "../../../shared/constants/admin.constant";
+import { QUERY_KEY_GET_ADMIN_BADGE_LIST } from "../../../shared/constants/query.constant";
+import {
+  DELETE_BADGE_MESSAGE,
+  UPDATE_BADGE_MESSAGE,
+} from "../../../shared/messages/admin.message";
 
 interface Props {
   tab: number;
@@ -22,32 +25,30 @@ const initialUpdatedBody = {
   price: 0,
 };
 
+const initialUpdatedState = { state: false, id: 0 };
+
 const initialPreview = {
   id: 0,
   url: "",
 };
 
 const AdminBadgeList: FC<Props> = ({ tab }) => {
+  const setToastState = useToastStore((state) => state.setToastState);
+
   const [badgeList, setBadgeList] = useState<BadgeEntity[]>([]);
-  const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
+  const [updatedState, setUpdatedState] = useState(initialUpdatedState);
   const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState(initialPreview);
 
   const inputRefs = useRef<{ [key: number]: HTMLInputElement | null }>({});
-
-  const [imageFile, setImageFile] = useState<File | null>(null);
-
-  const [previewUrl, setPreviewUrl] = useState(initialPreview);
 
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
 
-  const setToastState = useToastStore((state) => state.setToastState);
-
   const { data } = useQueryGet(
-    `/admin/badge/${
-      tab === 0 ? "normal" : tab === 1 ? "achievement" : "special"
-    }`,
-    "getAdminBadgeList"
+    GET_ADMIN_BADGE_LIST_LINK(tab),
+    QUERY_KEY_GET_ADMIN_BADGE_LIST
   );
 
   useEffect(() => {
@@ -77,7 +78,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
 
       mutate(
         {
-          link: "/admin/badge/upload",
+          link: UPLOAD_BADGE_LINK,
           method: "post",
           body: formData,
         },
@@ -86,19 +87,21 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
             Object.assign(body, { iconLink: data.filePath });
             mutate(
               {
-                link: `/admin/badge/update/${id}`,
+                link: UPDATE_BADGE_LINK(id),
                 method: "patch",
                 body,
               },
               {
                 onSuccess: async () => {
-                  await queryClient.invalidateQueries("getAdminBadgeList");
+                  await queryClient.invalidateQueries(
+                    QUERY_KEY_GET_ADMIN_BADGE_LIST
+                  );
                   setUpdatedState({
                     ...updatedState,
                     state: false,
                     id: 0,
                   });
-                  setToastState(true, "뱃지가 수정되었습니다", "success");
+                  setToastState(true, UPDATE_BADGE_MESSAGE, "success");
                 },
               }
             );
@@ -120,19 +123,19 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
 
     mutate(
       {
-        link: `/admin/badge/update/${id}`,
+        link: UPDATE_BADGE_LINK(id),
         method: "patch",
         body,
       },
       {
         onSuccess: async () => {
-          await queryClient.invalidateQueries("getAdminBadgeList");
+          await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
           setUpdatedState({
             ...updatedState,
             state: false,
             id: 0,
           });
-          setToastState(true, "뱃지가 수정되었습니다", "success");
+          setToastState(true, UPDATE_BADGE_MESSAGE, "success");
         },
       }
     );
@@ -141,13 +144,13 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
   const handleDelete = async (id: number) => {
     mutate(
       {
-        link: `/admin/badge/delete/${id}`,
+        link: DELETE_BADGE_LINK(id),
         method: "delete",
       },
       {
         onSuccess: async () => {
-          await queryClient.invalidateQueries("getAdminBadgeList");
-          setToastState(true, "뱃지가 삭제되었습니다", "danger");
+          await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
+          setToastState(true, DELETE_BADGE_MESSAGE, "danger");
         },
       }
     );

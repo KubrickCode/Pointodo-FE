@@ -1,5 +1,8 @@
 import { useMutation, useQuery } from "react-query";
 import axios, { AxiosRequestConfig } from "axios";
+import { EXPIRED_ACCESS_TOKEN } from "../shared/messages/auth.error";
+import { INTERNAL_SERVER_ERROR } from "../shared/messages/global.error";
+import { QUERY_STALE_TIME } from "../shared/constants/query.constant";
 
 const host = window.location.origin + "/api";
 
@@ -8,9 +11,6 @@ export type MethodType = "post" | "patch" | "put" | "delete";
 const api = axios.create({
   baseURL: host,
   withCredentials: true,
-  headers: {
-    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-  },
 });
 
 api.interceptors.response.use(
@@ -18,30 +18,21 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (
-      !error.response ||
-      (error.response.data.message !== "유효하지 않은 토큰입니다" &&
-        error.response.data.message !== "만료된 토큰입니다")
-    ) {
-      throw error;
+    if (error.response.data.message === EXPIRED_ACCESS_TOKEN) {
+      const response = await api.get("/auth/refresh");
+      if (!response.data) {
+        window.location.href = "/";
+        return Promise.reject(error);
+      }
+
+      return api.request(error.config);
     }
 
     if (error.response.status === 500) {
-      alert("서버 내부 오류 발생");
+      alert(INTERNAL_SERVER_ERROR);
     }
 
-    const response = await api.get("/auth/refresh");
-    if (!response.data.accessToken) {
-      localStorage.removeItem("persistStore");
-      localStorage.removeItem("accessToken");
-      window.location.href = "/";
-      return Promise.reject(error);
-    }
-    localStorage.setItem("accessToken", response.data.accessToken);
-    error.config.headers[
-      "Authorization"
-    ] = `Bearer ${response.data.accessToken}`;
-    return api.request(error.config);
+    throw error;
   }
 );
 
@@ -52,7 +43,8 @@ export const useQueryGet = (link: string, key: string, queryOptions?: {}) => {
   };
 
   return useQuery([key, host + link], queryFunc, {
-    staleTime: 1000 * 60 * 5,
+    retry: false,
+    staleTime: QUERY_STALE_TIME,
     refetchOnWindowFocus: false,
     ...queryOptions,
   });

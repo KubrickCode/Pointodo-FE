@@ -3,38 +3,53 @@ import { useModalStore } from "../../../../store/modal.store";
 import { useQueryGet, useQueryMutate } from "../../../../hooks/useQueryApi";
 import { useToastStore } from "../../../../store/toast.store";
 import { useQueryClient } from "react-query";
-
-interface BadgeList {
-  id?: number;
-  badgeId?: number;
-  name?: string;
-}
+import {
+  BadgeEntity,
+  UserBadgeListWithName,
+} from "../../../../entities/badge.entity";
+import {
+  DELETE_USER_BADGE_LINK,
+  GET_ALL_BADGE_LIST_LINK,
+  GET_USER_BADGE_LIST_LINK,
+  PUT_BADGE_TO_USER_LINK,
+} from "../../../../shared/constants/admin.constant";
+import {
+  QUERY_KEY_GET_ALL_BADGE_LIST,
+  QUERY_KEY_GET_USER_BADGE_LIST,
+} from "../../../../shared/constants/query.constant";
+import {
+  DELETE_USER_BADGE_MESSAGE,
+  PUT_BADGE_TO_USER_MESSAGE,
+} from "../../../../shared/messages/admin.message";
 
 const AdminUserBadge: FC = () => {
   const modaluserId = useModalStore((state) => state.modaluserId);
   const setToastState = useToastStore((state) => state.setToastState);
 
+  const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeEntity[]>([]);
+  const [selectedBadge, setSelectedBadge] = useState(0);
+
   const queryClient = useQueryClient();
 
   const { data: userBadgeList } = useQueryGet(
-    `/admin/user/badge/list/${modaluserId}`,
-    "getUserBadgeList",
+    GET_USER_BADGE_LIST_LINK(modaluserId),
+    QUERY_KEY_GET_USER_BADGE_LIST,
     { enabled: !!modaluserId }
   );
-  const { data: allBadgeList } = useQueryGet("/badge/all", "getAllBadgeList");
+  const { data: allBadgeList } = useQueryGet(
+    GET_ALL_BADGE_LIST_LINK,
+    QUERY_KEY_GET_ALL_BADGE_LIST
+  );
   const { mutate } = useQueryMutate();
-
-  const [filteredBadgeList, setFilteredBadgeList] = useState<BadgeList[]>([]);
-  const [selectedBadge, setSelectedBadge] = useState(0);
 
   useEffect(() => {
     if (allBadgeList && userBadgeList) {
       const userBadgeIds = userBadgeList.map(
-        (badge: BadgeList) => badge.badgeId
+        (badge: UserBadgeListWithName) => badge.badgeId
       );
 
       const filteredList = allBadgeList.filter(
-        (item: BadgeList) => !userBadgeIds.includes(item.id)
+        (item: BadgeEntity) => !userBadgeIds.includes(item.id)
       );
 
       setFilteredBadgeList(filteredList);
@@ -45,7 +60,7 @@ const AdminUserBadge: FC = () => {
   const handlePutBadgeToUser = async () => {
     mutate(
       {
-        link: "/admin/user/badge/put",
+        link: PUT_BADGE_TO_USER_LINK,
         method: "put",
         body: {
           userId: modaluserId,
@@ -54,8 +69,8 @@ const AdminUserBadge: FC = () => {
       },
       {
         onSuccess: async () => {
-          setToastState(true, "뱃지를 부여하였습니다", "success");
-          await queryClient.invalidateQueries("getUserBadgeList");
+          setToastState(true, PUT_BADGE_TO_USER_MESSAGE, "success");
+          await queryClient.invalidateQueries(QUERY_KEY_GET_USER_BADGE_LIST);
         },
       }
     );
@@ -64,13 +79,13 @@ const AdminUserBadge: FC = () => {
   const handleDeleteUserBadge = async (badgeId: number) => {
     mutate(
       {
-        link: `/admin/user/badge?userId=${modaluserId}&badgeId=${badgeId}`,
+        link: DELETE_USER_BADGE_LINK(modaluserId, badgeId),
         method: "delete",
       },
       {
         onSuccess: async () => {
-          setToastState(true, "뱃지를 삭제하였습니다", "success");
-          await queryClient.invalidateQueries("getUserBadgeList");
+          setToastState(true, DELETE_USER_BADGE_MESSAGE, "success");
+          await queryClient.invalidateQueries(QUERY_KEY_GET_USER_BADGE_LIST);
         },
       }
     );
@@ -84,7 +99,7 @@ const AdminUserBadge: FC = () => {
           className="border px-3 py-2 ml-2 rounded outline-neutral-400"
           onChange={(e) => setSelectedBadge(Number(e.target.value))}
         >
-          {filteredBadgeList?.map((item: BadgeList) => (
+          {filteredBadgeList?.map((item: BadgeEntity) => (
             <option key={item.id} value={item.id}>
               {item.name}
             </option>
@@ -98,7 +113,7 @@ const AdminUserBadge: FC = () => {
         </button>
       </div>
       <ul className="grid divide-y">
-        {userBadgeList?.map((item: BadgeList, index: number) => (
+        {userBadgeList?.map((item: UserBadgeListWithName, index: number) => (
           <li key={item.badgeId} className="flex flex-row justify-between py-2">
             <div className="mr-10">
               {index + 1} . <span>{item.name}</span>

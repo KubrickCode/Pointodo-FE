@@ -7,6 +7,7 @@ import BuyBadge from "../MyPage/Badge/BuyBadge";
 import ChangePassword from "../MyPage/Setting/ChangePassword";
 import Unregister from "../MyPage/Setting/Unregister";
 import AdminUserBadge from "../Admin/User/UserBadge/AdminUserBadge";
+import { BadgeType } from "../../entities/badge.entity";
 
 const Modal: FC = () => {
   const modalState = useModalStore((state) => state.modalState);
@@ -27,13 +28,13 @@ const Modal: FC = () => {
           {modalContent === "addTask1" && <AddTask taskType="DUE" />}
           {modalContent === "addTask2" && <AddTask taskType="FREE" />}
           {modalContent === "addAdminBadge0" && (
-            <AdminAddBadge badgeType="NORMAL" />
+            <AdminAddBadge badgeType={BadgeType.NORMAL} />
           )}
           {modalContent === "addAdminBadge1" && (
-            <AdminAddBadge badgeType="ACHIEVEMENT" />
+            <AdminAddBadge badgeType={BadgeType.ACHIEVEMENT} />
           )}
           {modalContent === "addAdminBadge2" && (
-            <AdminAddBadge badgeType="SPECIAL" />
+            <AdminAddBadge badgeType={BadgeType.SPECIAL} />
           )}
           {modalContent === "deleteTask" && <DeleteTask />}
           {modalContent === "buyBadge" && <BuyBadge />}
