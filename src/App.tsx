@@ -7,12 +7,12 @@ import { useUserStore } from "./store/user.store";
 const App: FC = () => {
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
   const setIsLoggedIn = useUserStore((state) => state.setIsLoggedIn);
+  const setUser = useUserStore((state) => state.setUser);
 
   const { data: loggedInStatus } = useQueryGet("/auth/status", "getIsLoggedIn");
   const { data: user } = useQueryGet("/user", "getUser", {
     enabled: !!isLoggedIn,
   });
-  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     setIsLoggedIn(loggedInStatus ?? false);
