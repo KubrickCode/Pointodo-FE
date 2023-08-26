@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from "react";
 import { useUserStore } from "../../../store/user.store";
 import { useQueryGet } from "../../../hooks/useQueryApi";
-import { BadgeEntity } from "../../Admin/Badge/AdminBadgeList";
 import { useModalStore } from "../../../store/modal.store";
+import { BadgeEntity } from "../../../entities/badge.entity";
 
 interface Props {
   setTab(tab: number): void;

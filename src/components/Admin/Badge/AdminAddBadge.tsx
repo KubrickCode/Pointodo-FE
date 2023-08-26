@@ -5,35 +5,37 @@ import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
 import "react-datepicker/dist/react-datepicker.css";
+import {
+  ACHIEVEMENT_BADGE,
+  CREATE_BADGE_LINK,
+  NORMAL_BADGE,
+  SPECIAL_BADGE,
+  UPLOAD_BADGE_LINK,
+} from "../../../shared/constants/admin.constant";
+import { QUERY_KEY_GET_ADMIN_BADGE_LIST } from "../../../shared/constants/query.constant";
+import { CREATE_BADGE_MESSAGE } from "../../../shared/messages/admin.message";
+import { BadgeEntity, BadgeType } from "../../../entities/badge.entity";
+import {
+  BADGE_DESC_FORM_EMPTY_ERROR,
+  BADGE_DESC_FORM_LENGTH_ERROR,
+  BADGE_NAME_FORM_EMPTY_ERROR,
+  BADGE_NAME_FORM_LENGTH_ERROR,
+  BADGE_PRICE_FORM_LENGTH_ERROR,
+} from "../../../shared/messages/admin.error";
 
 interface Props {
-  badgeType: string;
+  badgeType: BadgeType;
 }
 
-interface AdminAddBadgeForm {
-  name: string;
-  description: string;
-  iconLink: string;
-  type: string;
-  price?: number;
-}
+type AdminAddBadgeForm = Omit<BadgeEntity, "id">;
 
 const AdminAddBadge: FC<Props> = ({ badgeType }) => {
   const setModalState = useModalStore((state) => state.setModalState);
   const setToastState = useToastStore((state) => state.setToastState);
-  const queryClient = useQueryClient();
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-
   const [previewUrl, setPreviewUrl] = useState("");
-
   const [dueDate, setDueDate] = useState(new Date());
-
-  useEffect(() => {
-    if (dueDate < new Date()) {
-      setDueDate(new Date());
-    }
-  }, [dueDate]);
 
   const {
     register,
@@ -41,7 +43,14 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
     formState: { errors },
   } = useForm<AdminAddBadgeForm>();
 
+  const queryClient = useQueryClient();
   const { mutate } = useQueryMutate();
+
+  useEffect(() => {
+    if (dueDate < new Date()) {
+      setDueDate(new Date());
+    }
+  }, [dueDate]);
 
   const onSubmitHandler: SubmitHandler<AdminAddBadgeForm> = async (body) => {
     if (imageFile) {
@@ -50,7 +59,7 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
 
       mutate(
         {
-          link: "/admin/badge/upload",
+          link: UPLOAD_BADGE_LINK,
           method: "post",
           body: formData,
         },
@@ -59,14 +68,16 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
             Object.assign(body, { iconLink: data.filePath });
             mutate(
               {
-                link: "/admin/badge/create",
+                link: CREATE_BADGE_LINK,
                 method: "post",
                 body,
               },
               {
                 onSuccess: async () => {
-                  await queryClient.invalidateQueries("getAdminBadgeList");
-                  setToastState(true, "뱃지가 추가되었습니다", "success");
+                  await queryClient.invalidateQueries(
+                    QUERY_KEY_GET_ADMIN_BADGE_LIST
+                  );
+                  setToastState(true, CREATE_BADGE_MESSAGE, "success");
                 },
               }
             );
@@ -89,11 +100,11 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
     <>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <h1 className="text-xl text-center mb-5">
-          {badgeType === "NORMAL"
-            ? "일반 뱃지"
-            : badgeType === "ACHIEVEMENT"
-            ? "업적 뱃지"
-            : "특별 뱃지"}{" "}
+          {badgeType === BadgeType.NORMAL
+            ? NORMAL_BADGE
+            : badgeType === BadgeType.ACHIEVEMENT
+            ? ACHIEVEMENT_BADGE
+            : SPECIAL_BADGE}{" "}
           추가
         </h1>
         <div className="my-2">
@@ -105,18 +116,18 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
             maxLength={20}
             required
             {...register("name", {
-              required: "뱃지명은 필수 입력 필드입니다.",
+              required: BADGE_NAME_FORM_EMPTY_ERROR,
               maxLength: {
                 value: 20,
-                message: "뱃지명은 20자 이내로 입력하세요.",
+                message: BADGE_NAME_FORM_LENGTH_ERROR,
               },
             })}
           />
           {errors.name && errors.name.type === "required" && (
-            <div>뱃지명을 입력해 주세요</div>
+            <div>{errors.name.message}</div>
           )}
           {errors.name && errors.name.type === "maxLength" && (
-            <div>뱃지명은 20자리 이내로 입력하세요.</div>
+            <div>{errors.name.message}</div>
           )}
         </div>
         <div className="my-2">
@@ -126,41 +137,36 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
             maxLength={500}
             required
             {...register("description", {
-              required: "뱃지 설명은 필수 입력 필드입니다.",
+              required: BADGE_DESC_FORM_EMPTY_ERROR,
               maxLength: {
                 value: 100,
-                message: "뱃지 설명은 100자 이내로 입력하세요.",
+                message: BADGE_DESC_FORM_LENGTH_ERROR,
               },
             })}
           />
           {errors.description && errors.description.type === "required" && (
-            <div>뱃지 설명을 입력해 주세요</div>
+            <div>{errors.description.message}</div>
           )}
           {errors.description && errors.description.type === "maxLength" && (
-            <div>뱃지 설명명은 100자리 이내로 입력하세요.</div>
+            <div>{errors.description.message}</div>
           )}
         </div>
-        {badgeType !== "SPECIAL" && (
+        {badgeType !== BadgeType.SPECIAL && (
           <div className="my-2">
             <label className="block my-2 text-sm">뱃지 가격</label>
             <input
               type="text"
               className="border p-1 rounded outline-neutral-400"
               maxLength={10}
-              required
               {...register("price", {
-                required: "뱃지 가격은 필수 입력 필드입니다.",
                 maxLength: {
                   value: 10,
-                  message: "뱃지 가격은 10자 이내로 입력하세요.",
+                  message: BADGE_PRICE_FORM_LENGTH_ERROR,
                 },
               })}
             />
-            {errors.name && errors.name.type === "required" && (
-              <div>뱃지 가격을 입력해 주세요</div>
-            )}
-            {errors.name && errors.name.type === "maxLength" && (
-              <div>뱃지 가격은 10자리 이내로 입력하세요.</div>
+            {errors.price && errors.price.type === "maxLength" && (
+              <div>{errors.price?.message}</div>
             )}
           </div>
         )}
