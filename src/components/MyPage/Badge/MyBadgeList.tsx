@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
-import { BadgeEntity } from "../../Admin/Badge/AdminBadgeList";
 import { useUserStore } from "../../../store/user.store";
 import { useModalStore } from "../../../store/modal.store";
 import { useToastStore } from "../../../store/toast.store";
 import { useQueryClient } from "react-query";
+import { BadgeEntity } from "../../../entities/badge.entity";
 
 interface Props {
   tab: number;
@@ -138,7 +138,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
               item.type !== "SPECIAL" && (
                 <button
                   className="border px-2 py-1 mx-1 rounded bg-blue-500 text-white"
-                  onClick={() => handleBuy(item.id, item.price)}
+                  onClick={() => handleBuy(item.id, item.price!)}
                 >
                   구매
                 </button>
