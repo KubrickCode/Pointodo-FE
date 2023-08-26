@@ -36,7 +36,6 @@ const ProfileDropdown: FC = () => {
       },
       {
         onSuccess: async () => {
-          localStorage.removeItem("accessToken");
           location.href = "/";
         },
       }

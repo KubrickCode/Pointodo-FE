@@ -15,7 +15,6 @@ const Unregister: FC = () => {
       },
       {
         onSuccess: async () => {
-          localStorage.removeItem("accessToken");
           location.href = "/";
         },
       }

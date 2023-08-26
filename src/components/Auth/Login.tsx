@@ -28,8 +28,7 @@ const Login: FC<AuthProps> = ({ setTab }) => {
         body: formData,
       },
       {
-        onSuccess: async (data) => {
-          localStorage.setItem("accessToken", data.accessToken);
+        onSuccess: async () => {
           location.reload();
         },
         onError: async (err: any) => {

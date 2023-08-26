@@ -44,8 +44,7 @@ const Register: FC<AuthProps> = ({ setTab }) => {
               body,
             },
             {
-              onSuccess: async (data) => {
-                localStorage.setItem("accessToken", data.accessToken);
+              onSuccess: async () => {
                 location.reload();
               },
             }

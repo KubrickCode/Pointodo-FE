@@ -2,7 +2,6 @@
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/auth", "destination": "/index.html" },
-    { "source": "/social-login", "destination": "/index.html" },
     { "source": "/my-page", "destination": "/index.html" },
     { "source": "/admin", "destination": "/index.html" }
   ]
