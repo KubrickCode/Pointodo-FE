@@ -9,7 +9,31 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useModalStore } from "../../../store/modal.store";
 import Pagination from "../../Pagination/Pagination";
 import { useUserStore } from "../../../store/user.store";
-import { TaskEntity } from "../../../entities/task.entity";
+import { TaskEntity, TaskType } from "../../../entities/task.entity";
+import {
+  CANCLE_TASK_LINK,
+  COMPLETE_TASK_LINK,
+  GET_TASK_LINK,
+  GET_TASK_TOTAL_PAGE,
+  UPDATE_TASK_LINK,
+} from "../../../shared/constants/task.constant";
+import {
+  QUERY_KEY_GET_ALL_BADGE_LIST,
+  QUERY_KEY_GET_CURRENT_POINTS,
+  QUERY_KEY_GET_DAILY_TASKS,
+  QUERY_KEY_GET_DAILY_TOTAL_PAGES,
+  QUERY_KEY_GET_DUE_TASKS,
+  QUERY_KEY_GET_DUE_TOTAL_PAGES,
+  QUERY_KEY_GET_EARNED_POINTS_LOGS,
+  QUERY_KEY_GET_FREE_TASKS,
+  QUERY_KEY_GET_FREE_TOTAL_PAGES,
+  QUERY_KEY_GET_USER_BADGE_PROGRESS,
+} from "../../../shared/constants/query.constant";
+import {
+  CANCLE_TASK_MESSAGE,
+  COMPLETE_TASK_MESSAGE,
+  UPDATE_TASK_MESSAGE,
+} from "../../../shared/messages/task.message";
 
 interface Props {
   tab: number;
@@ -24,70 +48,67 @@ const initialUpdatedBody = {
 };
 
 const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
-  const { mutate } = useQueryMutate();
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const queryClient = useQueryClient();
+  const setToastState = useToastStore((state) => state.setToastState);
+  const setModalState = useModalStore((state) => state.setModalState);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [taskList, setTaskList] = useState<TaskEntity[]>();
+  const [dueDate, setDueDate] = useState(new Date());
+  const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
+  const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
+
+  const queryClient = useQueryClient();
+  const { mutate } = useQueryMutate();
 
   const { data: dailyTasks } = useQueryGet(
-    `/task?taskType=DAILY&page=${currentPage}&order=${order}`,
-    "getDailyTasks",
+    GET_TASK_LINK(TaskType.DAILY, currentPage, order),
+    QUERY_KEY_GET_DAILY_TASKS,
     {
       enabled: tab === 0 && isLoggedIn,
     }
   );
 
   const { data: dueTasks } = useQueryGet(
-    `/task?taskType=DUE&page=${currentPage}&order=${order}`,
-    "getDueTasks",
+    GET_TASK_LINK(TaskType.DUE, currentPage, order),
+    QUERY_KEY_GET_DUE_TASKS,
     {
       enabled: tab === 1 && isLoggedIn,
     }
   );
 
   const { data: freeTasks } = useQueryGet(
-    `/task?taskType=FREE&page=${currentPage}&order=${order}`,
-    "getFreeTasks",
+    GET_TASK_LINK(TaskType.FREE, currentPage, order),
+    QUERY_KEY_GET_FREE_TASKS,
     {
       enabled: tab === 2 && isLoggedIn,
     }
   );
 
   const { data: dailyTotalPage } = useQueryGet(
-    "/task/count/daily",
-    "getDailyTotalPage",
+    GET_TASK_TOTAL_PAGE("daily"),
+    QUERY_KEY_GET_DAILY_TOTAL_PAGES,
     {
       enabled: tab === 0 && isLoggedIn,
     }
   );
 
   const { data: dueTotalPage } = useQueryGet(
-    "/task/count/due",
-    "getDueTotalPage",
+    GET_TASK_TOTAL_PAGE("due"),
+    QUERY_KEY_GET_DUE_TOTAL_PAGES,
     {
       enabled: tab === 1 && isLoggedIn,
     }
   );
 
   const { data: freeTotalPage } = useQueryGet(
-    "/task/count/free",
-    "getFreeTotalPage",
+    GET_TASK_TOTAL_PAGE("free"),
+    QUERY_KEY_GET_FREE_TOTAL_PAGES,
     {
       enabled: tab === 2 && isLoggedIn,
     }
   );
-
-  const [taskList, setTaskList] = useState<TaskEntity[]>();
-
-  const [dueDate, setDueDate] = useState(new Date());
-
-  const setToastState = useToastStore((state) => state.setToastState);
-  const setModalState = useModalStore((state) => state.setModalState);
-
-  const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
-  const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
 
   useEffect(() => {
     if (tab === 0) {
@@ -142,23 +163,27 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
     if (e.target.checked) {
       mutate(
         {
-          link: `/task/complete/${item.id}`,
+          link: COMPLETE_TASK_LINK(item.id),
           method: "patch",
         },
         {
           onSuccess: async () => {
             await queryClient.invalidateQueries(
-              item.taskType === "DAILY"
-                ? "getDailyTasks"
-                : item.taskType === "DUE"
-                ? "getDueTasks"
-                : "getFreeTasks"
+              item.taskType === TaskType.DAILY
+                ? QUERY_KEY_GET_DAILY_TASKS
+                : item.taskType === TaskType.DUE
+                ? QUERY_KEY_GET_DUE_TASKS
+                : QUERY_KEY_GET_FREE_TASKS
             );
-            await queryClient.invalidateQueries("getPoints");
-            await queryClient.invalidateQueries("getAllBadges");
-            await queryClient.invalidateQueries("getUserBadgeProgress");
-            await queryClient.invalidateQueries("getEarnedPointsLogs");
-            setToastState(true, "작업이 완료되었습니다", "success");
+            await queryClient.invalidateQueries(QUERY_KEY_GET_CURRENT_POINTS);
+            await queryClient.invalidateQueries(QUERY_KEY_GET_ALL_BADGE_LIST);
+            await queryClient.invalidateQueries(
+              QUERY_KEY_GET_USER_BADGE_PROGRESS
+            );
+            await queryClient.invalidateQueries(
+              QUERY_KEY_GET_EARNED_POINTS_LOGS
+            );
+            setToastState(true, COMPLETE_TASK_MESSAGE, "success");
           },
         }
       );
@@ -166,19 +191,19 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
     if (!e.target.checked) {
       mutate(
         {
-          link: `/task/cancle/${item.id}`,
+          link: CANCLE_TASK_LINK(item.id),
           method: "patch",
         },
         {
           onSuccess: async () => {
             await queryClient.invalidateQueries(
-              item.taskType === "DAILY"
-                ? "getDailyTasks"
-                : item.taskType === "DUE"
-                ? "getDueTasks"
-                : "getFreeTasks"
+              item.taskType === TaskType.DAILY
+                ? QUERY_KEY_GET_DAILY_TASKS
+                : item.taskType === TaskType.DUE
+                ? QUERY_KEY_GET_DUE_TASKS
+                : QUERY_KEY_GET_FREE_TASKS
             );
-            setToastState(true, "작업 완료가 취소되었습니다", "success");
+            setToastState(true, CANCLE_TASK_MESSAGE, "success");
           },
         }
       );
@@ -192,7 +217,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
       description: updatedBody.description,
       importance: updatedBody.importance,
     };
-    if (taskType === "DUE") {
+    if (taskType === TaskType.DUE) {
       body = Object.assign(body, {
         dueDate: moment(dueDate).format("YYYY-MM-DD"),
       });
@@ -200,25 +225,25 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
 
     mutate(
       {
-        link: "/task/update",
+        link: UPDATE_TASK_LINK,
         method: "patch",
         body,
       },
       {
         onSuccess: async () => {
           await queryClient.invalidateQueries(
-            taskType === "DAILY"
-              ? "getDailyTasks"
-              : taskType === "DUE"
-              ? "getDueTasks"
-              : "getFreeTasks"
+            taskType === TaskType.DAILY
+              ? QUERY_KEY_GET_DAILY_TASKS
+              : taskType === TaskType.DUE
+              ? QUERY_KEY_GET_DUE_TASKS
+              : QUERY_KEY_GET_FREE_TASKS
           );
           setUpdatedState({
             ...updatedState,
             state: false,
             id: 0,
           });
-          setToastState(true, "작업이 수정되었습니다", "success");
+          setToastState(true, UPDATE_TASK_MESSAGE, "success");
         },
       }
     );

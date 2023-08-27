@@ -5,6 +5,7 @@ import { useModalStore } from "../../../store/modal.store";
 import { useToastStore } from "../../../store/toast.store";
 import { useQueryClient } from "react-query";
 import { BadgeEntity } from "../../../entities/badge.entity";
+import { QUERY_KEY_GET_ALL_BADGE_LIST } from "../../../shared/constants/query.constant";
 
 interface Props {
   tab: number;
@@ -33,7 +34,10 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
 
   const { data: currentPoints } = useQueryGet("/point/current", "getPoints");
 
-  const { data: badgeList } = useQueryGet("/badge/all", "getAllBadges");
+  const { data: badgeList } = useQueryGet(
+    "/badge/all",
+    QUERY_KEY_GET_ALL_BADGE_LIST
+  );
   const { data: userBadgeListData } = useQueryGet(
     "/badge/list",
     "getUserBadgeList"

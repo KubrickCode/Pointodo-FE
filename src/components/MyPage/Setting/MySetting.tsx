@@ -3,6 +3,7 @@ import { useUserStore } from "../../../store/user.store";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import { useModalStore } from "../../../store/modal.store";
 import { BadgeEntity } from "../../../entities/badge.entity";
+import { QUERY_KEY_GET_ALL_BADGE_LIST } from "../../../shared/constants/query.constant";
 
 interface Props {
   setTab(tab: number): void;
@@ -14,7 +15,10 @@ const MySetting: FC<Props> = ({ setTab }) => {
   const user = useUserStore((state) => state.user);
   const setModalState = useModalStore((state) => state.setModalState);
 
-  const { data: badgeList } = useQueryGet("/badge/all", "getAllBadges");
+  const { data: badgeList } = useQueryGet(
+    "/badge/all",
+    QUERY_KEY_GET_ALL_BADGE_LIST
+  );
 
   useEffect(() => {
     const filteredBadgeList = badgeList?.filter(
