@@ -1,4 +1,11 @@
-import { FC, ChangeEvent, useState, useEffect } from "react";
+import {
+  FC,
+  ChangeEvent,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
@@ -111,144 +118,146 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
     }
   );
 
+  const tabData = useMemo(
+    () => [
+      {
+        tasks: dailyTasks,
+        totalPage: dailyTotalPage?.totalPages,
+      },
+      {
+        tasks: dueTasks,
+        totalPage: dueTotalPage?.totalPages,
+      },
+      {
+        tasks: freeTasks,
+        totalPage: freeTotalPage?.totalPages,
+      },
+    ],
+    [
+      dailyTasks,
+      dueTasks,
+      freeTasks,
+      dailyTotalPage,
+      dueTotalPage,
+      freeTotalPage,
+    ]
+  );
+
   useEffect(() => {
-    if (tab === 0) {
-      setTotalPage(dailyTotalPage?.totalPages);
-      if (checkedCompletion) {
-        setTaskList(
-          dailyTasks?.filter((item: TaskEntity) => item.completion !== 1)
-        );
-      } else {
-        setTaskList(dailyTasks);
-      }
+    const currentTabData = tabData[tab];
+
+    setTotalPage(currentTabData.totalPage);
+
+    if (checkedCompletion) {
+      setTaskList(
+        currentTabData.tasks?.filter(
+          (item: TaskEntity) => item.completion !== 1
+        )
+      );
+    } else {
+      setTaskList(currentTabData.tasks);
     }
-    if (tab === 1) {
-      setTotalPage(dueTotalPage?.totalPages);
-      if (checkedCompletion) {
-        setTaskList(
-          dueTasks?.filter((item: TaskEntity) => item.completion !== 1)
-        );
-      } else {
-        setTaskList(dueTasks);
-      }
-    }
-    if (tab === 2) {
-      setTotalPage(freeTotalPage?.totalPages);
-      if (checkedCompletion) {
-        setTaskList(
-          freeTasks?.filter((item: TaskEntity) => item.completion !== 1)
-        );
-      } else {
-        setTaskList(freeTasks);
-      }
-    }
-  }, [
-    tab,
-    dailyTasks,
-    dueTasks,
-    freeTasks,
-    dailyTotalPage,
-    dueTotalPage,
-    freeTotalPage,
-    checkedCompletion,
-  ]);
+  }, [tab, tabData, checkedCompletion]);
 
   useEffect(() => {
     if (totalPage === 1) setCurrentPage(1);
   }, [totalPage]);
 
-  const handleCheckboxChange = (
-    item: TaskEntity,
-    e: ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.checked) {
-      mutate(
-        {
-          link: COMPLETE_TASK_LINK(item.id),
-          method: "patch",
-        },
-        {
-          onSuccess: async () => {
-            await queryClient.invalidateQueries(
-              item.taskType === TaskType.DAILY
-                ? QUERY_KEY_GET_DAILY_TASKS
-                : item.taskType === TaskType.DUE
-                ? QUERY_KEY_GET_DUE_TASKS
-                : QUERY_KEY_GET_FREE_TASKS
-            );
-            await queryClient.invalidateQueries(QUERY_KEY_GET_CURRENT_POINTS);
-            await queryClient.invalidateQueries(QUERY_KEY_GET_ALL_BADGE_LIST);
-            await queryClient.invalidateQueries(
-              QUERY_KEY_GET_USER_BADGE_PROGRESS
-            );
-            await queryClient.invalidateQueries(
-              QUERY_KEY_GET_EARNED_POINTS_LOGS
-            );
-            setToastState(true, COMPLETE_TASK_MESSAGE, "success");
+  const handleCheckboxChange = useCallback(
+    async (item: TaskEntity, e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.checked) {
+        mutate(
+          {
+            link: COMPLETE_TASK_LINK(item.id),
+            method: "patch",
           },
-        }
-      );
-    }
-    if (!e.target.checked) {
-      mutate(
-        {
-          link: CANCLE_TASK_LINK(item.id),
-          method: "patch",
-        },
-        {
-          onSuccess: async () => {
-            await queryClient.invalidateQueries(
-              item.taskType === TaskType.DAILY
-                ? QUERY_KEY_GET_DAILY_TASKS
-                : item.taskType === TaskType.DUE
-                ? QUERY_KEY_GET_DUE_TASKS
-                : QUERY_KEY_GET_FREE_TASKS
-            );
-            setToastState(true, CANCLE_TASK_MESSAGE, "success");
-          },
-        }
-      );
-    }
-  };
-
-  const handleUpdate = async (id: number, taskType: string) => {
-    let body = {
-      id,
-      name: updatedBody.name,
-      description: updatedBody.description,
-      importance: updatedBody.importance,
-    };
-    if (taskType === TaskType.DUE) {
-      body = Object.assign(body, {
-        dueDate: moment(dueDate).format("YYYY-MM-DD"),
-      });
-    }
-
-    mutate(
-      {
-        link: UPDATE_TASK_LINK,
-        method: "patch",
-        body,
-      },
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(
-            taskType === TaskType.DAILY
-              ? QUERY_KEY_GET_DAILY_TASKS
-              : taskType === TaskType.DUE
-              ? QUERY_KEY_GET_DUE_TASKS
-              : QUERY_KEY_GET_FREE_TASKS
-          );
-          setUpdatedState({
-            ...updatedState,
-            state: false,
-            id: 0,
-          });
-          setToastState(true, UPDATE_TASK_MESSAGE, "success");
-        },
+          {
+            onSuccess: async () => {
+              await queryClient.invalidateQueries(
+                item.taskType === TaskType.DAILY
+                  ? QUERY_KEY_GET_DAILY_TASKS
+                  : item.taskType === TaskType.DUE
+                  ? QUERY_KEY_GET_DUE_TASKS
+                  : QUERY_KEY_GET_FREE_TASKS
+              );
+              await queryClient.invalidateQueries(QUERY_KEY_GET_CURRENT_POINTS);
+              await queryClient.invalidateQueries(QUERY_KEY_GET_ALL_BADGE_LIST);
+              await queryClient.invalidateQueries(
+                QUERY_KEY_GET_USER_BADGE_PROGRESS
+              );
+              await queryClient.invalidateQueries(
+                QUERY_KEY_GET_EARNED_POINTS_LOGS
+              );
+              setToastState(true, COMPLETE_TASK_MESSAGE, "success");
+            },
+          }
+        );
       }
-    );
-  };
+      if (!e.target.checked) {
+        mutate(
+          {
+            link: CANCLE_TASK_LINK(item.id),
+            method: "patch",
+          },
+          {
+            onSuccess: async () => {
+              await queryClient.invalidateQueries(
+                item.taskType === TaskType.DAILY
+                  ? QUERY_KEY_GET_DAILY_TASKS
+                  : item.taskType === TaskType.DUE
+                  ? QUERY_KEY_GET_DUE_TASKS
+                  : QUERY_KEY_GET_FREE_TASKS
+              );
+              setToastState(true, CANCLE_TASK_MESSAGE, "success");
+            },
+          }
+        );
+      }
+    },
+    []
+  );
+
+  const handleUpdate = useCallback(
+    async (id: number, taskType: string) => {
+      let body = {
+        id,
+        name: updatedBody.name,
+        description: updatedBody.description,
+        importance: updatedBody.importance,
+      };
+      if (taskType === TaskType.DUE) {
+        body = Object.assign(body, {
+          dueDate: moment(dueDate).format("YYYY-MM-DD"),
+        });
+      }
+
+      mutate(
+        {
+          link: UPDATE_TASK_LINK,
+          method: "patch",
+          body,
+        },
+        {
+          onSuccess: async () => {
+            await queryClient.invalidateQueries(
+              taskType === TaskType.DAILY
+                ? QUERY_KEY_GET_DAILY_TASKS
+                : taskType === TaskType.DUE
+                ? QUERY_KEY_GET_DUE_TASKS
+                : QUERY_KEY_GET_FREE_TASKS
+            );
+            setUpdatedState({
+              ...updatedState,
+              state: false,
+              id: 0,
+            });
+            setToastState(true, UPDATE_TASK_MESSAGE, "success");
+          },
+        }
+      );
+    },
+    [updatedBody, dueDate, updatedState]
+  );
 
   return (
     <div>
