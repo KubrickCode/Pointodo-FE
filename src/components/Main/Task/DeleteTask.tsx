@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useToastStore } from "../../../store/toast.store";
 import { useQueryClient } from "react-query";
@@ -24,7 +24,7 @@ const DeleteTask: FC = () => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     mutate(
       {
         link: DELETE_TASK_LINK(modalTaskId),
@@ -51,7 +51,7 @@ const DeleteTask: FC = () => {
         },
       }
     );
-  };
+  }, [modalTaskId, modalTaskType]);
 
   return (
     <>
