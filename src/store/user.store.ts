@@ -1,16 +1,17 @@
 import { StateCreator, create } from "zustand";
 import { UserStoreType } from "./store.type";
 import { devtools } from "zustand/middleware";
+import { Provider, Role } from "../entities/user.entity";
 
 const userStore: StateCreator<UserStoreType> = (set) => ({
   user: {
     id: "",
     email: "",
-    provider: "LOCAL",
-    role: "USER",
+    provider: Provider.LOCAL,
+    role: Role.USER,
     selectedBadgeId: 1,
     selectedBadge: { iconLink: "" },
-    createdAt: "",
+    createdAt: new Date(),
   },
   isLoggedIn: false,
   setUser: (user) => set((state) => ({ ...state, user })),

@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { EXPIRED_ACCESS_TOKEN } from "../shared/messages/auth.error";
 import { INTERNAL_SERVER_ERROR } from "../shared/messages/global.error";
 import { QUERY_STALE_TIME } from "../shared/constants/query.constant";
+import { REFRESH_LINK } from "../shared/constants/auth.constant";
 
 const host = window.location.origin + "/api";
 
@@ -19,7 +20,7 @@ api.interceptors.response.use(
   },
   async (error) => {
     if (error.response.data.message === EXPIRED_ACCESS_TOKEN) {
-      const response = await api.get("/auth/refresh");
+      const response = await api.get(REFRESH_LINK);
       if (!response.data) {
         window.location.href = "/";
         return Promise.reject(error);

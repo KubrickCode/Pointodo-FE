@@ -1,17 +1,9 @@
-interface User {
-  id: string;
-  email: string;
-  provider: "LOCAL" | "GOOGLE" | "KAKAO";
-  role: "USER" | "ADMIN" | "MASTER";
-  selectedBadgeId: number;
-  selectedBadge: { iconLink: string };
-  createdAt: string;
-}
+import { UserEntity } from "../entities/user.entity";
 
 export interface UserStoreType {
-  user: User;
+  user: UserEntity;
   isLoggedIn: boolean;
-  setUser: (user: User) => void;
+  setUser: (user: UserEntity) => void;
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
