@@ -1,14 +1,17 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState, useEffect, useCallback } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { UNREGISTER_LINK } from "../../../shared/constants/user.constant";
 
 const Unregister: FC = () => {
+  const setModalState = useModalStore((state) => state.setModalState);
+
   const [confirmText, setConfirmText] = useState("");
   const [isValid, setIsValid] = useState(false);
-  const setModalState = useModalStore((state) => state.setModalState);
+
   const { mutate } = useQueryMutate();
-  const handleSubmit = async () => {
+
+  const handleSubmit = useCallback(async () => {
     mutate(
       {
         link: UNREGISTER_LINK,
@@ -20,7 +23,7 @@ const Unregister: FC = () => {
         },
       }
     );
-  };
+  }, []);
 
   useEffect(() => {
     if (confirmText === "회원 탈퇴") {
