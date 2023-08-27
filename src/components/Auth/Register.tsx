@@ -72,16 +72,18 @@ const Register: FC<Props> = ({ setTab }) => {
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             maxLength: 255,
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className={`border p-1 rounded w-full outline-neutral-300 ${
+            errors.email && "border-red-500 outline-red-500"
+          }`}
         />
         {errors.email && errors.email.type === "required" && (
-          <div>{AUTH_EMAIL_EMPTY_ERROR}</div>
+          <div className="text-red-500">{AUTH_EMAIL_EMPTY_ERROR}</div>
         )}
         {errors.email && errors.email.type === "pattern" && (
-          <div>{AUTH_EMAIL_FORM_ERROR}</div>
+          <div className="text-red-500">{AUTH_EMAIL_FORM_ERROR}</div>
         )}
         {errors.email && errors.email.type === "maxLength" && (
-          <div>{AUTH_EMAIL_LENGTH_EMPTY_ERROR}</div>
+          <div className="text-red-500">{AUTH_EMAIL_LENGTH_EMPTY_ERROR}</div>
         )}
       </div>
       <div className="my-4">
@@ -93,13 +95,15 @@ const Register: FC<Props> = ({ setTab }) => {
             pattern:
               /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,20}$/,
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className={`border p-1 rounded w-full outline-neutral-300 ${
+            errors.password && "border-red-500 outline-red-500"
+          }`}
         />
         {errors.password && errors.password.type === "required" && (
-          <div>{AUTH_PASSWORD_EMPTY_ERROR}</div>
+          <div className="text-red-500">{AUTH_PASSWORD_EMPTY_ERROR}</div>
         )}
         {errors.password && errors.password.type === "pattern" && (
-          <div>{AUTH_PASSWORD_FORM_ERROR}</div>
+          <div className="text-red-500">{AUTH_PASSWORD_FORM_ERROR}</div>
         )}
       </div>
       <div className="my-4">
@@ -110,15 +114,17 @@ const Register: FC<Props> = ({ setTab }) => {
             required: true,
             validate: (value) => value === watch("password"),
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className={`border p-1 rounded w-full outline-neutral-300 ${
+            errors.confirmPassword && "border-red-500 outline-red-500"
+          }`}
         />
         {errors.confirmPassword &&
           errors.confirmPassword.type === "required" && (
-            <div>{AUTH_PASSWORD_EMPTY_ERROR}</div>
+            <div className="text-red-500">{AUTH_PASSWORD_EMPTY_ERROR}</div>
           )}
         {errors.confirmPassword &&
           errors.confirmPassword.type === "validate" && (
-            <div>{AUTH_PASSWORD_NOT_EQUAL_ERROR}</div>
+            <div className="text-red-500">{AUTH_PASSWORD_NOT_EQUAL_ERROR}</div>
           )}
       </div>
       {errMsg.length > 0 && (
