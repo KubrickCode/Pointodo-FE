@@ -34,6 +34,7 @@ import {
   COMPLETE_TASK_MESSAGE,
   UPDATE_TASK_MESSAGE,
 } from "../../../shared/messages/task.message";
+import { MODAL_CONTENT_DELETE_TASK } from "../../../shared/constants/modal.constant";
 
 interface Props {
   tab: number;
@@ -453,7 +454,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                       onClick={() =>
                         setModalState(
                           true,
-                          "deleteTask",
+                          MODAL_CONTENT_DELETE_TASK,
                           item.id,
                           item.taskType
                         )

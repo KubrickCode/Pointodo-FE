@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useModalStore } from "../../../store/modal.store";
+import { MODAL_CONTENT_ADD_TASK } from "../../../shared/constants/modal.constant";
 
 interface Props {
   tab: number;
@@ -22,7 +23,7 @@ const TaskHeader: FC<Props> = ({
         <div>
           <button
             className="bg-blue-500 rounded px-3 py-2 text-white hover:bg-blue-600"
-            onClick={() => setModalState(true, `addTask${tab}`)}
+            onClick={() => setModalState(true, MODAL_CONTENT_ADD_TASK(tab))}
           >
             작업 추가
           </button>

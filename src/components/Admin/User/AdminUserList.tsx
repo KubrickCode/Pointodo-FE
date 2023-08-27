@@ -12,6 +12,7 @@ import {
   QUERY_KEY_GET_USER_LIST,
   QUERY_KEY_GET_USER_LIST_TOTAL_PAGE,
 } from "../../../shared/constants/query.constant";
+import { MODAL_CONTENT_USER_BADGE_LIST } from "../../../shared/constants/modal.constant";
 
 interface Props {
   tab: number;
@@ -142,7 +143,7 @@ const AdminUserList: FC<Props> = ({ tab }) => {
                     onClick={() =>
                       setModalState(
                         true,
-                        "userBadgeList",
+                        MODAL_CONTENT_USER_BADGE_LIST,
                         undefined,
                         undefined,
                         undefined,

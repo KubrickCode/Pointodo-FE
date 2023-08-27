@@ -6,6 +6,7 @@ import { useToastStore } from "../../../store/toast.store";
 import { useQueryClient } from "react-query";
 import { BadgeEntity } from "../../../entities/badge.entity";
 import { QUERY_KEY_GET_ALL_BADGE_LIST } from "../../../shared/constants/query.constant";
+import { MODAL_CONTENT_BUY_BADGE } from "../../../shared/constants/modal.constant";
 
 interface Props {
   tab: number;
@@ -78,7 +79,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
     if (price && price > currentPoints.points) {
       setToastState(true, "포인트가 부족합니다", "warning");
     } else {
-      setModalState(true, "buyBadge", undefined, undefined, id);
+      setModalState(true, MODAL_CONTENT_BUY_BADGE, undefined, undefined, id);
     }
   };
 

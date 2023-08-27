@@ -4,6 +4,10 @@ import { useQueryGet } from "../../../hooks/useQueryApi";
 import { useModalStore } from "../../../store/modal.store";
 import { BadgeEntity } from "../../../entities/badge.entity";
 import { QUERY_KEY_GET_ALL_BADGE_LIST } from "../../../shared/constants/query.constant";
+import {
+  MODAL_CONTENT_CHANGE_PASSWORD,
+  MODAL_CONTENT_UNREGISTER,
+} from "../../../shared/constants/modal.constant";
 
 interface Props {
   setTab(tab: number): void;
@@ -41,13 +45,13 @@ const MySetting: FC<Props> = ({ setTab }) => {
         </button>
         <button
           className="border rounded px-2 py-1 my-2 w-40"
-          onClick={() => setModalState(true, "changePassword")}
+          onClick={() => setModalState(true, MODAL_CONTENT_CHANGE_PASSWORD)}
         >
           비밀번호 변경
         </button>
         <button
           className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white"
-          onClick={() => setModalState(true, "unregister")}
+          onClick={() => setModalState(true, MODAL_CONTENT_UNREGISTER)}
         >
           회원 탈퇴
         </button>
