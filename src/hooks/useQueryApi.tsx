@@ -22,6 +22,7 @@ api.interceptors.response.use(
     if (error.response.data.message === EXPIRED_ACCESS_TOKEN) {
       const response = await api.get(REFRESH_LINK);
       if (!response.data) {
+        localStorage.removeItem("themeStore");
         window.location.href = "/";
         return Promise.reject(error);
       }

@@ -99,7 +99,7 @@ const AddTask: FC<Props> = ({ taskType }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <h1 className="text-xl text-center mb-5">
+        <h1 className="text-xl text-center mb-5 dark:text-neutral-200">
           {taskType === TaskType.DAILY
             ? DAILY_TASK
             : taskType === TaskType.DUE
@@ -108,11 +108,13 @@ const AddTask: FC<Props> = ({ taskType }) => {
           추가
         </h1>
         <div className="my-2">
-          <label className="block my-2 text-sm">작업명</label>
+          <label className="block my-2 text-sm dark:text-neutral-200">
+            작업명
+          </label>
           <input type="hidden" value={taskType} {...register("taskType")} />
           <input
             type="text"
-            className="border p-1 rounded outline-neutral-400"
+            className="border p-1 rounded outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
             maxLength={20}
             required
             {...register("name", {
@@ -131,9 +133,11 @@ const AddTask: FC<Props> = ({ taskType }) => {
           )}
         </div>
         <div className="my-2">
-          <label className="block my-2 text-sm">작업 설명</label>
+          <label className="block my-2 text-sm dark:text-neutral-200">
+            작업 설명
+          </label>
           <textarea
-            className="border p-1 rounded outline-neutral-400 w-full"
+            className="border p-1 rounded outline-neutral-400 w-full dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
             maxLength={500}
             {...register("description", {
               maxLength: {
@@ -148,21 +152,26 @@ const AddTask: FC<Props> = ({ taskType }) => {
         </div>
         {taskType === "DUE" && (
           <div className="my-2">
-            <label className="block my-2 text-sm">만료 기한</label>
-            <div className="border p-1 rounded">
+            <label className="block my-2 text-sm dark:text-neutral-200">
+              만료 기한
+            </label>
+            <div className="border p-1 rounded dark:border-0">
               <DatePicker
                 locale={ko}
                 selected={dueDate}
                 onChange={(date) => setDueDate(date!)}
                 dateFormat="yyyy-MM-dd"
+                className="dark:bg-neutral-600 dark:text-neutral-200 w-full cursor-pointer p-1 rounded"
               />
             </div>
           </div>
         )}
         <div className="my-2">
-          <label className="block my-2 text-sm">작업 우선도</label>
+          <label className="block my-2 text-sm dark:text-neutral-200">
+            작업 우선도
+          </label>
           <select
-            className="w-full border p-1 rounded outline-neutral-400"
+            className="w-full border p-1 rounded outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
             {...register("importance")}
           >
             <option value={3}>하</option>
@@ -173,13 +182,13 @@ const AddTask: FC<Props> = ({ taskType }) => {
         <div className="text-center mt-5">
           <button
             type="submit"
-            className="border px-2 py-1 mr-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600"
+            className="border px-2 py-1 mr-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:border-0"
           >
             추가
           </button>
           <button
             type="button"
-            className="border-2 px-2 py-1 mr-2 rounded-lg bg-white hover:bg-neutral-200"
+            className="border-2 px-2 py-1 mr-2 rounded-lg bg-white hover:bg-neutral-200 dark:border-0"
             onClick={() => setModalState(false)}
           >
             취소

@@ -65,7 +65,7 @@ const Modal: FC = () => {
           className="fixed inset-0 bg-black opacity-70"
           onClick={handleCloseModal}
         ></div>
-        <div className="relative bg-white p-10 overflow-hidden z-60 rounded-3xl">
+        <div className="relative bg-white p-10 overflow-hidden z-60 rounded-3xl dark:bg-neutral-800">
           {modalContentComponents[modalContent]}
         </div>
       </div>

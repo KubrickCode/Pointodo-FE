@@ -19,13 +19,13 @@ interface Props {
 const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
   return (
     <>
-      <nav className="border-r sm:py-8 sm:h-screen sm:w-[15%]">
+      <nav className="border-r sm:py-8 sm:h-screen sm:w-[15%] dark:border-neutral-600">
         <ul className="grid grid-cols-3 sm:flex sm:flex-col mx-2">
           {menu.map((item) => (
             <li
               key={item.id}
-              className={`cursor-pointer my-5 py-3 px-8 w-full rounded-lg text-center hover:bg-blue-300 hover:text-white ${
-                item.id === tab && "bg-blue-400 text-white"
+              className={`cursor-pointer my-5 py-3 px-8 w-full rounded-lg text-center dark:text-neutral-200 hover:bg-blue-300 hover:text-white dark:hover:bg-neutral-900 ${
+                item.id === tab && "bg-blue-400 text-white dark:bg-neutral-800"
               }`}
               onClick={() => setTab(item.id)}
             >

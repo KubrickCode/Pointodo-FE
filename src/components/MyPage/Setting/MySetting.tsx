@@ -40,25 +40,25 @@ const MySetting: FC<Props> = ({ setTab }) => {
 
   return (
     <div className="w-full p-5 flex justify-center">
-      <div className="grid justify-items-center border p-5 h-fit rounded-xl">
+      <div className="grid justify-items-center border p-5 h-fit rounded-xl dark:border-neutral-600">
         <img src={myBadge} className="w-40 h-40" />
-        <div className="my-2">이메일 : {user?.email}</div>
+        <div className="my-2 dark:text-neutral-200">이메일 : {user?.email}</div>
         <button
-          className="border-2 px-2 py-1 rounded my-2 w-40 hover:bg-neutral-200"
+          className="border-2 px-2 py-1 rounded my-2 w-40 hover:bg-neutral-200 dark:border-neutral-600 dark:text-neutral-200 dark:bg-neutral-600 dark:hover:bg-neutral-700"
           onClick={() => setTab(0)}
         >
           대표 뱃지 수정
         </button>
         {user?.provider === Provider.LOCAL && (
           <button
-            className="border-2 rounded px-2 py-1 my-2 w-40 hover:bg-neutral-200"
+            className="border-2 rounded px-2 py-1 my-2 w-40 hover:bg-neutral-200 dark:border-neutral-600 dark:text-neutral-200 dark:bg-neutral-600 dark:hover:bg-neutral-700"
             onClick={() => setModalState(true, MODAL_CONTENT_CHANGE_PASSWORD)}
           >
             비밀번호 변경
           </button>
         )}
         <button
-          className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white hover:bg-red-600"
+          className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white hover:bg-red-600 dark:border-neutral-600"
           onClick={() => setModalState(true, MODAL_CONTENT_UNREGISTER)}
         >
           회원 탈퇴

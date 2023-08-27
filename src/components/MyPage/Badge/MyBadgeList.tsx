@@ -128,16 +128,19 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
   return (
     <ul className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
       {data?.map((item) => (
-        <li key={item.id} className="border text-center rounded-lg p-3">
+        <li
+          key={item.id}
+          className="border text-center rounded-lg p-3 dark:border-neutral-600"
+        >
           <div className="flex justify-center">
             <img src={item.iconLink} className="w-40 h-40" />
           </div>
           <div>
-            <h2 className="text-2xl my-3">{item.name}</h2>
+            <h2 className="text-2xl my-3 dark:text-neutral-200">{item.name}</h2>
           </div>
-          <div className="mb-2">{item.description}</div>
+          <div className="mb-2 dark:text-neutral-200">{item.description}</div>
           {item.type === BadgeType.ACHIEVEMENT ? (
-            <div className="h-8">
+            <div className="h-8 dark:text-neutral-200">
               진척도:{" "}
               {userBadgeProgress?.filter((el) => el.badgeId === item.id)[0]
                 ?.progress || 0}{" "}
@@ -153,13 +156,15 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
                 (item.name === "생산성 뱃지3" && 500)}
             </div>
           ) : (
-            <div className="h-8 ">{"  "}</div>
+            <div className="h-8">{"  "}</div>
           )}
-          <div>가격: {item?.price || "구매 불가"}</div>
+          <div className="dark:text-neutral-200">
+            가격: {item?.price || "구매 불가"}
+          </div>
           <div className="mt-2">
             {userBadgeList?.includes(item.id) || item.id === 1 ? (
               <button
-                className="border px-2 py-1 mx-1 rounded bg-blue-300 text-white"
+                className="border px-2 py-1 mx-1 rounded bg-blue-300 text-white dark:border-0"
                 disabled
               >
                 보유중
@@ -167,7 +172,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
             ) : (
               item.type !== BadgeType.SPECIAL && (
                 <button
-                  className="border px-2 py-1 mx-1 rounded bg-blue-500 text-white hover:bg-blue-600"
+                  className="border px-2 py-1 mx-1 rounded bg-blue-500 text-white hover:bg-blue-600 dark:border-0"
                   onClick={() => handleBuy(item.id, item.price!)}
                 >
                   구매
@@ -178,14 +183,14 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
             {(userBadgeList?.includes(item.id) || item.id === 1) &&
               (user?.selectedBadgeId === item.id ? (
                 <button
-                  className="border px-2 py-1 mx-1 rounded bg-pink-300 text-white"
+                  className="border px-2 py-1 mx-1 rounded bg-pink-300 text-white dark:border-0"
                   disabled
                 >
                   선택됨
                 </button>
               ) : (
                 <button
-                  className="border px-2 py-1 mx-1 rounded bg-pink-500 text-white hover:bg-pink-600"
+                  className="border px-2 py-1 mx-1 rounded bg-pink-500 text-white hover:bg-pink-600 dark:border-0"
                   onClick={() => handleSelect(item.id)}
                 >
                   선택

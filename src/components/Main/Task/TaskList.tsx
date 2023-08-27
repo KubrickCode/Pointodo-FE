@@ -262,30 +262,34 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   return (
     <div>
       <table className="table-fixed w-full">
-        <thead className="border-b p-2 sm:p-5">
+        <thead className="border-b p-2 sm:p-5 dark:border-neutral-600">
           <tr>
-            <th className="p-2 sm:p-5 text-center border-r w-[10%]">완료</th>
+            <th className="p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[10%] dark:text-neutral-200">
+              완료
+            </th>
             <th
-              className={`p-2 sm:p-5 text-center border-r w-[${
+              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업명
             </th>
             <th
-              className={`p-2 sm:p-5 text-center border-r w-[${
+              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업 설명
             </th>
-            <th className="p-2 sm:p-5 text-center border-l w-[10%]">중요도</th>
+            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[10%]">
+              중요도
+            </th>
             {tab === 1 && (
-              <th className="p-2 sm:p-5 text-center border-l w-[20%]">
+              <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[20%]">
                 작업 기한
               </th>
             )}
-            <th className="p-2 sm:p-5 text-center border-l w-[20%]">
+            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[20%]">
               수정/삭제
             </th>
           </tr>
@@ -299,15 +303,15 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 moment(item.dueDate).isBefore(
                   moment(new Date()).format("YYYY-MM-DD")
                 )
-                  ? "line-through"
+                  ? "line-through dark:decoration-neutral-200"
                   : ""
               }
             >
-              <td className="p-2 sm:p-5 text-center border-r w-[10%] ">
+              <td className="p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[10%] ">
                 <div className="flex items-center justify-center mb-4">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
                     defaultChecked={item.completion === 0 ? false : true}
                     onChange={(e) => handleCheckboxChange(item, e)}
                     disabled={moment(item.dueDate).isBefore(
@@ -317,14 +321,14 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 </div>
               </td>
               <td
-                className={`p-2 sm:p-5 text-center border-r w-[${
+                className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[${
                   tab === 1 ? "20" : "30"
                 }%]`}
               >
                 {updatedState.state && updatedState.id === item.id ? (
                   <input
                     type="text"
-                    className="border rounded p-1 w-full"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200"
                     value={updatedBody.name}
                     required
                     minLength={1}
@@ -334,18 +338,20 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all">{item.name}</span>
+                  <span className="break-all dark:text-neutral-200">
+                    {item.name}
+                  </span>
                 )}
               </td>
 
               <td
-                className={`p-2 sm:p-5 text-center border-r w-[${
+                className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[${
                   tab === 1 ? "20" : "30"
                 }%]`}
               >
                 {updatedState.state && updatedState.id === item.id ? (
                   <textarea
-                    className="border rounded p-1 w-full"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200"
                     value={updatedBody.description || ""}
                     maxLength={500}
                     onChange={(e) =>
@@ -356,15 +362,15 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all">
+                  <span className="break-all dark:text-neutral-200">
                     {item.description || "설명이 없습니다"}
                   </span>
                 )}
               </td>
-              <td className="p-2 sm:p-5 text-center border-l w-[10%]">
+              <td className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 w-[10%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <select
-                    className="w-full border p-1 rounded outline-neutral-400"
+                    className="w-full border p-1 rounded outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200"
                     value={updatedBody.importance}
                     onChange={(e) =>
                       setUpdatedBody({
@@ -384,7 +390,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     </option>
                   </select>
                 ) : (
-                  <span>
+                  <span className="dark:text-neutral-200">
                     {item.importance === 1
                       ? "상"
                       : item.importance === 2
@@ -394,9 +400,9 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 )}
               </td>
               {tab === 1 && (
-                <td className="p-2 sm:p-5 text-center border-l w-[10%]">
+                <td className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 w-[10%]">
                   {updatedState.state && updatedState.id === item.id ? (
-                    <div className="border p-1 rounded">
+                    <div className="border p-1 rounded w-full">
                       <DatePicker
                         locale={ko}
                         selected={dueDate}
@@ -407,26 +413,27 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                           setDueDate(date!);
                         }}
                         dateFormat="yyyy-MM-dd"
+                        className="dark:bg-neutral-600 dark:text-neutral-200 w-full cursor-pointer"
                       />
                     </div>
                   ) : (
-                    <span>{`${moment
+                    <span className="dark:text-neutral-200">{`${moment
                       .utc(item.occurredAt)
                       .format("YYYY-MM-DD")} ~ ${item.dueDate}`}</span>
                   )}
                 </td>
               )}
-              <td className="p-2 sm:p-5 text-center border-l w-[20%]">
+              <td className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 w-[20%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800 dark:border-0"
                       onClick={() => handleUpdate(item.id, item.taskType)}
                     >
                       완료
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500"
+                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-800 dark:border-0"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -441,7 +448,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 ) : (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-900 dark:hover:bg-blue-950 dark:border-0"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -459,7 +466,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                       수정
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400"
+                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400 dark:bg-red-900 dark:hover:bg-red-950 dark:border-0"
                       onClick={() =>
                         setModalState(
                           true,

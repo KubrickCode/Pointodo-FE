@@ -24,8 +24,10 @@ const Pagination: FC<Props> = ({ totalPage, currentPage, setCurrentPage }) => {
   return (
     <div className="flex flex-row">
       <button
-        className={`border py-3 px-4  border-neutral-300 rounded-l-lg  ${
-          currentPage === 1 ? "cursor-not-allowed" : "hover:bg-blue-100"
+        className={`border py-3 px-4 border-neutral-300 rounded-l-lg dark:bg-neutral-300  ${
+          currentPage === 1
+            ? "cursor-not-allowed"
+            : "hover:bg-blue-100 dark:hover:bg-neutral-400"
         }`}
         onClick={() => handlePageClick(1)}
         disabled={currentPage === 1}
@@ -47,8 +49,10 @@ const Pagination: FC<Props> = ({ totalPage, currentPage, setCurrentPage }) => {
       </button>
 
       <button
-        className={`border py-3 px-4 border-neutral-300 ${
-          currentPage === 1 ? "cursor-not-allowed" : "hover:bg-blue-100"
+        className={`border py-3 px-4 border-neutral-300 dark:bg-neutral-300 ${
+          currentPage === 1
+            ? "cursor-not-allowed"
+            : "hover:bg-blue-100 dark:hover:bg-neutral-400"
         }`}
         onClick={() => handlePageClick(currentPage - 1)}
         disabled={currentPage === 1}
@@ -74,10 +78,10 @@ const Pagination: FC<Props> = ({ totalPage, currentPage, setCurrentPage }) => {
         <button
           key={index}
           onClick={() => handlePageClick(startPage + index)}
-          className={`border border-neutral-300 py-2 px-4 ${
+          className={`border border-neutral-300 py-2 px-4 dark:bg-neutral-300 ${
             currentPage === startPage + index
-              ? "border-blue-300 bg-blue-50 cursor-not-allowed"
-              : "hover:bg-blue-100"
+              ? "border-blue-300 bg-blue-50 cursor-not-allowed dark:bg-neutral-500 dark:border-0 dark:text-neutral-200"
+              : "hover:bg-blue-100 dark:hover:bg-neutral-400"
           }`}
         >
           {startPage + index}
@@ -85,8 +89,10 @@ const Pagination: FC<Props> = ({ totalPage, currentPage, setCurrentPage }) => {
       ))}
 
       <button
-        className={`border py-3 px-4 border-neutral-300 ${
-          currentPage === totalPage ? "cursor-not-allowed" : "hover:bg-blue-100"
+        className={`border py-3 px-4 border-neutral-300 dark:bg-neutral-300 ${
+          currentPage === totalPage
+            ? "cursor-not-allowed"
+            : "hover:bg-blue-100 dark:hover:bg-neutral-400"
         }`}
         onClick={() => handlePageClick(currentPage + 1)}
         disabled={currentPage === totalPage}
@@ -109,8 +115,10 @@ const Pagination: FC<Props> = ({ totalPage, currentPage, setCurrentPage }) => {
       </button>
 
       <button
-        className={`border py-3 px-4 border border-neutral-300 rounded-r-lg ${
-          currentPage === totalPage ? "cursor-not-allowed" : "hover:bg-blue-100"
+        className={`border py-3 px-4 border border-neutral-300 dark:bg-neutral-300 rounded-r-lg ${
+          currentPage === totalPage
+            ? "cursor-not-allowed"
+            : "hover:bg-blue-100 dark:hover:bg-neutral-400"
         }`}
         onClick={() => handlePageClick(totalPage)}
         disabled={currentPage === totalPage}

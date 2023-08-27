@@ -23,14 +23,16 @@ const Navigation: FC = () => {
       <nav
         className={`${
           !isLoggedIn && "hidden"
-        } flex justify-between p-5 border-b`}
+        } flex justify-between p-5 border-b dark:border-neutral-600`}
       >
         <div>
           <button
             className="flex flex-row items-center h-full"
             onClick={() => (location.href = "/")}
           >
-            <h1 className="text-2xl ml-5 font-bold">Pointodo</h1>
+            <h1 className="text-2xl ml-5 mr-1 font-bold dark:text-neutral-200">
+              Pointodo
+            </h1>
             <img src="logo.png" className="w-10" />
           </button>
         </div>
@@ -56,25 +58,33 @@ const Navigation: FC = () => {
                 />
               </svg>
               <div
-                className={`absolute border bg-white p-4 rounded w-fit right-[-50px] top-10 ${
+                className={`absolute border bg-white p-4 rounded w-fit right-[-50px] top-10 dark:bg-neutral-800 dark:border-neutral-400 ${
                   !pointInfo && "hidden"
                 }`}
               >
-                <p className="text-lg mb-2">※ 포인트 정책</p>
-                <p className="whitespace-nowrap">- 매일 작업 완료 시 1포인트</p>
-                <p className="whitespace-nowrap">- 기한 작업 완료 시 3포인트</p>
-                <p className="whitespace-nowrap">
+                <p className="text-lg mb-2 dark:text-neutral-200">
+                  ※ 포인트 정책
+                </p>
+                <p className="whitespace-nowrap dark:text-neutral-200">
+                  - 매일 작업 완료 시 1포인트
+                </p>
+                <p className="whitespace-nowrap dark:text-neutral-200">
+                  - 기한 작업 완료 시 3포인트
+                </p>
+                <p className="whitespace-nowrap dark:text-neutral-200">
                   - 무기한 작업 완료 시 5포인트
                 </p>
-                <p className="whitespace-nowrap">
+                <p className="whitespace-nowrap dark:text-neutral-200">
                   - 이틀 이상 연속으로 작업 완료 시 추가 1포인트
                 </p>
-                <p className="whitespace-nowrap">
+                <p className="whitespace-nowrap dark:text-neutral-200">
                   - 포인트로 각종 뱃지 구매 가능
                 </p>
               </div>
             </div>
-            <span>보유 포인트: {currentPoints?.points}</span>
+            <span className="dark:text-neutral-200">
+              보유 포인트: {currentPoints?.points}
+            </span>
           </div>
           <ProfileDropdown />
         </div>

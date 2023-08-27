@@ -53,9 +53,9 @@ const ChangePassword: FC = () => {
   return (
     <>
       <div>
-        <h1 className="text-xl mb-5">비밀번호 변경</h1>
+        <h1 className="text-xl mb-5 dark:text-neutral-200">비밀번호 변경</h1>
         <div>
-          <label>현재 비밀번호</label>
+          <label className="dark:text-neutral-200">현재 비밀번호</label>
           <input
             type="password"
             className="block border my-2 rounded p-1"
@@ -63,7 +63,7 @@ const ChangePassword: FC = () => {
           />
         </div>
         <div>
-          <label>새 비밀번호</label>
+          <label className="dark:text-neutral-200">새 비밀번호</label>
           <input
             type="password"
             className="block border my-2 rounded p-1"
@@ -73,15 +73,15 @@ const ChangePassword: FC = () => {
         {errMsg && (
           <div className="my-2 text-center text-red-400">{errMsg}</div>
         )}
-        <div className="text-center">
+        <div className="text-center mt-4">
           <button
-            className="border px-2 py-1 rounded mx-1 mt-2"
+            className="border px-2 py-1 mr-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:border-0"
             onClick={handleSubmit}
           >
             변경
           </button>
           <button
-            className="border px-2 py-1 rounded mx-1 mt-2"
+            className="border px-2 py-1 rounded-lg mx-1 bg-neutral-100 hover:bg-neutral-300 dark:border-0 dark:bg-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
             onClick={() => setModalState(false)}
           >
             취소

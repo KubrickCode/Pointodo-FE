@@ -56,16 +56,18 @@ const DeleteTask: FC = () => {
   return (
     <>
       <div>
-        <h1 className="text-xl mb-5">정말 작업을 삭제하시겠습니까?</h1>
+        <h1 className="text-xl mb-5 dark:text-neutral-200">
+          정말 작업을 삭제하시겠습니까?
+        </h1>
         <div className="text-center">
           <button
-            className="border bg-red-500 text-white px-3 py-2 rounded-lg mx-1"
+            className="border-2 bg-red-500 text-white px-2 py-1 rounded-lg mx-1 hover:bg-red-600 dark:border-0 mx-1"
             onClick={handleDelete}
           >
             삭제
           </button>
           <button
-            className="border px-3 py-2 rounded-lg mx-1"
+            className="border-2 px-2 py-1 mr-2 rounded-lg bg-white hover:bg-neutral-200 dark:border-0 mx-1"
             onClick={() => setModalState(false)}
           >
             취소

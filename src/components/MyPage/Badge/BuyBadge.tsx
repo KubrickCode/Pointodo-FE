@@ -41,16 +41,18 @@ const BuyBadge: FC = () => {
   return (
     <>
       <div>
-        <h1 className="text-xl mb-5">해당 뱃지를 구매하시겠습니까?</h1>
+        <h1 className="text-xl mb-5 dark:text-neutral-200">
+          해당 뱃지를 구매하시겠습니까?
+        </h1>
         <div className="text-center">
           <button
-            className="border bg-blue-500 text-white px-3 py-2 rounded-lg mx-1"
+            className="border bg-blue-500 text-white px-2 py-1 rounded-lg mx-1 hover:bg-blue-600 dark:border-0"
             onClick={handleSubmit}
           >
             구매
           </button>
           <button
-            className="border px-3 py-2 rounded-lg mx-1"
+            className="border px-2 py-1 rounded-lg mx-1 bg-neutral-100 hover:bg-neutral-300 dark:border-0 dark:bg-neutral-600 dark:text-neutral-200 dark:hover:bg-neutral-700"
             onClick={() => setModalState(false)}
           >
             취소

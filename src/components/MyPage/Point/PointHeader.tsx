@@ -9,7 +9,7 @@ const PointHeader: FC<Props> = ({ setOrder }) => {
     <>
       <div className="p-3">
         <select
-          className="border px-3 py-2 ml-2 rounded outline-neutral-400 cursor-pointer"
+          className="border px-3 py-2 ml-2 rounded outline-neutral-400 cursor-pointer dark:border-neutral-600 dark:bg-neutral-500 dark:text-neutral-200"
           onChange={(e) => setOrder(e.target.value)}
         >
           <option value="newest">최신 순</option>

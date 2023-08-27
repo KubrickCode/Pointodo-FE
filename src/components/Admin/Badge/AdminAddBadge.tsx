@@ -106,7 +106,7 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <h1 className="text-xl text-center mb-5">
+        <h1 className="text-xl text-center mb-5 dark:text-neutral-200">
           {badgeType === BadgeType.NORMAL
             ? NORMAL_BADGE
             : badgeType === BadgeType.ACHIEVEMENT
@@ -115,11 +115,13 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
           추가
         </h1>
         <div className="my-2">
-          <label className="block my-2 text-sm">뱃지명</label>
+          <label className="block my-2 text-sm dark:text-neutral-200">
+            뱃지명
+          </label>
           <input type="hidden" value={badgeType} {...register("type")} />
           <input
             type="text"
-            className="border p-1 rounded outline-neutral-400"
+            className="border p-1 rounded w-full outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
             maxLength={20}
             required
             {...register("name", {
@@ -138,9 +140,11 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
           )}
         </div>
         <div className="my-2">
-          <label className="block my-2 text-sm">뱃지 설명</label>
+          <label className="block my-2 text-sm dark:text-neutral-200">
+            뱃지 설명
+          </label>
           <textarea
-            className="border p-1 rounded outline-neutral-400 w-full"
+            className="border p-1 rounded outline-neutral-400 w-full dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
             maxLength={500}
             required
             {...register("description", {
@@ -160,10 +164,12 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
         </div>
         {badgeType !== BadgeType.SPECIAL && (
           <div className="my-2">
-            <label className="block my-2 text-sm">뱃지 가격</label>
+            <label className="block my-2 text-sm dark:text-neutral-200">
+              뱃지 가격
+            </label>
             <input
               type="text"
-              className="border p-1 rounded outline-neutral-400"
+              className="border p-1 rounded w-full outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
               maxLength={10}
               {...register("price", {
                 maxLength: {
@@ -178,7 +184,9 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
           </div>
         )}
         <div className="my-2">
-          <label className="block my-2 text-sm">아이콘 이미지</label>
+          <label className="block my-2 text-sm dark:text-neutral-200">
+            아이콘 이미지
+          </label>
           <img
             className="w-20 h-20"
             src={previewUrl}
@@ -189,13 +197,13 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
         <div className="text-center mt-5">
           <button
             type="submit"
-            className="border px-2 py-1 mr-2 rounded-lg bg-neutral-100 hover:bg-neutral-200"
+            className="border px-2 py-1 mr-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 dark:border-0"
           >
             추가
           </button>
           <button
             type="button"
-            className="border px-2 py-1 mr-2 rounded-lg bg-neutral-100 hover:bg-neutral-200"
+            className="border-2 px-2 py-1 mr-2 rounded-lg bg-white hover:bg-neutral-200 dark:border-0"
             onClick={() => setModalState(false)}
           >
             취소

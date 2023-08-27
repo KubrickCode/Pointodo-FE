@@ -42,6 +42,7 @@ const ProfileDropdown: FC = () => {
       },
       {
         onSuccess: async () => {
+          localStorage.removeItem("themeStore");
           location.href = "/";
         },
       }
@@ -63,25 +64,33 @@ const ProfileDropdown: FC = () => {
         <div
           className={`z-10 ${
             open ? "block" : "hidden"
-          } absolute right-1 top-12 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 text-center`}
+          } absolute right-1 top-12 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 text-center dark:bg-neutral-800 dark:divide-gray-600`}
         >
           <div className="px-4 py-3 text-sm text-gray-900">
-            <span className="font-medium truncate">{user?.email}</span>
+            <span className="font-medium truncate dark:text-neutral-200">
+              {user?.email}
+            </span>
           </div>
           <ul className="py-2 text-sm text-gray-700">
             <li>
-              <Link to="/" className="block px-4 py-2 hover:bg-gray-100">
+              <Link
+                to="/"
+                className="block px-4 py-2 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              >
                 작업 페이지
               </Link>
             </li>
             <li>
-              <Link to="my-page" className="block px-4 py-2 hover:bg-gray-100">
+              <Link
+                to="my-page"
+                className="block px-4 py-2 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              >
                 마이 페이지
               </Link>
             </li>
             <li>
               <button
-                className="w-full px-4 py-2 hover:bg-gray-100"
+                className="w-full px-4 py-2 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
                 onClick={handleLogout}
               >
                 로그아웃
@@ -92,7 +101,10 @@ const ProfileDropdown: FC = () => {
             </li>
             {(user?.role === Role.ADMIN || user?.role === Role.MASTER) && (
               <li>
-                <Link to="admin" className="block px-4 py-2 hover:bg-gray-100">
+                <Link
+                  to="admin"
+                  className="block px-4 py-2 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+                >
                   관리자 페이지
                 </Link>
               </li>
