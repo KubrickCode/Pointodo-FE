@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import SideBar from "../SideBar/SideBar";
 import Task from "./Task/Task";
+import { TaskType } from "../../entities/task.entity";
 
 const Main: FC = () => {
   const [tab, setTab] = useState(0);
@@ -16,15 +17,15 @@ const Main: FC = () => {
 const menu = [
   {
     id: 0,
-    name: "DAILY",
+    name: TaskType.DAILY,
   },
   {
     id: 1,
-    name: "DUE",
+    name: TaskType.DUE,
   },
   {
     id: 2,
-    name: "FREE",
+    name: TaskType.FREE,
   },
 ];
 

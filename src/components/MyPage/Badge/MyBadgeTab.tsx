@@ -1,4 +1,9 @@
 import { FC } from "react";
+import {
+  ACHIEVEMENT_BADGE,
+  NORMAL_BADGE,
+  SPECIAL_BADGE,
+} from "../../../shared/constants/admin.constant";
 
 interface Props {
   tab: number;
@@ -8,42 +13,40 @@ interface Props {
 const MyBadgeTab: FC<Props> = ({ tab, setTab }) => {
   return (
     <>
-      <ul className="flex flex-row justify-evenly border-b">
-        <li
-          onClick={() => setTab(0)}
-          className={`${
-            tab === 0 && "bg-neutral-200"
-          } w-full text-center p-5 cursor-pointer`}
-        >
-          전체
-        </li>
-        <li
-          onClick={() => setTab(1)}
-          className={`${
-            tab === 1 && "bg-neutral-200"
-          } w-full text-center p-5 cursor-pointer`}
-        >
-          일반 뱃지
-        </li>
-        <li
-          onClick={() => setTab(2)}
-          className={`${
-            tab === 2 && "bg-neutral-200"
-          } w-full text-center p-5 cursor-pointer`}
-        >
-          업적 뱃지
-        </li>
-        <li
-          onClick={() => setTab(3)}
-          className={`${
-            tab === 3 && "bg-neutral-200"
-          } w-full text-center p-5 cursor-pointer`}
-        >
-          특별 뱃지
-        </li>
+      <ul className="flex flex-row justify-evenly border-b dark:border-neutral-600">
+        {myBadgeTabList.map((item) => (
+          <li
+            key={item.id}
+            onClick={() => setTab(item.id)}
+            className={`${
+              tab === item.id && "bg-blue-400 text-white dark:bg-neutral-800"
+            } w-full text-center p-5 cursor-pointer rounded-xl m-2 hover:bg-blue-300 hover:text-white dark:text-neutral-200 dark:hover:bg-neutral-900`}
+          >
+            {item.name}
+          </li>
+        ))}
       </ul>
     </>
   );
 };
+
+const myBadgeTabList = [
+  {
+    id: 0,
+    name: "전체",
+  },
+  {
+    id: 1,
+    name: NORMAL_BADGE,
+  },
+  {
+    id: 2,
+    name: ACHIEVEMENT_BADGE,
+  },
+  {
+    id: 3,
+    name: SPECIAL_BADGE,
+  },
+];
 
 export default MyBadgeTab;

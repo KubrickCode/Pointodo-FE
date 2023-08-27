@@ -55,106 +55,105 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
     setBadgeList(data);
   }, [data]);
 
-  const handleUpdate = async (
-    id: number,
-    name: string,
-    description: string,
-    price: number
-  ) => {
-    let body = {};
+  const handleUpdate = useCallback(
+    async (id: number, name: string, description: string, price: number) => {
+      let body = {};
 
-    if (name !== updatedBody.name)
-      Object.assign(body, { name: updatedBody.name });
+      if (name !== updatedBody.name)
+        Object.assign(body, { name: updatedBody.name });
 
-    if (description !== updatedBody.description)
-      Object.assign(body, { description: updatedBody.description });
+      if (description !== updatedBody.description)
+        Object.assign(body, { description: updatedBody.description });
 
-    if (price !== updatedBody.price)
-      Object.assign(body, { price: updatedBody.price });
+      if (price !== updatedBody.price)
+        Object.assign(body, { price: updatedBody.price });
 
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("file", imageFile);
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("file", imageFile);
+
+        mutate(
+          {
+            link: UPLOAD_BADGE_LINK,
+            method: "post",
+            body: formData,
+          },
+          {
+            onSuccess: async (data) => {
+              Object.assign(body, { iconLink: data.filePath });
+              mutate(
+                {
+                  link: UPDATE_BADGE_LINK(id),
+                  method: "patch",
+                  body,
+                },
+                {
+                  onSuccess: async () => {
+                    await queryClient.invalidateQueries(
+                      QUERY_KEY_GET_ADMIN_BADGE_LIST
+                    );
+                    setUpdatedState({
+                      ...updatedState,
+                      state: false,
+                      id: 0,
+                    });
+                    setToastState(true, UPDATE_BADGE_MESSAGE, "success");
+                  },
+                }
+              );
+            },
+          }
+        );
+
+        return;
+      }
+
+      if (Object.keys(body).length === 0) {
+        setUpdatedState({
+          ...updatedState,
+          state: false,
+          id: 0,
+        });
+        return;
+      }
 
       mutate(
         {
-          link: UPLOAD_BADGE_LINK,
-          method: "post",
-          body: formData,
+          link: UPDATE_BADGE_LINK(id),
+          method: "patch",
+          body,
         },
         {
-          onSuccess: async (data) => {
-            Object.assign(body, { iconLink: data.filePath });
-            mutate(
-              {
-                link: UPDATE_BADGE_LINK(id),
-                method: "patch",
-                body,
-              },
-              {
-                onSuccess: async () => {
-                  await queryClient.invalidateQueries(
-                    QUERY_KEY_GET_ADMIN_BADGE_LIST
-                  );
-                  setUpdatedState({
-                    ...updatedState,
-                    state: false,
-                    id: 0,
-                  });
-                  setToastState(true, UPDATE_BADGE_MESSAGE, "success");
-                },
-              }
-            );
+          onSuccess: async () => {
+            await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
+            setUpdatedState({
+              ...updatedState,
+              state: false,
+              id: 0,
+            });
+            setToastState(true, UPDATE_BADGE_MESSAGE, "success");
           },
         }
       );
+    },
+    [updatedBody, imageFile, updatedState]
+  );
 
-      return;
-    }
-
-    if (Object.keys(body).length === 0) {
-      setUpdatedState({
-        ...updatedState,
-        state: false,
-        id: 0,
-      });
-      return;
-    }
-
-    mutate(
-      {
-        link: UPDATE_BADGE_LINK(id),
-        method: "patch",
-        body,
-      },
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
-          setUpdatedState({
-            ...updatedState,
-            state: false,
-            id: 0,
-          });
-          setToastState(true, UPDATE_BADGE_MESSAGE, "success");
+  const handleDelete = useCallback(async (id: number) => {
+    if (confirm("정말 뱃지를 삭제하시겠습니까?"))
+      mutate(
+        {
+          link: DELETE_BADGE_LINK(id),
+          method: "delete",
         },
-      }
-    );
-  };
-
-  const handleDelete = async (id: number) => {
-    mutate(
-      {
-        link: DELETE_BADGE_LINK(id),
-        method: "delete",
-      },
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
-          setToastState(true, DELETE_BADGE_MESSAGE, "danger");
-        },
-      }
-    );
-  };
+        {
+          onSuccess: async () => {
+            await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
+            setToastState(true, DELETE_BADGE_MESSAGE, "danger");
+          },
+        }
+      );
+  }, []);
 
   const onUploadImage = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -182,18 +181,30 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
   return (
     <>
       <table className="table-fixed w-full">
-        <thead className="border-b p-1 sm:p-5">
+        <thead className="border-b p-1 sm:p-5 dark:border-neutral-600">
           <tr>
-            <th className="p-1 sm:p-5 text-center border-r w-[10%]">ID</th>
-            <th className="p-1 sm:p-5 text-center border-r w-[20%]">아이콘</th>
-            <th className={`p-1 sm:p-5 text-center border-r w-[20%]`}>
+            <th className="p-1 sm:p-5 text-center border-r w-[10%] dark:border-neutral-600 dark:text-neutral-200">
+              ID
+            </th>
+            <th className="p-1 sm:p-5 text-center border-r w-[20%] dark:border-neutral-600 dark:text-neutral-200">
+              아이콘
+            </th>
+            <th
+              className={`p-1 sm:p-5 text-center border-r w-[20%] dark:border-neutral-600 dark:text-neutral-200`}
+            >
               뱃지명
             </th>
-            <th className={`p-1 sm:p-5 text-center border-r w-[20%]`}>설명</th>
+            <th
+              className={`p-1 sm:p-5 text-center border-r w-[20%] dark:border-neutral-600 dark:text-neutral-200`}
+            >
+              설명
+            </th>
             {tab !== 2 && (
-              <th className="p-1 sm:p-5 text-center border-r w-[10%]">가격</th>
+              <th className="p-1 sm:p-5 text-center border-r w-[10%] dark:border-neutral-600 dark:text-neutral-200">
+                가격
+              </th>
             )}
-            <th className="p-1 sm:p-5 text-center border-l w-[20%]">
+            <th className="p-1 sm:p-5 text-center border-l w-[20%] dark:border-neutral-600 dark:text-neutral-200">
               수정/삭제
             </th>
           </tr>
@@ -201,10 +212,12 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
         <tbody>
           {badgeList?.map((item) => (
             <tr key={item.id}>
-              <td className="p-1 sm:p-5 text-center border-r w-[10%] ">
-                <span className="break-all">{item.id}</span>
+              <td className="p-1 sm:p-5 text-center border-r w-[10%] dark:border-neutral-600">
+                <span className="break-all dark:text-neutral-200">
+                  {item.id}
+                </span>
               </td>
-              <td className="p-1 sm:p-5 text-center border-r w-[20%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[20%] dark:border-neutral-600">
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <img
@@ -223,7 +236,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                       onChange={(e) => onUploadImage(e, item.id)}
                     />
                     <button
-                      className="border p-2 rounded"
+                      className="border p-2 rounded dark:text-neutral-200 dark:bg-neutral-600 dark:hover:bg-neutral-700"
                       onClick={() => onUploadImageButtonClick(item.id)}
                     >
                       이미지 업로드
@@ -233,11 +246,11 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                   <img className="w-20 h-20" src={item.iconLink} />
                 )}
               </td>
-              <td className="p-1 sm:p-5 text-center border-r w-[20%] ">
+              <td className="p-1 sm:p-5 text-center border-r w-[20%] dark:border-neutral-600">
                 {updatedState.state && updatedState.id === item.id ? (
                   <input
                     type="text"
-                    className="border rounded p-1 w-full"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
                     value={updatedBody.name}
                     required
                     minLength={1}
@@ -247,13 +260,15 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all">{item.name}</span>
+                  <span className="break-all dark:text-neutral-200">
+                    {item.name}
+                  </span>
                 )}
               </td>
-              <td className="p-1 sm:p-5 text-center border-r w-[20%]">
+              <td className="p-1 sm:p-5 text-center border-r w-[20%] dark:border-neutral-600">
                 {updatedState.state && updatedState.id === item.id ? (
                   <textarea
-                    className="border rounded p-1 w-full"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
                     value={updatedBody.description || ""}
                     required
                     minLength={1}
@@ -266,15 +281,17 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all">{item.description}</span>
+                  <span className="break-all dark:text-neutral-200">
+                    {item.description}
+                  </span>
                 )}
               </td>
               {tab !== 2 && (
-                <td className="p-1 sm:p-5 text-center border-r w-[10%]">
+                <td className="p-1 sm:p-5 text-center border-r w-[10%] dark:border-neutral-600">
                   {updatedState.state && updatedState.id === item.id ? (
                     <input
                       type="text"
-                      className="border rounded p-1 w-full"
+                      className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
                       value={updatedBody.price}
                       required
                       maxLength={10}
@@ -286,16 +303,18 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                       }
                     />
                   ) : (
-                    <span className="break-all">{item.price}</span>
+                    <span className="break-all dark:text-neutral-200">
+                      {item.price}
+                    </span>
                   )}
                 </td>
               )}
 
-              <td className="p-1 sm:p-5 text-center border-l w-[20%]">
+              <td className="p-1 sm:p-5 text-center border-l w-[20%] dark:border-neutral-600">
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800 dark:border-0"
                       onClick={() =>
                         handleUpdate(
                           item.id,
@@ -308,7 +327,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                       완료
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500"
+                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-800 dark:border-0"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -323,7 +342,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                 ) : (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-900 dark:hover:bg-blue-950 dark:border-0"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -343,7 +362,7 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
                       수정
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400"
+                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400 dark:bg-red-900 dark:hover:bg-red-950 dark:border-0"
                       onClick={() => handleDelete(item.id)}
                     >
                       삭제

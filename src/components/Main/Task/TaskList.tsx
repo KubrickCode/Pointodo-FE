@@ -1,4 +1,11 @@
-import { FC, ChangeEvent, useState, useEffect } from "react";
+import {
+  FC,
+  ChangeEvent,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
@@ -9,18 +16,32 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useModalStore } from "../../../store/modal.store";
 import Pagination from "../../Pagination/Pagination";
 import { useUserStore } from "../../../store/user.store";
-
-export interface TaskEntity {
-  id: number;
-  userId: string;
-  taskType: string;
-  name: string;
-  description: string;
-  completion: number;
-  importance: number;
-  occurredAt: string;
-  dueDate?: string;
-}
+import { TaskEntity, TaskType } from "../../../entities/task.entity";
+import {
+  CANCLE_TASK_LINK,
+  COMPLETE_TASK_LINK,
+  GET_TASK_LINK,
+  GET_TASK_TOTAL_PAGE,
+  UPDATE_TASK_LINK,
+} from "../../../shared/constants/task.constant";
+import {
+  QUERY_KEY_GET_ALL_BADGE_LIST,
+  QUERY_KEY_GET_CURRENT_POINTS,
+  QUERY_KEY_GET_DAILY_TASKS,
+  QUERY_KEY_GET_DAILY_TOTAL_PAGES,
+  QUERY_KEY_GET_DUE_TASKS,
+  QUERY_KEY_GET_DUE_TOTAL_PAGES,
+  QUERY_KEY_GET_EARNED_POINTS_LOGS,
+  QUERY_KEY_GET_FREE_TASKS,
+  QUERY_KEY_GET_FREE_TOTAL_PAGES,
+  QUERY_KEY_GET_USER_BADGE_PROGRESS,
+} from "../../../shared/constants/query.constant";
+import {
+  CANCLE_TASK_MESSAGE,
+  COMPLETE_TASK_MESSAGE,
+  UPDATE_TASK_MESSAGE,
+} from "../../../shared/messages/task.message";
+import { MODAL_CONTENT_DELETE_TASK } from "../../../shared/constants/modal.constant";
 
 interface Props {
   tab: number;
@@ -35,233 +56,240 @@ const initialUpdatedBody = {
 };
 
 const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
-  const { mutate } = useQueryMutate();
   const isLoggedIn = useUserStore((state) => state.isLoggedIn);
-  const queryClient = useQueryClient();
+  const setToastState = useToastStore((state) => state.setToastState);
+  const setModalState = useModalStore((state) => state.setModalState);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [taskList, setTaskList] = useState<TaskEntity[]>();
+  const [dueDate, setDueDate] = useState(new Date());
+  const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
+  const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
+
+  const queryClient = useQueryClient();
+  const { mutate } = useQueryMutate();
 
   const { data: dailyTasks } = useQueryGet(
-    `/task?taskType=DAILY&page=${currentPage}&order=${order}`,
-    "getDailyTasks",
+    GET_TASK_LINK(TaskType.DAILY, currentPage, order),
+    QUERY_KEY_GET_DAILY_TASKS,
     {
       enabled: tab === 0 && isLoggedIn,
     }
   );
 
   const { data: dueTasks } = useQueryGet(
-    `/task?taskType=DUE&page=${currentPage}&order=${order}`,
-    "getDueTasks",
+    GET_TASK_LINK(TaskType.DUE, currentPage, order),
+    QUERY_KEY_GET_DUE_TASKS,
     {
       enabled: tab === 1 && isLoggedIn,
     }
   );
 
   const { data: freeTasks } = useQueryGet(
-    `/task?taskType=FREE&page=${currentPage}&order=${order}`,
-    "getFreeTasks",
+    GET_TASK_LINK(TaskType.FREE, currentPage, order),
+    QUERY_KEY_GET_FREE_TASKS,
     {
       enabled: tab === 2 && isLoggedIn,
     }
   );
 
   const { data: dailyTotalPage } = useQueryGet(
-    "/task/count/daily",
-    "getDailyTotalPage",
+    GET_TASK_TOTAL_PAGE("daily"),
+    QUERY_KEY_GET_DAILY_TOTAL_PAGES,
     {
       enabled: tab === 0 && isLoggedIn,
     }
   );
 
   const { data: dueTotalPage } = useQueryGet(
-    "/task/count/due",
-    "getDueTotalPage",
+    GET_TASK_TOTAL_PAGE("due"),
+    QUERY_KEY_GET_DUE_TOTAL_PAGES,
     {
       enabled: tab === 1 && isLoggedIn,
     }
   );
 
   const { data: freeTotalPage } = useQueryGet(
-    "/task/count/free",
-    "getFreeTotalPage",
+    GET_TASK_TOTAL_PAGE("free"),
+    QUERY_KEY_GET_FREE_TOTAL_PAGES,
     {
       enabled: tab === 2 && isLoggedIn,
     }
   );
 
-  const [taskList, setTaskList] = useState<TaskEntity[]>();
-
-  const [dueDate, setDueDate] = useState(new Date());
-
-  const setToastState = useToastStore((state) => state.setToastState);
-  const setModalState = useModalStore((state) => state.setModalState);
-
-  const [updatedState, setUpdatedState] = useState({ state: false, id: 0 });
-  const [updatedBody, setUpdatedBody] = useState(initialUpdatedBody);
+  const tabData = useMemo(
+    () => [
+      {
+        tasks: dailyTasks,
+        totalPage: dailyTotalPage?.totalPages,
+      },
+      {
+        tasks: dueTasks,
+        totalPage: dueTotalPage?.totalPages,
+      },
+      {
+        tasks: freeTasks,
+        totalPage: freeTotalPage?.totalPages,
+      },
+    ],
+    [
+      dailyTasks,
+      dueTasks,
+      freeTasks,
+      dailyTotalPage,
+      dueTotalPage,
+      freeTotalPage,
+    ]
+  );
 
   useEffect(() => {
-    if (tab === 0) {
-      setTotalPage(dailyTotalPage?.totalPages);
-      if (checkedCompletion) {
-        setTaskList(
-          dailyTasks?.filter((item: TaskEntity) => item.completion !== 1)
-        );
-      } else {
-        setTaskList(dailyTasks);
-      }
+    const currentTabData = tabData[tab];
+
+    setTotalPage(currentTabData.totalPage);
+
+    if (checkedCompletion) {
+      setTaskList(
+        currentTabData.tasks?.filter(
+          (item: TaskEntity) => item.completion !== 1
+        )
+      );
+    } else {
+      setTaskList(currentTabData.tasks);
     }
-    if (tab === 1) {
-      setTotalPage(dueTotalPage?.totalPages);
-      if (checkedCompletion) {
-        setTaskList(
-          dueTasks?.filter((item: TaskEntity) => item.completion !== 1)
-        );
-      } else {
-        setTaskList(dueTasks);
-      }
-    }
-    if (tab === 2) {
-      setTotalPage(freeTotalPage?.totalPages);
-      if (checkedCompletion) {
-        setTaskList(
-          freeTasks?.filter((item: TaskEntity) => item.completion !== 1)
-        );
-      } else {
-        setTaskList(freeTasks);
-      }
-    }
-  }, [
-    tab,
-    dailyTasks,
-    dueTasks,
-    freeTasks,
-    dailyTotalPage,
-    dueTotalPage,
-    freeTotalPage,
-    checkedCompletion,
-  ]);
+  }, [tab, tabData, checkedCompletion]);
 
   useEffect(() => {
     if (totalPage === 1) setCurrentPage(1);
   }, [totalPage]);
 
-  const handleCheckboxChange = (
-    item: TaskEntity,
-    e: ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.checked) {
-      mutate(
-        {
-          link: `/task/complete/${item.id}`,
-          method: "patch",
-        },
-        {
-          onSuccess: async () => {
-            await queryClient.invalidateQueries(
-              item.taskType === "DAILY"
-                ? "getDailyTasks"
-                : item.taskType === "DUE"
-                ? "getDueTasks"
-                : "getFreeTasks"
-            );
-            await queryClient.invalidateQueries("getPoints");
-            await queryClient.invalidateQueries("getAllBadges");
-            await queryClient.invalidateQueries("getUserBadgeProgress");
-            await queryClient.invalidateQueries("getEarnedPointsLogs");
-            setToastState(true, "작업이 완료되었습니다", "success");
+  const handleCheckboxChange = useCallback(
+    async (item: TaskEntity, e: ChangeEvent<HTMLInputElement>) => {
+      if (e.target.checked) {
+        mutate(
+          {
+            link: COMPLETE_TASK_LINK(item.id),
+            method: "patch",
           },
-        }
-      );
-    }
-    if (!e.target.checked) {
-      mutate(
-        {
-          link: `/task/cancle/${item.id}`,
-          method: "patch",
-        },
-        {
-          onSuccess: async () => {
-            await queryClient.invalidateQueries(
-              item.taskType === "DAILY"
-                ? "getDailyTasks"
-                : item.taskType === "DUE"
-                ? "getDueTasks"
-                : "getFreeTasks"
-            );
-            setToastState(true, "작업 완료가 취소되었습니다", "success");
-          },
-        }
-      );
-    }
-  };
-
-  const handleUpdate = async (id: number, taskType: string) => {
-    let body = {
-      id,
-      name: updatedBody.name,
-      description: updatedBody.description,
-      importance: updatedBody.importance,
-    };
-    if (taskType === "DUE") {
-      body = Object.assign(body, {
-        dueDate: moment(dueDate).format("YYYY-MM-DD"),
-      });
-    }
-
-    mutate(
-      {
-        link: "/task/update",
-        method: "patch",
-        body,
-      },
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(
-            taskType === "DAILY"
-              ? "getDailyTasks"
-              : taskType === "DUE"
-              ? "getDueTasks"
-              : "getFreeTasks"
-          );
-          setUpdatedState({
-            ...updatedState,
-            state: false,
-            id: 0,
-          });
-          setToastState(true, "작업이 수정되었습니다", "success");
-        },
+          {
+            onSuccess: async () => {
+              await queryClient.invalidateQueries(
+                item.taskType === TaskType.DAILY
+                  ? QUERY_KEY_GET_DAILY_TASKS
+                  : item.taskType === TaskType.DUE
+                  ? QUERY_KEY_GET_DUE_TASKS
+                  : QUERY_KEY_GET_FREE_TASKS
+              );
+              await queryClient.invalidateQueries(QUERY_KEY_GET_CURRENT_POINTS);
+              await queryClient.invalidateQueries(QUERY_KEY_GET_ALL_BADGE_LIST);
+              await queryClient.invalidateQueries(
+                QUERY_KEY_GET_USER_BADGE_PROGRESS
+              );
+              await queryClient.invalidateQueries(
+                QUERY_KEY_GET_EARNED_POINTS_LOGS
+              );
+              setToastState(true, COMPLETE_TASK_MESSAGE, "success");
+            },
+          }
+        );
       }
-    );
-  };
+      if (!e.target.checked) {
+        mutate(
+          {
+            link: CANCLE_TASK_LINK(item.id),
+            method: "patch",
+          },
+          {
+            onSuccess: async () => {
+              await queryClient.invalidateQueries(
+                item.taskType === TaskType.DAILY
+                  ? QUERY_KEY_GET_DAILY_TASKS
+                  : item.taskType === TaskType.DUE
+                  ? QUERY_KEY_GET_DUE_TASKS
+                  : QUERY_KEY_GET_FREE_TASKS
+              );
+              setToastState(true, CANCLE_TASK_MESSAGE, "success");
+            },
+          }
+        );
+      }
+    },
+    []
+  );
+
+  const handleUpdate = useCallback(
+    async (id: number, taskType: string) => {
+      let body = {
+        id,
+        name: updatedBody.name,
+        description: updatedBody.description,
+        importance: updatedBody.importance,
+      };
+      if (taskType === TaskType.DUE) {
+        body = Object.assign(body, {
+          dueDate: moment(dueDate).format("YYYY-MM-DD"),
+        });
+      }
+
+      mutate(
+        {
+          link: UPDATE_TASK_LINK,
+          method: "patch",
+          body,
+        },
+        {
+          onSuccess: async () => {
+            await queryClient.invalidateQueries(
+              taskType === TaskType.DAILY
+                ? QUERY_KEY_GET_DAILY_TASKS
+                : taskType === TaskType.DUE
+                ? QUERY_KEY_GET_DUE_TASKS
+                : QUERY_KEY_GET_FREE_TASKS
+            );
+            setUpdatedState({
+              ...updatedState,
+              state: false,
+              id: 0,
+            });
+            setToastState(true, UPDATE_TASK_MESSAGE, "success");
+          },
+        }
+      );
+    },
+    [updatedBody, dueDate, updatedState]
+  );
 
   return (
     <div>
       <table className="table-fixed w-full">
-        <thead className="border-b p-2 sm:p-5">
+        <thead className="border-b p-2 sm:p-5 dark:border-neutral-600">
           <tr>
-            <th className="p-2 sm:p-5 text-center border-r w-[10%]">완료</th>
+            <th className="p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[10%] dark:text-neutral-200">
+              완료
+            </th>
             <th
-              className={`p-2 sm:p-5 text-center border-r w-[${
+              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업명
             </th>
             <th
-              className={`p-2 sm:p-5 text-center border-r w-[${
+              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업 설명
             </th>
-            <th className="p-2 sm:p-5 text-center border-l w-[10%]">중요도</th>
+            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[10%]">
+              중요도
+            </th>
             {tab === 1 && (
-              <th className="p-2 sm:p-5 text-center border-l w-[20%]">
+              <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[20%]">
                 작업 기한
               </th>
             )}
-            <th className="p-2 sm:p-5 text-center border-l w-[20%]">
+            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[20%]">
               수정/삭제
             </th>
           </tr>
@@ -275,15 +303,15 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 moment(item.dueDate).isBefore(
                   moment(new Date()).format("YYYY-MM-DD")
                 )
-                  ? "line-through"
+                  ? "line-through dark:decoration-neutral-200"
                   : ""
               }
             >
-              <td className="p-2 sm:p-5 text-center border-r w-[10%] ">
+              <td className="p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[10%] ">
                 <div className="flex items-center justify-center mb-4">
                   <input
                     type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
                     defaultChecked={item.completion === 0 ? false : true}
                     onChange={(e) => handleCheckboxChange(item, e)}
                     disabled={moment(item.dueDate).isBefore(
@@ -293,14 +321,14 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 </div>
               </td>
               <td
-                className={`p-2 sm:p-5 text-center border-r w-[${
+                className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[${
                   tab === 1 ? "20" : "30"
                 }%]`}
               >
                 {updatedState.state && updatedState.id === item.id ? (
                   <input
                     type="text"
-                    className="border rounded p-1 w-full"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200"
                     value={updatedBody.name}
                     required
                     minLength={1}
@@ -310,18 +338,20 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all">{item.name}</span>
+                  <span className="break-all dark:text-neutral-200">
+                    {item.name}
+                  </span>
                 )}
               </td>
 
               <td
-                className={`p-2 sm:p-5 text-center border-r w-[${
+                className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[${
                   tab === 1 ? "20" : "30"
                 }%]`}
               >
                 {updatedState.state && updatedState.id === item.id ? (
                   <textarea
-                    className="border rounded p-1 w-full"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200"
                     value={updatedBody.description || ""}
                     maxLength={500}
                     onChange={(e) =>
@@ -332,15 +362,15 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all">
+                  <span className="break-all dark:text-neutral-200">
                     {item.description || "설명이 없습니다"}
                   </span>
                 )}
               </td>
-              <td className="p-2 sm:p-5 text-center border-l w-[10%]">
+              <td className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 w-[10%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <select
-                    className="w-full border p-1 rounded outline-neutral-400"
+                    className="w-full border p-1 rounded outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200"
                     value={updatedBody.importance}
                     onChange={(e) =>
                       setUpdatedBody({
@@ -360,7 +390,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     </option>
                   </select>
                 ) : (
-                  <span>
+                  <span className="dark:text-neutral-200">
                     {item.importance === 1
                       ? "상"
                       : item.importance === 2
@@ -370,9 +400,9 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 )}
               </td>
               {tab === 1 && (
-                <td className="p-2 sm:p-5 text-center border-l w-[10%]">
+                <td className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 w-[10%]">
                   {updatedState.state && updatedState.id === item.id ? (
-                    <div className="border p-1 rounded">
+                    <div className="border p-1 rounded w-full">
                       <DatePicker
                         locale={ko}
                         selected={dueDate}
@@ -383,26 +413,27 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                           setDueDate(date!);
                         }}
                         dateFormat="yyyy-MM-dd"
+                        className="dark:bg-neutral-600 dark:text-neutral-200 w-full cursor-pointer"
                       />
                     </div>
                   ) : (
-                    <span>{`${moment
+                    <span className="dark:text-neutral-200">{`${moment
                       .utc(item.occurredAt)
                       .format("YYYY-MM-DD")} ~ ${item.dueDate}`}</span>
                   )}
                 </td>
               )}
-              <td className="p-2 sm:p-5 text-center border-l w-[20%]">
+              <td className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 w-[20%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800 dark:border-0"
                       onClick={() => handleUpdate(item.id, item.taskType)}
                     >
                       완료
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500"
+                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-800 dark:border-0"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -417,7 +448,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 ) : (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-900 dark:hover:bg-blue-950 dark:border-0"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -435,11 +466,11 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                       수정
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400"
+                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400 dark:bg-red-900 dark:hover:bg-red-950 dark:border-0"
                       onClick={() =>
                         setModalState(
                           true,
-                          "deleteTask",
+                          MODAL_CONTENT_DELETE_TASK,
                           item.id,
                           item.taskType
                         )

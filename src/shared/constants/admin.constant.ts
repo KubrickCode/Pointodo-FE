@@ -13,7 +13,6 @@ export const SPECIAL_BADGE = "특별 뱃지";
 
 export const GET_USER_BADGE_LIST_LINK = (modaluserId: string) =>
   `/admin/user/badge/list/${modaluserId}`;
-export const GET_ALL_BADGE_LIST_LINK = "/badge/all";
 export const PUT_BADGE_TO_USER_LINK = "/admin/user/badge/put";
 export const DELETE_USER_BADGE_LINK = (modaluserId: string, badgeId: number) =>
   `/admin/user/badge?userId=${modaluserId}&badgeId=${badgeId}`;

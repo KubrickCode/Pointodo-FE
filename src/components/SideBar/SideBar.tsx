@@ -1,9 +1,15 @@
 import { FC } from "react";
+import { TaskType } from "../../entities/task.entity";
+import {
+  DAILY_TASK,
+  DUE_TASK,
+  FREE_TASK,
+} from "../../shared/constants/task.constant";
 
 interface Props {
   menu: {
     id: number;
-    name: string;
+    name: string | TaskType;
   }[];
 
   tab: number;
@@ -13,22 +19,22 @@ interface Props {
 const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
   return (
     <>
-      <nav className="border-r sm:py-8 sm:h-screen sm:w-[15%]">
-        <ul className="grid grid-cols-3 sm:flex sm:flex-col">
+      <nav className="border-r sm:py-8 sm:h-screen sm:w-[15%] dark:border-neutral-600">
+        <ul className="grid grid-cols-3 sm:flex sm:flex-col mx-2">
           {menu.map((item) => (
             <li
               key={item.id}
-              className={`cursor-pointer my-5 py-3 px-8 w-full rounded-lg text-center ${
-                item.id === tab && "bg-neutral-200"
+              className={`cursor-pointer my-5 py-3 px-8 w-full rounded-lg text-center dark:text-neutral-200 hover:bg-blue-300 hover:text-white dark:hover:bg-neutral-900 ${
+                item.id === tab && "bg-blue-400 text-white dark:bg-neutral-800"
               }`}
               onClick={() => setTab(item.id)}
             >
-              {item.name === "DAILY"
-                ? "매일 작업"
-                : item.name === "DUE"
-                ? "기한 작업"
-                : item.name === "FREE"
-                ? "무기한 작업"
+              {item.name === TaskType.DAILY
+                ? DAILY_TASK
+                : item.name === TaskType.DUE
+                ? DUE_TASK
+                : item.name === TaskType.FREE
+                ? FREE_TASK
                 : item.name}
             </li>
           ))}

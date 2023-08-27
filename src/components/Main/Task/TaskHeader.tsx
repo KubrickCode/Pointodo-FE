@@ -1,5 +1,6 @@
 import { FC } from "react";
 import { useModalStore } from "../../../store/modal.store";
+import { MODAL_CONTENT_ADD_TASK } from "../../../shared/constants/modal.constant";
 
 interface Props {
   tab: number;
@@ -22,12 +23,12 @@ const TaskHeader: FC<Props> = ({
         <div>
           <button
             className="bg-blue-500 rounded px-3 py-2 text-white hover:bg-blue-600"
-            onClick={() => setModalState(true, `addTask${tab}`)}
+            onClick={() => setModalState(true, MODAL_CONTENT_ADD_TASK(tab))}
           >
             작업 추가
           </button>
           <select
-            className="border px-3 py-2 ml-2 rounded outline-neutral-400 cursor-pointer"
+            className="border px-3 py-2 ml-2 rounded outline-neutral-400 cursor-pointer dark:bg-neutral-600 dark:border-0 dark:text-neutral-200"
             onChange={(e) => setOrder(e.target.value)}
           >
             <option value="importance">중요도 순</option>
@@ -46,7 +47,9 @@ const TaskHeader: FC<Props> = ({
             onChange={() => setCheckedCompletion(!checkedCompletion)}
             className="cursor-pointer"
           />
-          <label className="ml-1 cursor-pointer">완료 작업 숨기기</label>
+          <label className="ml-1 cursor-pointer dark:text-neutral-200">
+            완료 작업 숨기기
+          </label>
         </div>
       </div>
     </>

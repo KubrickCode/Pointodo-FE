@@ -1,11 +1,13 @@
 import { FC, useEffect } from "react";
 import { useToastStore } from "../../store/toast.store";
+import { useThemeStore } from "../../store/theme.store";
 
 const Toast: FC = () => {
   const toastContent = useToastStore((state) => state.toastContent);
   const toastState = useToastStore((state) => state.toastState);
   const toastType = useToastStore((state) => state.toastType);
   const setToastState = useToastStore((state) => state.setToastState);
+  const theme = useThemeStore((state) => state.theme);
 
   useEffect(() => {
     setTimeout(() => {
@@ -17,7 +19,7 @@ const Toast: FC = () => {
 
   return (
     <>
-      <div className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow fixed bottom-0 left-5">
+      <div className="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow fixed bottom-0 left-5 dark:bg-neutral-800">
         <div
           className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-${
             toastType === "success"
@@ -41,10 +43,12 @@ const Toast: FC = () => {
             <Danger />
           )}
         </div>
-        <div className="ml-3 text-sm font-normal">{toastContent}</div>
+        <div className="ml-3 text-sm font-normal dark:text-neutral-200">
+          {toastContent}
+        </div>
         <button
           type="button"
-          className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8"
+          className="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:bg-neutral-800"
           onClick={() => setToastState(false, "", "")}
         >
           <svg
@@ -54,7 +58,7 @@ const Toast: FC = () => {
             viewBox="0 0 14 14"
           >
             <path
-              stroke="currentColor"
+              stroke={`${theme === "light" ? "currentColor" : "lightgray"}`}
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"

@@ -8,3 +8,7 @@
   font-family: "Noto Sans KR", sans-serif;
   color: #262626;
 }
+
+.react-datepicker-wrapper {
+  width: 100%;
+}

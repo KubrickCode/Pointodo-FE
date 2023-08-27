@@ -1,9 +1,10 @@
 import { useMutation } from "react-query";
 import axios from "axios";
 
-interface SignBody {
+export interface SignBody {
   email: string;
   password: string;
+  confirmPassword?: string;
 }
 
 const host = window.location.origin + "/api";
