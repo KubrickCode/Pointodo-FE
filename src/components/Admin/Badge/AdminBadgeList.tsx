@@ -55,106 +55,105 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
     setBadgeList(data);
   }, [data]);
 
-  const handleUpdate = async (
-    id: number,
-    name: string,
-    description: string,
-    price: number
-  ) => {
-    let body = {};
+  const handleUpdate = useCallback(
+    async (id: number, name: string, description: string, price: number) => {
+      let body = {};
 
-    if (name !== updatedBody.name)
-      Object.assign(body, { name: updatedBody.name });
+      if (name !== updatedBody.name)
+        Object.assign(body, { name: updatedBody.name });
 
-    if (description !== updatedBody.description)
-      Object.assign(body, { description: updatedBody.description });
+      if (description !== updatedBody.description)
+        Object.assign(body, { description: updatedBody.description });
 
-    if (price !== updatedBody.price)
-      Object.assign(body, { price: updatedBody.price });
+      if (price !== updatedBody.price)
+        Object.assign(body, { price: updatedBody.price });
 
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("file", imageFile);
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("file", imageFile);
+
+        mutate(
+          {
+            link: UPLOAD_BADGE_LINK,
+            method: "post",
+            body: formData,
+          },
+          {
+            onSuccess: async (data) => {
+              Object.assign(body, { iconLink: data.filePath });
+              mutate(
+                {
+                  link: UPDATE_BADGE_LINK(id),
+                  method: "patch",
+                  body,
+                },
+                {
+                  onSuccess: async () => {
+                    await queryClient.invalidateQueries(
+                      QUERY_KEY_GET_ADMIN_BADGE_LIST
+                    );
+                    setUpdatedState({
+                      ...updatedState,
+                      state: false,
+                      id: 0,
+                    });
+                    setToastState(true, UPDATE_BADGE_MESSAGE, "success");
+                  },
+                }
+              );
+            },
+          }
+        );
+
+        return;
+      }
+
+      if (Object.keys(body).length === 0) {
+        setUpdatedState({
+          ...updatedState,
+          state: false,
+          id: 0,
+        });
+        return;
+      }
 
       mutate(
         {
-          link: UPLOAD_BADGE_LINK,
-          method: "post",
-          body: formData,
+          link: UPDATE_BADGE_LINK(id),
+          method: "patch",
+          body,
         },
         {
-          onSuccess: async (data) => {
-            Object.assign(body, { iconLink: data.filePath });
-            mutate(
-              {
-                link: UPDATE_BADGE_LINK(id),
-                method: "patch",
-                body,
-              },
-              {
-                onSuccess: async () => {
-                  await queryClient.invalidateQueries(
-                    QUERY_KEY_GET_ADMIN_BADGE_LIST
-                  );
-                  setUpdatedState({
-                    ...updatedState,
-                    state: false,
-                    id: 0,
-                  });
-                  setToastState(true, UPDATE_BADGE_MESSAGE, "success");
-                },
-              }
-            );
+          onSuccess: async () => {
+            await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
+            setUpdatedState({
+              ...updatedState,
+              state: false,
+              id: 0,
+            });
+            setToastState(true, UPDATE_BADGE_MESSAGE, "success");
           },
         }
       );
+    },
+    [updatedBody, imageFile, updatedState]
+  );
 
-      return;
-    }
-
-    if (Object.keys(body).length === 0) {
-      setUpdatedState({
-        ...updatedState,
-        state: false,
-        id: 0,
-      });
-      return;
-    }
-
-    mutate(
-      {
-        link: UPDATE_BADGE_LINK(id),
-        method: "patch",
-        body,
-      },
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
-          setUpdatedState({
-            ...updatedState,
-            state: false,
-            id: 0,
-          });
-          setToastState(true, UPDATE_BADGE_MESSAGE, "success");
+  const handleDelete = useCallback(async (id: number) => {
+    if (confirm("정말 뱃지를 삭제하시겠습니까?"))
+      mutate(
+        {
+          link: DELETE_BADGE_LINK(id),
+          method: "delete",
         },
-      }
-    );
-  };
-
-  const handleDelete = async (id: number) => {
-    mutate(
-      {
-        link: DELETE_BADGE_LINK(id),
-        method: "delete",
-      },
-      {
-        onSuccess: async () => {
-          await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
-          setToastState(true, DELETE_BADGE_MESSAGE, "danger");
-        },
-      }
-    );
-  };
+        {
+          onSuccess: async () => {
+            await queryClient.invalidateQueries(QUERY_KEY_GET_ADMIN_BADGE_LIST);
+            setToastState(true, DELETE_BADGE_MESSAGE, "danger");
+          },
+        }
+      );
+  }, []);
 
   const onUploadImage = (
     e: React.ChangeEvent<HTMLInputElement>,

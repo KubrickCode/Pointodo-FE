@@ -79,6 +79,7 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
                       QUERY_KEY_GET_ADMIN_BADGE_LIST
                     );
                     setToastState(true, CREATE_BADGE_MESSAGE, "success");
+                    setModalState(false);
                   },
                 }
               );
