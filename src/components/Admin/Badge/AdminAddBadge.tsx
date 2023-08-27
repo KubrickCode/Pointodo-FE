@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
@@ -52,49 +52,55 @@ const AdminAddBadge: FC<Props> = ({ badgeType }) => {
     }
   }, [dueDate]);
 
-  const onSubmitHandler: SubmitHandler<AdminAddBadgeForm> = async (body) => {
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("file", imageFile);
+  const onSubmitHandler: SubmitHandler<AdminAddBadgeForm> = useCallback(
+    async (body) => {
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("file", imageFile);
 
-      mutate(
-        {
-          link: UPLOAD_BADGE_LINK,
-          method: "post",
-          body: formData,
-        },
-        {
-          onSuccess: async (data) => {
-            Object.assign(body, { iconLink: data.filePath });
-            mutate(
-              {
-                link: CREATE_BADGE_LINK,
-                method: "post",
-                body,
-              },
-              {
-                onSuccess: async () => {
-                  await queryClient.invalidateQueries(
-                    QUERY_KEY_GET_ADMIN_BADGE_LIST
-                  );
-                  setToastState(true, CREATE_BADGE_MESSAGE, "success");
-                },
-              }
-            );
+        mutate(
+          {
+            link: UPLOAD_BADGE_LINK,
+            method: "post",
+            body: formData,
           },
-        }
-      );
-    }
-  };
+          {
+            onSuccess: async (data) => {
+              Object.assign(body, { iconLink: data.filePath });
+              mutate(
+                {
+                  link: CREATE_BADGE_LINK,
+                  method: "post",
+                  body,
+                },
+                {
+                  onSuccess: async () => {
+                    await queryClient.invalidateQueries(
+                      QUERY_KEY_GET_ADMIN_BADGE_LIST
+                    );
+                    setToastState(true, CREATE_BADGE_MESSAGE, "success");
+                  },
+                }
+              );
+            },
+          }
+        );
+      }
+    },
+    [imageFile]
+  );
 
-  const onUploadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) {
-      return;
-    }
-    setImageFile(e.target.files[0]);
+  const onUploadImage = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files) {
+        return;
+      }
+      setImageFile(e.target.files[0]);
 
-    setPreviewUrl(URL.createObjectURL(e.target.files[0]));
-  };
+      setPreviewUrl(URL.createObjectURL(e.target.files[0]));
+    },
+    []
+  );
 
   return (
     <>
