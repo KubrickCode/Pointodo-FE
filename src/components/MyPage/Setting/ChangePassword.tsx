@@ -2,6 +2,9 @@ import { FC, useState } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useToastStore } from "../../../store/toast.store";
+import { CHECK_PASSWORD_LINK } from "../../../shared/constants/auth.constant";
+import { CHANGE_PASSWORD_LINK } from "../../../shared/constants/user.constant";
+import { CHANGE_PASSWORD_MESSAGE } from "../../../shared/messages/user.message";
 
 const initialBody = {
   password: "",
@@ -9,18 +12,18 @@ const initialBody = {
 };
 
 const ChangePassword: FC = () => {
+  const setModalState = useModalStore((state) => state.setModalState);
+  const setToastState = useToastStore((state) => state.setToastState);
+
   const [body, setBody] = useState(initialBody);
   const [errMsg, setErrMsg] = useState("");
 
   const { mutate } = useQueryMutate();
 
-  const setModalState = useModalStore((state) => state.setModalState);
-  const setToastState = useToastStore((state) => state.setToastState);
-
   const handleSubmit = async () => {
     mutate(
       {
-        link: "/auth/check-password",
+        link: CHECK_PASSWORD_LINK,
         method: "post",
         body: { password: body.password },
       },
@@ -28,14 +31,14 @@ const ChangePassword: FC = () => {
         onSuccess: async () => {
           mutate(
             {
-              link: "/user/password",
+              link: CHANGE_PASSWORD_LINK,
               method: "patch",
               body: { password: body.newPassword },
             },
             {
               onSuccess: async () => {
                 setModalState(false);
-                setToastState(true, "비밀번호가 변경되었습니다", "success");
+                setToastState(true, CHANGE_PASSWORD_MESSAGE, "success");
               },
             }
           );
