@@ -173,13 +173,13 @@ const AddTask: FC<Props> = ({ taskType }) => {
         <div className="text-center mt-5">
           <button
             type="submit"
-            className="border px-2 py-1 mr-2 rounded-lg bg-neutral-100 hover:bg-neutral-200"
+            className="border px-2 py-1 mr-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600"
           >
             추가
           </button>
           <button
             type="button"
-            className="border px-2 py-1 mr-2 rounded-lg bg-neutral-100 hover:bg-neutral-200"
+            className="border-2 px-2 py-1 mr-2 rounded-lg bg-white hover:bg-neutral-200"
             onClick={() => setModalState(false)}
           >
             취소
