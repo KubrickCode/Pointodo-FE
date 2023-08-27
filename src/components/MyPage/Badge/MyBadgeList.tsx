@@ -167,7 +167,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
             ) : (
               item.type !== BadgeType.SPECIAL && (
                 <button
-                  className="border px-2 py-1 mx-1 rounded bg-blue-500 text-white"
+                  className="border px-2 py-1 mx-1 rounded bg-blue-500 text-white hover:bg-blue-600"
                   onClick={() => handleBuy(item.id, item.price!)}
                 >
                   구매
@@ -185,7 +185,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
                 </button>
               ) : (
                 <button
-                  className="border px-2 py-1 mx-1 rounded bg-pink-500 text-white"
+                  className="border px-2 py-1 mx-1 rounded bg-pink-500 text-white hover:bg-pink-600"
                   onClick={() => handleSelect(item.id)}
                 >
                   선택
