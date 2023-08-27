@@ -1,6 +1,7 @@
 import { FC, useState, useEffect } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
+import { UNREGISTER_LINK } from "../../../shared/constants/user.constant";
 
 const Unregister: FC = () => {
   const [confirmText, setConfirmText] = useState("");
@@ -10,7 +11,7 @@ const Unregister: FC = () => {
   const handleSubmit = async () => {
     mutate(
       {
-        link: "/user",
+        link: UNREGISTER_LINK,
         method: "delete",
       },
       {

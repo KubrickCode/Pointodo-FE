@@ -2,6 +2,8 @@ import { FC, useState, useRef, useEffect } from "react";
 import { useQueryMutate } from "./../../../hooks/useQueryApi";
 import { useUserStore } from "../../../store/user.store";
 import { Link } from "react-router-dom";
+import { LOGOUT_LINK } from "../../../shared/constants/auth.constant";
+import { Role } from "../../../entities/user.entity";
 
 const ProfileDropdown: FC = () => {
   const user = useUserStore((state) => state.user);
@@ -31,7 +33,7 @@ const ProfileDropdown: FC = () => {
   const handleLogout = async () => {
     logout(
       {
-        link: "/auth/logout",
+        link: LOGOUT_LINK,
         method: "post",
       },
       {
@@ -79,7 +81,7 @@ const ProfileDropdown: FC = () => {
                 로그아웃
               </button>
             </li>
-            {(user?.role === "ADMIN" || user?.role === "MASTER") && (
+            {(user?.role === Role.ADMIN || user?.role === Role.MASTER) && (
               <li>
                 <Link to="admin" className="block px-4 py-2 hover:bg-gray-100">
                   관리자 페이지

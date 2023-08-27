@@ -14,3 +14,9 @@ export interface UserBadgeProgressEntity {
   progress: number;
   occurredAt: Date;
 }
+
+export enum Role {
+  USER = "USER",
+  ADMIN = "ADMIN",
+  MASTER = "MASTER",
+}
