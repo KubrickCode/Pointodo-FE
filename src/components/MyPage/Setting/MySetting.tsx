@@ -8,19 +8,20 @@ import {
   MODAL_CONTENT_CHANGE_PASSWORD,
   MODAL_CONTENT_UNREGISTER,
 } from "../../../shared/constants/modal.constant";
+import { GET_ALL_BADGE_LIST_LINK } from "../../../shared/constants/badge.constant";
 
 interface Props {
   setTab(tab: number): void;
 }
 
 const MySetting: FC<Props> = ({ setTab }) => {
-  const [myBadge, setMyBadge] = useState("");
-
   const user = useUserStore((state) => state.user);
   const setModalState = useModalStore((state) => state.setModalState);
 
+  const [myBadge, setMyBadge] = useState("");
+
   const { data: badgeList } = useQueryGet(
-    "/badge/all",
+    GET_ALL_BADGE_LIST_LINK,
     QUERY_KEY_GET_ALL_BADGE_LIST
   );
 
