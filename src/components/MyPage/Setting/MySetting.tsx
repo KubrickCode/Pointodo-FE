@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { useUserStore } from "../../../store/user.store";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import { useModalStore } from "../../../store/modal.store";
@@ -26,13 +26,17 @@ const MySetting: FC<Props> = ({ setTab }) => {
     QUERY_KEY_GET_ALL_BADGE_LIST
   );
 
-  useEffect(() => {
-    const filteredBadgeList = badgeList?.filter(
-      (item: BadgeEntity) => item.id === user?.selectedBadgeId
-    );
+  const filteredBadgeList = useMemo(
+    () =>
+      badgeList?.filter(
+        (item: BadgeEntity) => item.id === user?.selectedBadgeId
+      ),
+    [user, badgeList]
+  );
 
+  useEffect(() => {
     setMyBadge(filteredBadgeList[0]?.iconLink);
-  }, [user, badgeList]);
+  }, [filteredBadgeList]);
 
   return (
     <div className="w-full p-5 flex justify-center">

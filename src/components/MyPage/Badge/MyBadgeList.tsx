@@ -99,13 +99,13 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
 
   const handleBuy = useCallback(
     (id: number, price?: number) => {
-      if (price && price > currentPoints.points) {
+      if (price && price > currentPoints?.points) {
         setToastState(true, BUY_BADGE_NOT_ENOUGH_POINT_MESSAGE, "warning");
       } else {
         setModalState(true, MODAL_CONTENT_BUY_BADGE, undefined, undefined, id);
       }
     },
-    [currentPoints.points]
+    [currentPoints?.points]
   );
 
   const handleSelect = useCallback(async (badgeId: number) => {
