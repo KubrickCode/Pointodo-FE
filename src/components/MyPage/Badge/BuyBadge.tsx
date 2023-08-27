@@ -6,8 +6,8 @@ import { useQueryClient } from "react-query";
 import { BUY_BADGE_LINK } from "../../../shared/constants/badge.constant";
 import {
   QUERY_KEY_GET_CURRENT_POINTS,
+  QUERY_KEY_GET_MY_BADGE_LIST,
   QUERY_KEY_GET_SPENT_POINTS_LOGS,
-  QUERY_KEY_GET_USER_BADGE_LIST,
 } from "../../../shared/constants/query.constant";
 import { BUY_BADGE_MESSAGE } from "../../../shared/messages/badge.message";
 
@@ -28,7 +28,7 @@ const BuyBadge: FC = () => {
       },
       {
         onSuccess: async () => {
-          await queryClient.invalidateQueries(QUERY_KEY_GET_USER_BADGE_LIST);
+          await queryClient.invalidateQueries(QUERY_KEY_GET_MY_BADGE_LIST);
           await queryClient.invalidateQueries(QUERY_KEY_GET_SPENT_POINTS_LOGS);
           await queryClient.invalidateQueries(QUERY_KEY_GET_CURRENT_POINTS);
           setToastState(true, BUY_BADGE_MESSAGE, "success");

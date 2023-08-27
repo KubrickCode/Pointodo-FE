@@ -4,9 +4,27 @@ import { useUserStore } from "../../../store/user.store";
 import { useModalStore } from "../../../store/modal.store";
 import { useToastStore } from "../../../store/toast.store";
 import { useQueryClient } from "react-query";
-import { BadgeEntity } from "../../../entities/badge.entity";
-import { QUERY_KEY_GET_ALL_BADGE_LIST } from "../../../shared/constants/query.constant";
+import { BadgeEntity, BadgeType } from "../../../entities/badge.entity";
+import {
+  QUERY_KEY_GET_ALL_BADGE_LIST,
+  QUERY_KEY_GET_CURRENT_POINTS,
+  QUERY_KEY_GET_MY_BADGE_LIST,
+  QUERY_KEY_GET_MY_BADGE_PROGRESS,
+  QUERY_KEY_GET_USER,
+} from "../../../shared/constants/query.constant";
 import { MODAL_CONTENT_BUY_BADGE } from "../../../shared/constants/modal.constant";
+import { UserBadgeProgressEntity } from "../../../entities/user.entity";
+import {
+  CHANGE_SELECTED_BADGE_LINK,
+  GET_ALL_BADGE_LIST_LINK,
+  GET_MY_BADGE_LIST_LINK,
+  GET_MY_BADGE_PROGRESS_LINK,
+} from "../../../shared/constants/badge.constant";
+import { GET_CURRENT_POINTS_LINK } from "../../../shared/constants/point.constant";
+import {
+  BUY_BADGE_NOT_ENOUGH_POINT_MESSAGE,
+  CHANGE_SELECTED_BADGE_MESSAGE,
+} from "../../../shared/messages/badge.message";
 
 interface Props {
   tab: number;
@@ -14,38 +32,36 @@ interface Props {
 
 type UserBadgeList = number[];
 
-interface UserBadgeProgress {
-  badgeId: number;
-  progress: number;
-}
-
 const MyBadgeList: FC<Props> = ({ tab }) => {
-  const [data, setData] = useState<BadgeEntity[]>([]);
-  const [userBadgeList, setUserBadgeList] = useState<UserBadgeList>([]);
-  const [userBadgeProgress, setUserBadgeProgress] = useState<
-    UserBadgeProgress[]
-  >([]);
-
   const user = useUserStore((state) => state.user);
   const setModalState = useModalStore((state) => state.setModalState);
   const setToastState = useToastStore((state) => state.setToastState);
 
+  const [data, setData] = useState<BadgeEntity[]>([]);
+  const [userBadgeList, setUserBadgeList] = useState<UserBadgeList>([]);
+  const [userBadgeProgress, setUserBadgeProgress] = useState<
+    UserBadgeProgressEntity[]
+  >([]);
+
   const queryClient = useQueryClient();
   const { mutate } = useQueryMutate();
 
-  const { data: currentPoints } = useQueryGet("/point/current", "getPoints");
+  const { data: currentPoints } = useQueryGet(
+    GET_CURRENT_POINTS_LINK,
+    QUERY_KEY_GET_CURRENT_POINTS
+  );
 
   const { data: badgeList } = useQueryGet(
-    "/badge/all",
+    GET_ALL_BADGE_LIST_LINK,
     QUERY_KEY_GET_ALL_BADGE_LIST
   );
   const { data: userBadgeListData } = useQueryGet(
-    "/badge/list",
-    "getUserBadgeList"
+    GET_MY_BADGE_LIST_LINK,
+    QUERY_KEY_GET_MY_BADGE_LIST
   );
   const { data: userBadgeProgressData } = useQueryGet(
-    "/badge/progress",
-    "getUserBadgeProgress"
+    GET_MY_BADGE_PROGRESS_LINK,
+    QUERY_KEY_GET_MY_BADGE_PROGRESS
   );
 
   useEffect(() => {
@@ -63,21 +79,27 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
       setData(badgeList);
     }
     if (tab === 1) {
-      setData(badgeList.filter((item: BadgeEntity) => item.type === "NORMAL"));
+      setData(
+        badgeList.filter((item: BadgeEntity) => item.type === BadgeType.NORMAL)
+      );
     }
     if (tab === 2) {
       setData(
-        badgeList.filter((item: BadgeEntity) => item.type === "ACHIEVEMENT")
+        badgeList.filter(
+          (item: BadgeEntity) => item.type === BadgeType.ACHIEVEMENT
+        )
       );
     }
     if (tab === 3) {
-      setData(badgeList.filter((item: BadgeEntity) => item.type === "SPECIAL"));
+      setData(
+        badgeList.filter((item: BadgeEntity) => item.type === BadgeType.SPECIAL)
+      );
     }
   }, [badgeList, tab]);
 
   const handleBuy = (id: number, price?: number) => {
     if (price && price > currentPoints.points) {
-      setToastState(true, "포인트가 부족합니다", "warning");
+      setToastState(true, BUY_BADGE_NOT_ENOUGH_POINT_MESSAGE, "warning");
     } else {
       setModalState(true, MODAL_CONTENT_BUY_BADGE, undefined, undefined, id);
     }
@@ -86,15 +108,15 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
   const handleSelect = async (badgeId: number) => {
     mutate(
       {
-        link: "/badge/selected",
+        link: CHANGE_SELECTED_BADGE_LINK,
         method: "patch",
         body: { badgeId },
       },
       {
         onSuccess: async () => {
-          setToastState(true, "대표 뱃지가 변경되었습니다", "success");
-          await queryClient.invalidateQueries("getUser");
-          await queryClient.invalidateQueries("getUserBadgeList");
+          setToastState(true, CHANGE_SELECTED_BADGE_MESSAGE, "success");
+          await queryClient.invalidateQueries(QUERY_KEY_GET_USER);
+          await queryClient.invalidateQueries(QUERY_KEY_GET_MY_BADGE_LIST);
         },
       }
     );
@@ -111,7 +133,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
             <h2 className="text-2xl my-3">{item.name}</h2>
           </div>
           <div className="mb-2">{item.description}</div>
-          {item.type === "ACHIEVEMENT" ? (
+          {item.type === BadgeType.ACHIEVEMENT ? (
             <div className="h-8">
               진척도:{" "}
               {userBadgeProgress?.filter((el) => el.badgeId === item.id)[0]
@@ -140,7 +162,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
                 보유중
               </button>
             ) : (
-              item.type !== "SPECIAL" && (
+              item.type !== BadgeType.SPECIAL && (
                 <button
                   className="border px-2 py-1 mx-1 rounded bg-blue-500 text-white"
                   onClick={() => handleBuy(item.id, item.price!)}

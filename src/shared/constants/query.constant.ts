@@ -6,6 +6,7 @@ export const QUERY_KEY_GET_ALL_BADGE_LIST = "getAllBadgeList";
 export const QUERY_KEY_GET_USER_LIST = "getUserList";
 export const QUERY_KEY_GET_USER_LIST_TOTAL_PAGE = "getUserListTotalPages";
 
+export const QUERY_KEY_GET_USER = "getUser";
 export const QUERY_KEY_GET_USER_BADGE_PROGRESS = "getUserBadgeProgress";
 export const QUERY_KEY_GET_CURRENT_POINTS = "getPoints";
 
@@ -18,3 +19,6 @@ export const QUERY_KEY_GET_FREE_TOTAL_PAGES = "getFreeTotalPage";
 
 export const QUERY_KEY_GET_EARNED_POINTS_LOGS = "getEarnedPointsLogs";
 export const QUERY_KEY_GET_SPENT_POINTS_LOGS = "getSpentPointsLogs";
+
+export const QUERY_KEY_GET_MY_BADGE_LIST = "getMyBadgeList";
+export const QUERY_KEY_GET_MY_BADGE_PROGRESS = "getMyBadgeProgress";

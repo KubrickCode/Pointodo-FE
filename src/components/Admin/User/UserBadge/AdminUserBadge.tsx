@@ -9,18 +9,19 @@ import {
 } from "../../../../entities/badge.entity";
 import {
   DELETE_USER_BADGE_LINK,
-  GET_ALL_BADGE_LIST_LINK,
   GET_USER_BADGE_LIST_LINK,
   PUT_BADGE_TO_USER_LINK,
 } from "../../../../shared/constants/admin.constant";
 import {
   QUERY_KEY_GET_ALL_BADGE_LIST,
+  QUERY_KEY_GET_MY_BADGE_LIST,
   QUERY_KEY_GET_USER_BADGE_LIST,
 } from "../../../../shared/constants/query.constant";
 import {
   DELETE_USER_BADGE_MESSAGE,
   PUT_BADGE_TO_USER_MESSAGE,
 } from "../../../../shared/messages/admin.message";
+import { GET_ALL_BADGE_LIST_LINK } from "../../../../shared/constants/badge.constant";
 
 const AdminUserBadge: FC = () => {
   const modaluserId = useModalStore((state) => state.modaluserId);
@@ -71,6 +72,7 @@ const AdminUserBadge: FC = () => {
         onSuccess: async () => {
           setToastState(true, PUT_BADGE_TO_USER_MESSAGE, "success");
           await queryClient.invalidateQueries(QUERY_KEY_GET_USER_BADGE_LIST);
+          await queryClient.invalidateQueries(QUERY_KEY_GET_MY_BADGE_LIST);
         },
       }
     );
@@ -86,6 +88,7 @@ const AdminUserBadge: FC = () => {
         onSuccess: async () => {
           setToastState(true, DELETE_USER_BADGE_MESSAGE, "success");
           await queryClient.invalidateQueries(QUERY_KEY_GET_USER_BADGE_LIST);
+          await queryClient.invalidateQueries(QUERY_KEY_GET_MY_BADGE_LIST);
         },
       }
     );

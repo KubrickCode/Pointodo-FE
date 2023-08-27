@@ -6,3 +6,11 @@ export interface UserEntity {
   role: string;
   createdAt: Date;
 }
+
+export interface UserBadgeProgressEntity {
+  id: number;
+  userId: string;
+  badgeId: number;
+  progress: number;
+  occurredAt: Date;
+}
