@@ -44,21 +44,21 @@ const MySetting: FC<Props> = ({ setTab }) => {
         <img src={myBadge} className="w-40 h-40" />
         <div className="my-2">이메일 : {user?.email}</div>
         <button
-          className="border px-2 py-1 rounded my-2 w-40"
+          className="border-2 px-2 py-1 rounded my-2 w-40 hover:bg-neutral-200"
           onClick={() => setTab(0)}
         >
           대표 뱃지 수정
         </button>
         {user?.provider === Provider.LOCAL && (
           <button
-            className="border rounded px-2 py-1 my-2 w-40"
+            className="border-2 rounded px-2 py-1 my-2 w-40 hover:bg-neutral-200"
             onClick={() => setModalState(true, MODAL_CONTENT_CHANGE_PASSWORD)}
           >
             비밀번호 변경
           </button>
         )}
         <button
-          className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white"
+          className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white hover:bg-red-600"
           onClick={() => setModalState(true, MODAL_CONTENT_UNREGISTER)}
         >
           회원 탈퇴
