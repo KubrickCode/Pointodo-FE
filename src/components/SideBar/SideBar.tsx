@@ -1,5 +1,10 @@
 import { FC } from "react";
 import { TaskType } from "../../entities/task.entity";
+import {
+  DAILY_TASK,
+  DUE_TASK,
+  FREE_TASK,
+} from "../../shared/constants/task.constant";
 
 interface Props {
   menu: {
@@ -24,12 +29,12 @@ const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
               }`}
               onClick={() => setTab(item.id)}
             >
-              {item.name === "DAILY"
-                ? "매일 작업"
-                : item.name === "DUE"
-                ? "기한 작업"
-                : item.name === "FREE"
-                ? "무기한 작업"
+              {item.name === TaskType.DAILY
+                ? DAILY_TASK
+                : item.name === TaskType.DUE
+                ? DUE_TASK
+                : item.name === TaskType.FREE
+                ? FREE_TASK
                 : item.name}
             </li>
           ))}
