@@ -30,7 +30,8 @@ const Navigation: FC = () => {
             className="flex flex-row items-center h-full"
             onClick={() => (location.href = "/")}
           >
-            <h1 className="text-2xl mx-5 font-bold">Pointodo</h1>
+            <h1 className="text-2xl ml-5 font-bold">Pointodo</h1>
+            <img src="logo.png" className="w-10" />
           </button>
         </div>
         <div className="flex flex-row items-center">

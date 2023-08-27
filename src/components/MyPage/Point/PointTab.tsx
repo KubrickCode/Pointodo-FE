@@ -14,8 +14,8 @@ const PointTab: FC<Props> = ({ tab, setTab }) => {
             key={item.id}
             onClick={() => setTab(item.id)}
             className={`${
-              tab === item.id && "bg-neutral-200"
-            } w-full text-center p-5 cursor-pointer`}
+              tab === item.id && "bg-blue-400 text-white"
+            } w-full text-center p-5 cursor-pointer rounded-xl m-2 hover:bg-blue-300 hover:text-white`}
           >
             {item.name}
           </li>
