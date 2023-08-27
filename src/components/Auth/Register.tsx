@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignBody, useSign } from "../../hooks/useSign";
 import {
@@ -31,7 +31,7 @@ const Register: FC<Props> = ({ setTab }) => {
   const { mutate: signUp } = useSign(REGISTER_LINK);
   const { mutate: login } = useSign(LOGIN_LINK);
 
-  const onSubmitHandler: SubmitHandler<SignBody> = (data) => {
+  const onSubmitHandler: SubmitHandler<SignBody> = useCallback(async (data) => {
     const body = {
       email: data.email,
       password: data.password,
@@ -58,7 +58,7 @@ const Register: FC<Props> = ({ setTab }) => {
         },
       }
     );
-  };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="p-10">

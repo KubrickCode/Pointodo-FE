@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignBody, useSign } from "../../hooks/useSign";
 import { LOGIN_LINK } from "../../shared/constants/auth.constant";
@@ -25,21 +25,24 @@ const Login: FC<Props> = ({ setTab }) => {
 
   const { mutate: login } = useSign(LOGIN_LINK);
 
-  const onSubmitHandler: SubmitHandler<SignBody> = async (formData) => {
-    login(
-      {
-        body: formData,
-      },
-      {
-        onSuccess: async () => {
-          location.reload();
+  const onSubmitHandler: SubmitHandler<SignBody> = useCallback(
+    async (formData) => {
+      login(
+        {
+          body: formData,
         },
-        onError: async (err: any) => {
-          setErrMsg(err.response.data.message);
-        },
-      }
-    );
-  };
+        {
+          onSuccess: async () => {
+            location.reload();
+          },
+          onError: async (err: any) => {
+            setErrMsg(err.response.data.message);
+          },
+        }
+      );
+    },
+    []
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="p-10">
