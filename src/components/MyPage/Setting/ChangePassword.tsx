@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useToastStore } from "../../../store/toast.store";
@@ -20,7 +20,7 @@ const ChangePassword: FC = () => {
 
   const { mutate } = useQueryMutate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     mutate(
       {
         link: CHECK_PASSWORD_LINK,
@@ -48,7 +48,7 @@ const ChangePassword: FC = () => {
         },
       }
     );
-  };
+  }, [body]);
 
   return (
     <>
