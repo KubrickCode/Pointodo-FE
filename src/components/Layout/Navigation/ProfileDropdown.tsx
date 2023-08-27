@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, useState, useRef, useEffect, useCallback } from "react";
 import { useQueryMutate } from "./../../../hooks/useQueryApi";
 import { useUserStore } from "../../../store/user.store";
 import { Link } from "react-router-dom";
@@ -15,22 +15,25 @@ const ProfileDropdown: FC = () => {
   const { mutate: logout } = useQueryMutate();
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [setOpen]);
 
-  const handleLogout = async () => {
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    },
+    [dropdownRef.current]
+  );
+
+  const handleLogout = useCallback(async () => {
     logout(
       {
         link: LOGOUT_LINK,
@@ -42,11 +45,14 @@ const ProfileDropdown: FC = () => {
         },
       }
     );
-  };
+  }, []);
 
   return (
     <>
-      <div className="relative border border-neutral-400 rounded-full">
+      <div
+        className="relative border border-neutral-400 rounded-full"
+        ref={dropdownRef}
+      >
         <img
           className="w-10 h-10 rounded-full cursor-pointer"
           src={user?.selectedBadge?.iconLink}
@@ -54,7 +60,6 @@ const ProfileDropdown: FC = () => {
         />
 
         <div
-          ref={dropdownRef}
           className={`z-10 ${
             open ? "block" : "hidden"
           } absolute right-1 top-12 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 text-center`}
