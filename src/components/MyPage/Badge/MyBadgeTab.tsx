@@ -20,7 +20,7 @@ const MyBadgeTab: FC<Props> = ({ tab, setTab }) => {
             onClick={() => setTab(item.id)}
             className={`${
               tab === item.id && "bg-blue-400 text-white"
-            } w-full text-center p-5 cursor-pointer rounded-xl m-2`}
+            } w-full text-center p-5 cursor-pointer rounded-xl m-2 hover:bg-blue-300 hover:text-white`}
           >
             {item.name}
           </li>
