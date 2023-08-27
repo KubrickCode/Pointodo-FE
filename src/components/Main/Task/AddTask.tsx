@@ -9,6 +9,23 @@ import { ko } from "date-fns/esm/locale";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
 import { TaskEntity, TaskType } from "../../../entities/task.entity";
+import {
+  CREATE_TASK_LINK,
+  DAILY_TASK,
+  DUE_TASK,
+  FREE_TASK,
+} from "../../../shared/constants/task.constant";
+import {
+  QUERY_KEY_GET_DAILY_TASKS,
+  QUERY_KEY_GET_DUE_TASKS,
+  QUERY_KEY_GET_FREE_TASKS,
+} from "../../../shared/constants/query.constant";
+import { CREATE_TASK_MESSAGE } from "../../../shared/messages/task.message";
+import {
+  TASK_DESC_LENGTH_ERROR,
+  TASK_NAME_EMPTY_ERROR,
+  TASK_NAME_LENGTH_ERROR,
+} from "../../../shared/messages/task.error";
 
 interface Props {
   taskType: TaskType;
@@ -50,7 +67,7 @@ const AddTask: FC<Props> = ({ taskType }) => {
 
     mutate(
       {
-        link: "/task/create",
+        link: CREATE_TASK_LINK,
         body: formData,
         method: "post",
       },
@@ -59,19 +76,19 @@ const AddTask: FC<Props> = ({ taskType }) => {
           setModalState(false);
           await queryClient.invalidateQueries(
             taskType === TaskType.DAILY
-              ? "getDailyTasks"
+              ? QUERY_KEY_GET_DAILY_TASKS
               : taskType === TaskType.DUE
-              ? "getDueTasks"
-              : "getFreeTasks"
+              ? QUERY_KEY_GET_DUE_TASKS
+              : QUERY_KEY_GET_FREE_TASKS
           );
           await queryClient.invalidateQueries(
             taskType === TaskType.DAILY
-              ? "getDailyTotalPage"
+              ? QUERY_KEY_GET_DAILY_TASKS
               : taskType === TaskType.DUE
-              ? "getDueTotalPage"
-              : "getFreeTotalPage"
+              ? QUERY_KEY_GET_DUE_TASKS
+              : QUERY_KEY_GET_FREE_TASKS
           );
-          setToastState(true, "작업이 추가되었습니다", "success");
+          setToastState(true, CREATE_TASK_MESSAGE, "success");
         },
       }
     );
@@ -82,10 +99,10 @@ const AddTask: FC<Props> = ({ taskType }) => {
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <h1 className="text-xl text-center mb-5">
           {taskType === TaskType.DAILY
-            ? "매일 작업"
+            ? DAILY_TASK
             : taskType === TaskType.DUE
-            ? "기한 작업"
-            : "무기한 작업"}{" "}
+            ? DUE_TASK
+            : FREE_TASK}{" "}
           추가
         </h1>
         <div className="my-2">
@@ -97,18 +114,18 @@ const AddTask: FC<Props> = ({ taskType }) => {
             maxLength={20}
             required
             {...register("name", {
-              required: "작업명은 필수 입력 필드입니다.",
+              required: TASK_NAME_EMPTY_ERROR,
               maxLength: {
                 value: 20,
-                message: "작업명은 20자 이내로 입력하세요.",
+                message: TASK_NAME_LENGTH_ERROR,
               },
             })}
           />
           {errors.name && errors.name.type === "required" && (
-            <div>작업명을 입력해 주세요</div>
+            <div>{errors.name.message}</div>
           )}
           {errors.name && errors.name.type === "maxLength" && (
-            <div>작업명은 20자리 이내로 입력하세요.</div>
+            <div>{errors.name.message}</div>
           )}
         </div>
         <div className="my-2">
@@ -119,12 +136,12 @@ const AddTask: FC<Props> = ({ taskType }) => {
             {...register("description", {
               maxLength: {
                 value: 500,
-                message: "작업 설명은 500자 이내로 입력하세요.",
+                message: TASK_DESC_LENGTH_ERROR,
               },
             })}
           />
           {errors.description && errors.description.type === "maxLength" && (
-            <div>작업명은 20자리 이내로 입력하세요.</div>
+            <div>{errors.description.message}</div>
           )}
         </div>
         {taskType === "DUE" && (
