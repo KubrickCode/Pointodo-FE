@@ -9,6 +9,7 @@ import {
   MODAL_CONTENT_UNREGISTER,
 } from "../../../shared/constants/modal.constant";
 import { GET_ALL_BADGE_LIST_LINK } from "../../../shared/constants/badge.constant";
+import { Provider } from "../../../entities/user.entity";
 
 interface Props {
   setTab(tab: number): void;
@@ -44,12 +45,14 @@ const MySetting: FC<Props> = ({ setTab }) => {
         >
           대표 뱃지 수정
         </button>
-        <button
-          className="border rounded px-2 py-1 my-2 w-40"
-          onClick={() => setModalState(true, MODAL_CONTENT_CHANGE_PASSWORD)}
-        >
-          비밀번호 변경
-        </button>
+        {user?.provider === Provider.LOCAL && (
+          <button
+            className="border rounded px-2 py-1 my-2 w-40"
+            onClick={() => setModalState(true, MODAL_CONTENT_CHANGE_PASSWORD)}
+          >
+            비밀번호 변경
+          </button>
+        )}
         <button
           className="border rounded px-2 py-1 my-2 w-40 bg-red-500 text-white"
           onClick={() => setModalState(true, MODAL_CONTENT_UNREGISTER)}
