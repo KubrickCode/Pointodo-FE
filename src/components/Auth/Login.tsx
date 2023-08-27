@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
-import { AuthProps, LoginForm } from "../../types/auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useSign } from "../../hooks/useSign";
+import { SignBody, useSign } from "../../hooks/useSign";
 import { LOGIN_LINK } from "../../shared/constants/auth.constant";
 import {
   AUTH_EMAIL_EMPTY_ERROR,
@@ -11,18 +10,22 @@ import {
   AUTH_PASSWORD_FORM_ERROR,
 } from "../../shared/messages/auth.error";
 
-const Login: FC<AuthProps> = ({ setTab }) => {
+interface Props {
+  setTab(tab: number): void;
+}
+
+const Login: FC<Props> = ({ setTab }) => {
   const [errMsg, setErrMsg] = useState("");
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginForm>();
+  } = useForm<SignBody>();
 
   const { mutate: login } = useSign(LOGIN_LINK);
 
-  const onSubmitHandler: SubmitHandler<LoginForm> = async (formData) => {
+  const onSubmitHandler: SubmitHandler<SignBody> = async (formData) => {
     login(
       {
         body: formData,

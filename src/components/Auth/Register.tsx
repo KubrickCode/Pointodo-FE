@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
-import { AuthProps, RegisterForm } from "../../types/auth.type";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useSign } from "../../hooks/useSign";
+import { SignBody, useSign } from "../../hooks/useSign";
 import {
   AUTH_EMAIL_EMPTY_ERROR,
   AUTH_EMAIL_FORM_ERROR,
@@ -15,7 +14,11 @@ import {
   REGISTER_LINK,
 } from "../../shared/constants/auth.constant";
 
-const Register: FC<AuthProps> = ({ setTab }) => {
+interface Props {
+  setTab(tab: number): void;
+}
+
+const Register: FC<Props> = ({ setTab }) => {
   const [errMsg, setErrMsg] = useState("");
 
   const {
@@ -23,12 +26,12 @@ const Register: FC<AuthProps> = ({ setTab }) => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterForm>();
+  } = useForm<SignBody>();
 
   const { mutate: signUp } = useSign(REGISTER_LINK);
   const { mutate: login } = useSign(LOGIN_LINK);
 
-  const onSubmitHandler: SubmitHandler<RegisterForm> = (data) => {
+  const onSubmitHandler: SubmitHandler<SignBody> = (data) => {
     const body = {
       email: data.email,
       password: data.password,
