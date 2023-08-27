@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useModalStore } from "../../../store/modal.store";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
@@ -57,41 +57,44 @@ const AddTask: FC<Props> = ({ taskType }) => {
     }
   }, [dueDate]);
 
-  const onSubmitHandler: SubmitHandler<AddTaskForm> = async (formData) => {
-    if (taskType === TaskType.DUE) {
-      formData = Object.assign(formData, {
-        dueDate: moment(dueDate).format("YYYY-MM-DD"),
-      });
-    }
-
-    mutate(
-      {
-        link: CREATE_TASK_LINK,
-        body: formData,
-        method: "post",
-      },
-      {
-        onSuccess: async () => {
-          setModalState(false);
-          await queryClient.invalidateQueries(
-            taskType === TaskType.DAILY
-              ? QUERY_KEY_GET_DAILY_TASKS
-              : taskType === TaskType.DUE
-              ? QUERY_KEY_GET_DUE_TASKS
-              : QUERY_KEY_GET_FREE_TASKS
-          );
-          await queryClient.invalidateQueries(
-            taskType === TaskType.DAILY
-              ? QUERY_KEY_GET_DAILY_TASKS
-              : taskType === TaskType.DUE
-              ? QUERY_KEY_GET_DUE_TASKS
-              : QUERY_KEY_GET_FREE_TASKS
-          );
-          setToastState(true, CREATE_TASK_MESSAGE, "success");
-        },
+  const onSubmitHandler: SubmitHandler<AddTaskForm> = useCallback(
+    async (formData) => {
+      if (taskType === TaskType.DUE) {
+        formData = Object.assign(formData, {
+          dueDate: moment(dueDate).format("YYYY-MM-DD"),
+        });
       }
-    );
-  };
+
+      mutate(
+        {
+          link: CREATE_TASK_LINK,
+          body: formData,
+          method: "post",
+        },
+        {
+          onSuccess: async () => {
+            setModalState(false);
+            await queryClient.invalidateQueries(
+              taskType === TaskType.DAILY
+                ? QUERY_KEY_GET_DAILY_TASKS
+                : taskType === TaskType.DUE
+                ? QUERY_KEY_GET_DUE_TASKS
+                : QUERY_KEY_GET_FREE_TASKS
+            );
+            await queryClient.invalidateQueries(
+              taskType === TaskType.DAILY
+                ? QUERY_KEY_GET_DAILY_TASKS
+                : taskType === TaskType.DUE
+                ? QUERY_KEY_GET_DUE_TASKS
+                : QUERY_KEY_GET_FREE_TASKS
+            );
+            setToastState(true, CREATE_TASK_MESSAGE, "success");
+          },
+        }
+      );
+    },
+    [taskType, dueDate]
+  );
 
   return (
     <>
