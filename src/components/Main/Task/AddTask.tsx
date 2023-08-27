@@ -8,24 +8,24 @@ import DatePicker from "react-datepicker";
 import { ko } from "date-fns/esm/locale";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
+import { TaskEntity, TaskType } from "../../../entities/task.entity";
 
 interface Props {
-  taskType: string;
+  taskType: TaskType;
 }
 
-interface AddTaskForm {
-  taskType: string;
-  name: string;
-  description: string;
-  importance: number;
-}
+type AddTaskForm = Pick<
+  TaskEntity,
+  "taskType" | "name" | "description" | "importance"
+>;
 
 const AddTask: FC<Props> = ({ taskType }) => {
   const setModalState = useModalStore((state) => state.setModalState);
   const setToastState = useToastStore((state) => state.setToastState);
-  const queryClient = useQueryClient();
 
   const [dueDate, setDueDate] = useState(new Date());
+
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (dueDate < new Date()) {
@@ -42,7 +42,7 @@ const AddTask: FC<Props> = ({ taskType }) => {
   const { mutate } = useQueryMutate();
 
   const onSubmitHandler: SubmitHandler<AddTaskForm> = async (formData) => {
-    if (taskType === "DUE") {
+    if (taskType === TaskType.DUE) {
       formData = Object.assign(formData, {
         dueDate: moment(dueDate).format("YYYY-MM-DD"),
       });
@@ -58,16 +58,16 @@ const AddTask: FC<Props> = ({ taskType }) => {
         onSuccess: async () => {
           setModalState(false);
           await queryClient.invalidateQueries(
-            taskType === "DAILY"
+            taskType === TaskType.DAILY
               ? "getDailyTasks"
-              : taskType === "DUE"
+              : taskType === TaskType.DUE
               ? "getDueTasks"
               : "getFreeTasks"
           );
           await queryClient.invalidateQueries(
-            taskType === "DAILY"
+            taskType === TaskType.DAILY
               ? "getDailyTotalPage"
-              : taskType === "DUE"
+              : taskType === TaskType.DUE
               ? "getDueTotalPage"
               : "getFreeTotalPage"
           );
@@ -81,9 +81,9 @@ const AddTask: FC<Props> = ({ taskType }) => {
     <>
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <h1 className="text-xl text-center mb-5">
-          {taskType === "DAILY"
+          {taskType === TaskType.DAILY
             ? "매일 작업"
-            : taskType === "DUE"
+            : taskType === TaskType.DUE
             ? "기한 작업"
             : "무기한 작업"}{" "}
           추가

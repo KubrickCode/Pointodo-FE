@@ -9,18 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useModalStore } from "../../../store/modal.store";
 import Pagination from "../../Pagination/Pagination";
 import { useUserStore } from "../../../store/user.store";
-
-export interface TaskEntity {
-  id: number;
-  userId: string;
-  taskType: string;
-  name: string;
-  description: string;
-  completion: number;
-  importance: number;
-  occurredAt: string;
-  dueDate?: string;
-}
+import { TaskEntity } from "../../../entities/task.entity";
 
 interface Props {
   tab: number;
