@@ -2,56 +2,55 @@ import { FC, useEffect, useState } from "react";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import moment from "moment";
 import Pagination from "../../Pagination/Pagination";
+import { PointLog } from "../../../entities/point.entity";
+import {
+  GET_POINTS_LOGS_LINK,
+  GET_POINTS_LOGS_TOTAL_PAGES,
+} from "../../../shared/constants/point.constant";
+import {
+  QUERY_KEY_GET_EARNED_POINTS_LOGS,
+  QUERY_KEY_GET_EARNED_POINTS_TOTAL_PAGES,
+  QUERY_KEY_GET_SPENT_POINTS_LOGS,
+  QUERY_KEY_GET_SPENT_POINTS_TOTAL_PAGES,
+} from "../../../shared/constants/query.constant";
 
 interface Props {
   tab: number;
   order: string;
 }
 
-interface PointLog {
-  id: number;
-  userId: string;
-  points: number;
-  occuredAt: string;
-  taskId?: number;
-  taskName?: string;
-  badgeId?: number;
-  badgeName?: string;
-}
-
 const PointsLogs: FC<Props> = ({ tab, order }) => {
   const [logs, setLogs] = useState<PointLog[]>();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
   const { data: earnedPointsLogs } = useQueryGet(
-    `/point/logs/earned?page=${currentPage}&order=${order}`,
-    "getEarnedPointsLogs",
+    GET_POINTS_LOGS_LINK("earned", currentPage, order),
+    QUERY_KEY_GET_EARNED_POINTS_LOGS,
     {
       enabled: tab === 0,
     }
   );
 
   const { data: spentPointsLogs } = useQueryGet(
-    `/point/logs/spent?page=${currentPage}&order=${order}`,
-    "getSpentPointsLogs",
+    GET_POINTS_LOGS_LINK("spent", currentPage, order),
+    QUERY_KEY_GET_SPENT_POINTS_LOGS,
     {
       enabled: tab === 1,
     }
   );
 
   const { data: earnedPointTotalPage } = useQueryGet(
-    `/point/count/earned`,
-    "getEarnedPointTotalPage",
+    GET_POINTS_LOGS_TOTAL_PAGES("earned"),
+    QUERY_KEY_GET_EARNED_POINTS_TOTAL_PAGES,
     {
       enabled: tab === 0,
     }
   );
 
   const { data: spentPointTotalPage } = useQueryGet(
-    `/point/count/spent`,
-    "getSpentPointTotalPage",
+    GET_POINTS_LOGS_TOTAL_PAGES("spent"),
+    QUERY_KEY_GET_SPENT_POINTS_TOTAL_PAGES,
     {
       enabled: tab === 1,
     }
@@ -77,35 +76,47 @@ const PointsLogs: FC<Props> = ({ tab, order }) => {
   return (
     <>
       <table className="table-fixed w-full">
-        <thead className="border-b p-5">
+        <thead className="border-b p-5 dark:border-neutral-600">
           <tr>
-            <th className="p-5 text-center border-r w-[30%]">거래 날짜</th>
-            <th className="p-5 text-center border-r w-[30%]">
+            <th className="p-5 text-center border-r w-[30%] dark:border-neutral-600 dark:text-neutral-200">
+              거래 날짜
+            </th>
+            <th className="p-5 text-center border-r w-[30%] dark:border-neutral-600 dark:text-neutral-200">
               {tab === 0 ? "획득" : "소모"} 포인트
             </th>
             {tab === 0 ? (
-              <th className="p-5 text-center border-r w-[40%]">완료 작업명</th>
+              <th className="p-5 text-center border-r w-[40%] dark:border-neutral-600 dark:text-neutral-200">
+                완료 작업명
+              </th>
             ) : (
-              <th className="p-5 text-center border-r w-[40%]">구매 뱃지명</th>
+              <th className="p-5 text-center border-r w-[40%] dark:border-neutral-600 dark:text-neutral-200">
+                구매 뱃지명
+              </th>
             )}
           </tr>
         </thead>
         <tbody>
           {logs?.map((item) => (
             <tr key={item.id}>
-              <td className="p-5 text-center border-r w-[30%] ">
-                <span className="break-all">
+              <td className="p-5 text-center border-r w-[30%] dark:border-neutral-600">
+                <span className="break-all dark:text-neutral-200">
                   {moment.utc(item.occuredAt).format("YYYY-MM-DD")}
                 </span>
               </td>
-              <td className="p-5 text-center border-r w-[30%] ">
-                <span className="break-all">{item.points}</span>
+              <td className="p-5 text-center border-r w-[30%] dark:border-neutral-600">
+                <span className="break-all dark:text-neutral-200">
+                  {item.points}
+                </span>
               </td>
-              <td className="p-5 text-center border-l w-[40%] ">
+              <td className="p-5 text-center border-l w-[40%] dark:border-neutral-600">
                 {tab === 0 ? (
-                  <span className="break-all">{item.taskName}</span>
+                  <span className="break-all dark:text-neutral-200">
+                    {item.taskName}
+                  </span>
                 ) : (
-                  <span className="break-all">{item.badgeName}</span>
+                  <span className="break-all dark:text-neutral-200">
+                    {item.badgeName}
+                  </span>
                 )}
               </td>
             </tr>

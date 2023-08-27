@@ -1,10 +1,11 @@
 import { FC, Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useUserStore } from "./store/user.store";
+import { Role } from "./entities/user.entity";
+import Admin from "./components/Admin/Admin";
 
 const Auth = lazy(() => import("./components/Auth/Auth"));
 const Main = lazy(() => import("./components/Main/Main"));
-const Admin = lazy(() => import("./components/Admin/Admin"));
 const MyPage = lazy(() => import("./components/MyPage/MyPage"));
 const Loading = lazy(() => import("./components/Loading/Loading"));
 
@@ -17,7 +18,7 @@ const Router: FC = () => {
       <Routes>
         <Route path="/" element={isLoggedIn ? <Main /> : <Auth />} />
         <Route path="/my-page" element={<MyPage />} />
-        {(user?.role === "MASTER" || user?.role === "ADMIN") && (
+        {(user?.role === Role.MASTER || user?.role === Role.ADMIN) && (
           <Route path="/admin" element={<Admin />} />
         )}
       </Routes>

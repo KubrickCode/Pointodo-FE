@@ -1,7 +1,6 @@
-import { FC, useState } from "react";
-import { AuthProps, RegisterForm } from "../../types/auth.type";
+import { FC, useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useSign } from "../../hooks/useSign";
+import { SignBody, useSign } from "../../hooks/useSign";
 import {
   AUTH_EMAIL_EMPTY_ERROR,
   AUTH_EMAIL_FORM_ERROR,
@@ -15,7 +14,11 @@ import {
   REGISTER_LINK,
 } from "../../shared/constants/auth.constant";
 
-const Register: FC<AuthProps> = ({ setTab }) => {
+interface Props {
+  setTab(tab: number): void;
+}
+
+const Register: FC<Props> = ({ setTab }) => {
   const [errMsg, setErrMsg] = useState("");
 
   const {
@@ -23,12 +26,12 @@ const Register: FC<AuthProps> = ({ setTab }) => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterForm>();
+  } = useForm<SignBody>();
 
   const { mutate: signUp } = useSign(REGISTER_LINK);
   const { mutate: login } = useSign(LOGIN_LINK);
 
-  const onSubmitHandler: SubmitHandler<RegisterForm> = (data) => {
+  const onSubmitHandler: SubmitHandler<SignBody> = useCallback(async (data) => {
     const body = {
       email: data.email,
       password: data.password,
@@ -55,7 +58,7 @@ const Register: FC<AuthProps> = ({ setTab }) => {
         },
       }
     );
-  };
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="p-10">
@@ -69,16 +72,18 @@ const Register: FC<AuthProps> = ({ setTab }) => {
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             maxLength: 255,
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className={`border p-1 rounded w-full outline-neutral-300 ${
+            errors.email && "border-red-500 outline-red-500"
+          }`}
         />
         {errors.email && errors.email.type === "required" && (
-          <div>{AUTH_EMAIL_EMPTY_ERROR}</div>
+          <div className="text-red-500">{AUTH_EMAIL_EMPTY_ERROR}</div>
         )}
         {errors.email && errors.email.type === "pattern" && (
-          <div>{AUTH_EMAIL_FORM_ERROR}</div>
+          <div className="text-red-500">{AUTH_EMAIL_FORM_ERROR}</div>
         )}
         {errors.email && errors.email.type === "maxLength" && (
-          <div>{AUTH_EMAIL_LENGTH_EMPTY_ERROR}</div>
+          <div className="text-red-500">{AUTH_EMAIL_LENGTH_EMPTY_ERROR}</div>
         )}
       </div>
       <div className="my-4">
@@ -90,13 +95,15 @@ const Register: FC<AuthProps> = ({ setTab }) => {
             pattern:
               /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,20}$/,
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className={`border p-1 rounded w-full outline-neutral-300 ${
+            errors.password && "border-red-500 outline-red-500"
+          }`}
         />
         {errors.password && errors.password.type === "required" && (
-          <div>{AUTH_PASSWORD_EMPTY_ERROR}</div>
+          <div className="text-red-500">{AUTH_PASSWORD_EMPTY_ERROR}</div>
         )}
         {errors.password && errors.password.type === "pattern" && (
-          <div>{AUTH_PASSWORD_FORM_ERROR}</div>
+          <div className="text-red-500">{AUTH_PASSWORD_FORM_ERROR}</div>
         )}
       </div>
       <div className="my-4">
@@ -107,15 +114,17 @@ const Register: FC<AuthProps> = ({ setTab }) => {
             required: true,
             validate: (value) => value === watch("password"),
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className={`border p-1 rounded w-full outline-neutral-300 ${
+            errors.confirmPassword && "border-red-500 outline-red-500"
+          }`}
         />
         {errors.confirmPassword &&
           errors.confirmPassword.type === "required" && (
-            <div>{AUTH_PASSWORD_EMPTY_ERROR}</div>
+            <div className="text-red-500">{AUTH_PASSWORD_EMPTY_ERROR}</div>
           )}
         {errors.confirmPassword &&
           errors.confirmPassword.type === "validate" && (
-            <div>{AUTH_PASSWORD_NOT_EQUAL_ERROR}</div>
+            <div className="text-red-500">{AUTH_PASSWORD_NOT_EQUAL_ERROR}</div>
           )}
       </div>
       {errMsg.length > 0 && (
