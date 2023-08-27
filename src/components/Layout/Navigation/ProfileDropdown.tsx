@@ -49,7 +49,7 @@ const ProfileDropdown: FC = () => {
       <div className="relative border border-neutral-400 rounded-full">
         <img
           className="w-10 h-10 rounded-full cursor-pointer"
-          src={user?.selectedBadge.iconLink}
+          src={user?.selectedBadge?.iconLink}
           onClick={() => setOpen(!open)}
         />
 
