@@ -34,3 +34,8 @@ export interface ToastStoreType {
     toasType: string
   ): void;
 }
+
+export interface ThemeStoreType {
+  theme: "dark" | "light";
+  toggleTheme: () => void;
+}
