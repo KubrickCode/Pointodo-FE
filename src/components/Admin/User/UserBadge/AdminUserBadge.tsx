@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useModalStore } from "../../../../store/modal.store";
 import { useQueryGet, useQueryMutate } from "../../../../hooks/useQueryApi";
 import { useToastStore } from "../../../../store/toast.store";
@@ -58,7 +58,7 @@ const AdminUserBadge: FC = () => {
     }
   }, [allBadgeList, userBadgeList]);
 
-  const handlePutBadgeToUser = async () => {
+  const handlePutBadgeToUser = useCallback(async () => {
     mutate(
       {
         link: PUT_BADGE_TO_USER_LINK,
@@ -76,23 +76,26 @@ const AdminUserBadge: FC = () => {
         },
       }
     );
-  };
+  }, [modaluserId, selectedBadge]);
 
-  const handleDeleteUserBadge = async (badgeId: number) => {
-    mutate(
-      {
-        link: DELETE_USER_BADGE_LINK(modaluserId, badgeId),
-        method: "delete",
-      },
-      {
-        onSuccess: async () => {
-          setToastState(true, DELETE_USER_BADGE_MESSAGE, "success");
-          await queryClient.invalidateQueries(QUERY_KEY_GET_USER_BADGE_LIST);
-          await queryClient.invalidateQueries(QUERY_KEY_GET_MY_BADGE_LIST);
+  const handleDeleteUserBadge = useCallback(
+    async (badgeId: number) => {
+      mutate(
+        {
+          link: DELETE_USER_BADGE_LINK(modaluserId, badgeId),
+          method: "delete",
         },
-      }
-    );
-  };
+        {
+          onSuccess: async () => {
+            setToastState(true, DELETE_USER_BADGE_MESSAGE, "success");
+            await queryClient.invalidateQueries(QUERY_KEY_GET_USER_BADGE_LIST);
+            await queryClient.invalidateQueries(QUERY_KEY_GET_MY_BADGE_LIST);
+          },
+        }
+      );
+    },
+    [modaluserId]
+  );
 
   return (
     <div>
