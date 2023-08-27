@@ -1,9 +1,10 @@
 import { FC } from "react";
+import { TaskType } from "../../entities/task.entity";
 
 interface Props {
   menu: {
     id: number;
-    name: string;
+    name: string | TaskType;
   }[];
 
   tab: number;
