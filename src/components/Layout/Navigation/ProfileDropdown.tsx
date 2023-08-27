@@ -4,6 +4,7 @@ import { useUserStore } from "../../../store/user.store";
 import { Link } from "react-router-dom";
 import { LOGOUT_LINK } from "../../../shared/constants/auth.constant";
 import { Role } from "../../../entities/user.entity";
+import DarkModeButton from "./DarkModeButton";
 
 const ProfileDropdown: FC = () => {
   const user = useUserStore((state) => state.user);
@@ -85,6 +86,9 @@ const ProfileDropdown: FC = () => {
               >
                 로그아웃
               </button>
+            </li>
+            <li>
+              <DarkModeButton />
             </li>
             {(user?.role === Role.ADMIN || user?.role === Role.MASTER) && (
               <li>
