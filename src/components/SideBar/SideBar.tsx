@@ -20,12 +20,12 @@ const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
   return (
     <>
       <nav className="border-r sm:py-8 sm:h-screen sm:w-[15%]">
-        <ul className="grid grid-cols-3 sm:flex sm:flex-col">
+        <ul className="grid grid-cols-3 sm:flex sm:flex-col mx-2">
           {menu.map((item) => (
             <li
               key={item.id}
               className={`cursor-pointer my-5 py-3 px-8 w-full rounded-lg text-center ${
-                item.id === tab && "bg-neutral-200"
+                item.id === tab && "bg-blue-400 text-white"
               }`}
               onClick={() => setTab(item.id)}
             >
