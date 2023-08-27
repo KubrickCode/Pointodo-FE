@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useUserStore } from "../../../store/user.store";
 import { useModalStore } from "../../../store/modal.store";
@@ -97,15 +97,18 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
     }
   }, [badgeList, tab]);
 
-  const handleBuy = (id: number, price?: number) => {
-    if (price && price > currentPoints.points) {
-      setToastState(true, BUY_BADGE_NOT_ENOUGH_POINT_MESSAGE, "warning");
-    } else {
-      setModalState(true, MODAL_CONTENT_BUY_BADGE, undefined, undefined, id);
-    }
-  };
+  const handleBuy = useCallback(
+    (id: number, price?: number) => {
+      if (price && price > currentPoints.points) {
+        setToastState(true, BUY_BADGE_NOT_ENOUGH_POINT_MESSAGE, "warning");
+      } else {
+        setModalState(true, MODAL_CONTENT_BUY_BADGE, undefined, undefined, id);
+      }
+    },
+    [currentPoints.points]
+  );
 
-  const handleSelect = async (badgeId: number) => {
+  const handleSelect = useCallback(async (badgeId: number) => {
     mutate(
       {
         link: CHANGE_SELECTED_BADGE_LINK,
@@ -120,7 +123,7 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
         },
       }
     );
-  };
+  }, []);
 
   return (
     <ul className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-5">
