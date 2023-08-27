@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { useModalStore } from "../../store/modal.store";
 import AddTask from "../Main/Task/AddTask";
 import AdminAddBadge from "../Admin/Badge/AdminAddBadge";
@@ -19,6 +19,34 @@ import {
   MODAL_CONTENT_USER_BADGE_LIST,
 } from "../../shared/constants/modal.constant";
 
+const MemoizedAddTask = memo(AddTask);
+const MemoizedAdminAddBadge = memo(AdminAddBadge);
+const MemoizedDeleteTask = memo(DeleteTask);
+const MemoizedBuyBadge = memo(BuyBadge);
+const MemoizedChangePassword = memo(ChangePassword);
+const MemoizedUnregister = memo(Unregister);
+const MemoizedAdminUserBadge = memo(AdminUserBadge);
+
+const modalContentComponents = {
+  [MODAL_CONTENT_ADD_TASK(0)]: <MemoizedAddTask taskType={TaskType.DAILY} />,
+  [MODAL_CONTENT_ADD_TASK(1)]: <MemoizedAddTask taskType={TaskType.DUE} />,
+  [MODAL_CONTENT_ADD_TASK(2)]: <MemoizedAddTask taskType={TaskType.FREE} />,
+  [MODAL_CONTENT_ADD_ADMIN_BADGE(0)]: (
+    <MemoizedAdminAddBadge badgeType={BadgeType.NORMAL} />
+  ),
+  [MODAL_CONTENT_ADD_ADMIN_BADGE(1)]: (
+    <MemoizedAdminAddBadge badgeType={BadgeType.ACHIEVEMENT} />
+  ),
+  [MODAL_CONTENT_ADD_ADMIN_BADGE(2)]: (
+    <MemoizedAdminAddBadge badgeType={BadgeType.SPECIAL} />
+  ),
+  [MODAL_CONTENT_DELETE_TASK]: <MemoizedDeleteTask />,
+  [MODAL_CONTENT_BUY_BADGE]: <MemoizedBuyBadge />,
+  [MODAL_CONTENT_CHANGE_PASSWORD]: <MemoizedChangePassword />,
+  [MODAL_CONTENT_UNREGISTER]: <MemoizedUnregister />,
+  [MODAL_CONTENT_USER_BADGE_LIST]: <MemoizedAdminUserBadge />,
+};
+
 const Modal: FC = () => {
   const modalState = useModalStore((state) => state.modalState);
   const modalContent = useModalStore((state) => state.modalContent);
@@ -26,37 +54,19 @@ const Modal: FC = () => {
 
   if (!modalState) return null;
 
+  const handleCloseModal = () => {
+    setModalState(false);
+  };
+
   return (
     <>
       <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
         <div
           className="fixed inset-0 bg-black opacity-70"
-          onClick={() => setModalState(false)}
+          onClick={handleCloseModal}
         ></div>
         <div className="relative bg-white p-10 overflow-hidden z-60 rounded-3xl">
-          {modalContent === MODAL_CONTENT_ADD_TASK(0) && (
-            <AddTask taskType={TaskType.DAILY} />
-          )}
-          {modalContent === MODAL_CONTENT_ADD_TASK(1) && (
-            <AddTask taskType={TaskType.DUE} />
-          )}
-          {modalContent === MODAL_CONTENT_ADD_TASK(2) && (
-            <AddTask taskType={TaskType.FREE} />
-          )}
-          {modalContent === MODAL_CONTENT_ADD_ADMIN_BADGE(0) && (
-            <AdminAddBadge badgeType={BadgeType.NORMAL} />
-          )}
-          {modalContent === MODAL_CONTENT_ADD_ADMIN_BADGE(1) && (
-            <AdminAddBadge badgeType={BadgeType.ACHIEVEMENT} />
-          )}
-          {modalContent === MODAL_CONTENT_ADD_ADMIN_BADGE(2) && (
-            <AdminAddBadge badgeType={BadgeType.SPECIAL} />
-          )}
-          {modalContent === MODAL_CONTENT_DELETE_TASK && <DeleteTask />}
-          {modalContent === MODAL_CONTENT_BUY_BADGE && <BuyBadge />}
-          {modalContent === MODAL_CONTENT_CHANGE_PASSWORD && <ChangePassword />}
-          {modalContent === MODAL_CONTENT_UNREGISTER && <Unregister />}
-          {modalContent === MODAL_CONTENT_USER_BADGE_LIST && <AdminUserBadge />}
+          {modalContentComponents[modalContent]}
         </div>
       </div>
     </>
