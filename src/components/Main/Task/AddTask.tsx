@@ -42,21 +42,20 @@ const AddTask: FC<Props> = ({ taskType }) => {
 
   const [dueDate, setDueDate] = useState(new Date());
 
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (dueDate < new Date()) {
-      setDueDate(new Date());
-    }
-  }, [dueDate]);
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<AddTaskForm>();
 
+  const queryClient = useQueryClient();
   const { mutate } = useQueryMutate();
+
+  useEffect(() => {
+    if (dueDate < new Date()) {
+      setDueDate(new Date());
+    }
+  }, [dueDate]);
 
   const onSubmitHandler: SubmitHandler<AddTaskForm> = async (formData) => {
     if (taskType === TaskType.DUE) {

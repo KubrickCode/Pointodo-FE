@@ -9,3 +9,6 @@ export const QUERY_KEY_GET_CURRENT_POINTS = "getPoints";
 export const QUERY_KEY_GET_DAILY_TASKS = "getDailyTasks";
 export const QUERY_KEY_GET_DUE_TASKS = "getDueTasks";
 export const QUERY_KEY_GET_FREE_TASKS = "getFreeTasks";
+export const QUERY_KEY_GET_DAILY_TOTAL_PAGES = "getDailyTotalPage";
+export const QUERY_KEY_GET_DUE_TOTAL_PAGES = "getDueTotalPage";
+export const QUERY_KEY_GET_FREE_TOTAL_PAGES = "getFreeTotalPage";
