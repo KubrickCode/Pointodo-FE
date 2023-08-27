@@ -80,19 +80,21 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
     }
     if (tab === 1) {
       setData(
-        badgeList.filter((item: BadgeEntity) => item.type === BadgeType.NORMAL)
+        badgeList?.filter((item: BadgeEntity) => item.type === BadgeType.NORMAL)
       );
     }
     if (tab === 2) {
       setData(
-        badgeList.filter(
+        badgeList?.filter(
           (item: BadgeEntity) => item.type === BadgeType.ACHIEVEMENT
         )
       );
     }
     if (tab === 3) {
       setData(
-        badgeList.filter((item: BadgeEntity) => item.type === BadgeType.SPECIAL)
+        badgeList?.filter(
+          (item: BadgeEntity) => item.type === BadgeType.SPECIAL
+        )
       );
     }
   }, [badgeList, tab]);

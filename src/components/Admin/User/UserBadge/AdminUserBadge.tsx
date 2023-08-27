@@ -45,11 +45,11 @@ const AdminUserBadge: FC = () => {
 
   useEffect(() => {
     if (allBadgeList && userBadgeList) {
-      const userBadgeIds = userBadgeList.map(
+      const userBadgeIds = userBadgeList?.map(
         (badge: UserBadgeListWithName) => badge.badgeId
       );
 
-      const filteredList = allBadgeList.filter(
+      const filteredList = allBadgeList?.filter(
         (item: BadgeEntity) => !userBadgeIds.includes(item.id)
       );
 
