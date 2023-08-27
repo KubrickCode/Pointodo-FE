@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { useQueryMutate } from "../../../hooks/useQueryApi";
 import { useModalStore } from "../../../store/modal.store";
 import { useToastStore } from "../../../store/toast.store";
@@ -19,7 +19,7 @@ const BuyBadge: FC = () => {
   const { mutate } = useQueryMutate();
   const queryClient = useQueryClient();
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     mutate(
       {
         link: BUY_BADGE_LINK,
@@ -36,7 +36,7 @@ const BuyBadge: FC = () => {
         },
       }
     );
-  };
+  }, [modalBadgeId]);
 
   return (
     <>
