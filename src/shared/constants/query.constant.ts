@@ -19,6 +19,9 @@ export const QUERY_KEY_GET_FREE_TOTAL_PAGES = "getFreeTotalPage";
 
 export const QUERY_KEY_GET_EARNED_POINTS_LOGS = "getEarnedPointsLogs";
 export const QUERY_KEY_GET_SPENT_POINTS_LOGS = "getSpentPointsLogs";
+export const QUERY_KEY_GET_EARNED_POINTS_TOTAL_PAGES =
+  "getEarnedPointTotalPage";
+export const QUERY_KEY_GET_SPENT_POINTS_TOTAL_PAGES = "getSpentPointTotalPage";
 
 export const QUERY_KEY_GET_MY_BADGE_LIST = "getMyBadgeList";
 export const QUERY_KEY_GET_MY_BADGE_PROGRESS = "getMyBadgeProgress";

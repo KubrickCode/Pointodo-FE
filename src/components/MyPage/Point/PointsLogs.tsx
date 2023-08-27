@@ -2,56 +2,55 @@ import { FC, useEffect, useState } from "react";
 import { useQueryGet } from "../../../hooks/useQueryApi";
 import moment from "moment";
 import Pagination from "../../Pagination/Pagination";
+import { PointLog } from "../../../entities/point.entity";
+import {
+  GET_POINTS_LOGS_LINK,
+  GET_POINTS_LOGS_TOTAL_PAGES,
+} from "../../../shared/constants/point.constant";
+import {
+  QUERY_KEY_GET_EARNED_POINTS_LOGS,
+  QUERY_KEY_GET_EARNED_POINTS_TOTAL_PAGES,
+  QUERY_KEY_GET_SPENT_POINTS_LOGS,
+  QUERY_KEY_GET_SPENT_POINTS_TOTAL_PAGES,
+} from "../../../shared/constants/query.constant";
 
 interface Props {
   tab: number;
   order: string;
 }
 
-interface PointLog {
-  id: number;
-  userId: string;
-  points: number;
-  occuredAt: string;
-  taskId?: number;
-  taskName?: string;
-  badgeId?: number;
-  badgeName?: string;
-}
-
 const PointsLogs: FC<Props> = ({ tab, order }) => {
   const [logs, setLogs] = useState<PointLog[]>();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
   const { data: earnedPointsLogs } = useQueryGet(
-    `/point/logs/earned?page=${currentPage}&order=${order}`,
-    "getEarnedPointsLogs",
+    GET_POINTS_LOGS_LINK("earned", currentPage, order),
+    QUERY_KEY_GET_EARNED_POINTS_LOGS,
     {
       enabled: tab === 0,
     }
   );
 
   const { data: spentPointsLogs } = useQueryGet(
-    `/point/logs/spent?page=${currentPage}&order=${order}`,
-    "getSpentPointsLogs",
+    GET_POINTS_LOGS_LINK("spent", currentPage, order),
+    QUERY_KEY_GET_SPENT_POINTS_LOGS,
     {
       enabled: tab === 1,
     }
   );
 
   const { data: earnedPointTotalPage } = useQueryGet(
-    `/point/count/earned`,
-    "getEarnedPointTotalPage",
+    GET_POINTS_LOGS_TOTAL_PAGES("earned"),
+    QUERY_KEY_GET_EARNED_POINTS_TOTAL_PAGES,
     {
       enabled: tab === 0,
     }
   );
 
   const { data: spentPointTotalPage } = useQueryGet(
-    `/point/count/spent`,
-    "getSpentPointTotalPage",
+    GET_POINTS_LOGS_TOTAL_PAGES("spent"),
+    QUERY_KEY_GET_SPENT_POINTS_TOTAL_PAGES,
     {
       enabled: tab === 1,
     }
