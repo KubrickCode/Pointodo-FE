@@ -62,9 +62,13 @@ const Register: FC<Props> = ({ setTab }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="p-10">
-      <h1 className="text-xl text-center mb-5">회원가입</h1>
+      <h1 className="text-xl text-center mb-5 dark:text-neutral-200">
+        회원가입
+      </h1>
       <div className="my-4">
-        <label className="block my-2 text-sm">이메일</label>
+        <label className="block my-2 text-sm dark:text-neutral-200">
+          이메일
+        </label>
         <input
           type="email"
           {...register("email", {
@@ -72,7 +76,7 @@ const Register: FC<Props> = ({ setTab }) => {
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             maxLength: 255,
           })}
-          className={`border p-1 rounded w-full outline-neutral-300 ${
+          className={`border p-1 rounded w-full outline-neutral-300 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0 ${
             errors.email && "border-red-500 outline-red-500"
           }`}
         />
@@ -87,7 +91,9 @@ const Register: FC<Props> = ({ setTab }) => {
         )}
       </div>
       <div className="my-4">
-        <label className="block my-2 text-sm">비밀번호</label>
+        <label className="block my-2 text-sm dark:text-neutral-200">
+          비밀번호
+        </label>
         <input
           type="password"
           {...register("password", {
@@ -95,7 +101,7 @@ const Register: FC<Props> = ({ setTab }) => {
             pattern:
               /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,20}$/,
           })}
-          className={`border p-1 rounded w-full outline-neutral-300 ${
+          className={`border p-1 rounded w-full outline-neutral-300 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0 ${
             errors.password && "border-red-500 outline-red-500"
           }`}
         />
@@ -107,14 +113,16 @@ const Register: FC<Props> = ({ setTab }) => {
         )}
       </div>
       <div className="my-4">
-        <label className="block my-2 text-sm">비밀번호 확인</label>
+        <label className="block my-2 text-sm dark:text-neutral-200">
+          비밀번호 확인
+        </label>
         <input
           type="password"
           {...register("confirmPassword", {
             required: true,
             validate: (value) => value === watch("password"),
           })}
-          className={`border p-1 rounded w-full outline-neutral-300 ${
+          className={`border p-1 rounded w-full outline-neutral-300 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0 ${
             errors.confirmPassword && "border-red-500 outline-red-500"
           }`}
         />
@@ -142,7 +150,7 @@ const Register: FC<Props> = ({ setTab }) => {
           </div>
         </div>
       )}
-      <button className="border py-2 py-1 block w-full my-5 rounded-lg shadow-lg hover:bg-neutral-100 transition-all duration-500">
+      <button className="border py-2 py-1 block w-full my-5 rounded-lg shadow-lg hover:bg-neutral-100 transition-all duration-500 dark:bg-neutral-900 dark:border-0 dark:text-neutral-200 dark:hover:bg-neutral-950">
         회원가입
       </button>
       <button

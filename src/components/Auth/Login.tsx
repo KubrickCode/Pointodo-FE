@@ -46,9 +46,11 @@ const Login: FC<Props> = ({ setTab }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmitHandler)} className="p-10">
-      <h1 className="text-xl text-center mb-5">로그인</h1>
+      <h1 className="text-xl text-center mb-5 dark:text-neutral-200">로그인</h1>
       <div className="my-4">
-        <label className="block my-2 text-sm">이메일</label>
+        <label className="block my-2 text-sm dark:text-neutral-200">
+          이메일
+        </label>
         <input
           type="email"
           {...register("email", {
@@ -56,7 +58,7 @@ const Login: FC<Props> = ({ setTab }) => {
             pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
             maxLength: 255,
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className="border p-1 rounded w-full outline-neutral-300 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
         />
         {errors.email && errors.email.type === "required" && (
           <div>{AUTH_EMAIL_EMPTY_ERROR}</div>
@@ -69,7 +71,9 @@ const Login: FC<Props> = ({ setTab }) => {
         )}
       </div>
       <div className="my-4">
-        <label className="block my-2 text-sm">비밀번호</label>
+        <label className="block my-2 text-sm dark:text-neutral-200">
+          비밀번호
+        </label>
         <input
           type="password"
           {...register("password", {
@@ -77,7 +81,7 @@ const Login: FC<Props> = ({ setTab }) => {
             pattern:
               /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,20}$/,
           })}
-          className="border p-1 rounded w-full outline-neutral-300"
+          className="border p-1 rounded w-full outline-neutral-300 dark:bg-neutral-600 dark:text-neutral-200 dark:border-0"
         />
         {errors.password && errors.password.type === "required" && (
           <div>{AUTH_PASSWORD_EMPTY_ERROR}</div>
@@ -103,7 +107,7 @@ const Login: FC<Props> = ({ setTab }) => {
       )}
       <button
         type="submit"
-        className="border py-2 py-1 block w-full my-5 rounded-lg shadow-lg hover:bg-neutral-100 transition-all duration-500"
+        className="border py-2 py-1 block w-full my-5 rounded-lg shadow-lg hover:bg-neutral-100 transition-all duration-500 dark:bg-neutral-900 dark:border-0 dark:text-neutral-200 dark:hover:bg-neutral-950"
       >
         로그인
       </button>
