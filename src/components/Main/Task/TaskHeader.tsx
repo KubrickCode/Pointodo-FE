@@ -22,13 +22,13 @@ const TaskHeader: FC<Props> = ({
       <div className="p-3 flex flex-row justify-between">
         <div>
           <button
-            className="bg-blue-500 rounded px-3 py-2 text-white hover:bg-blue-600"
+            className="bg-blue-500 rounded px-3 py-2 text-white hover:bg-blue-600 text-sm sm:text-base"
             onClick={() => setModalState(true, MODAL_CONTENT_ADD_TASK(tab))}
           >
             작업 추가
           </button>
           <select
-            className="border px-3 py-2 ml-2 rounded outline-neutral-400 cursor-pointer dark:bg-neutral-600 dark:border-0 dark:text-neutral-200"
+            className="border px-3 py-2 ml-2 rounded outline-neutral-400 cursor-pointer dark:bg-neutral-600 dark:border-0 dark:text-neutral-200 text-sm sm:text-base"
             onChange={(e) => setOrder(e.target.value)}
           >
             <option value="importance">중요도 순</option>
@@ -47,7 +47,7 @@ const TaskHeader: FC<Props> = ({
             onChange={() => setCheckedCompletion(!checkedCompletion)}
             className="cursor-pointer"
           />
-          <label className="ml-1 cursor-pointer dark:text-neutral-200">
+          <label className="ml-1 cursor-pointer dark:text-neutral-200 text-sm sm:text-base">
             완료 작업 숨기기
           </label>
         </div>
