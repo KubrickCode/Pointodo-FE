@@ -1,9 +1,13 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Login from "./Login";
 import Register from "./Register";
 
 const Auth: FC = () => {
   const [tab, setTab] = useState(0);
+
+  useEffect(() => {
+    localStorage.removeItem("themeStore");
+  }, []);
 
   return (
     <div className="md:flex md:flex-row h-full">
