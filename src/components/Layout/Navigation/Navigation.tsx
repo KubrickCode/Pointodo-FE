@@ -30,10 +30,10 @@ const Navigation: FC = () => {
             className="flex flex-row items-center h-full"
             onClick={() => (location.href = "/")}
           >
-            <h1 className="text-2xl ml-5 mr-1 font-bold dark:text-neutral-200">
+            <h1 className="text-2xl md:ml-5 mr-1 font-bold dark:text-neutral-200">
               Pointodo
             </h1>
-            <img src="logo.png" className="w-10" />
+            <img src="logo.png" className="w-10 hidden sm:block" />
           </button>
         </div>
         <div className="flex flex-row items-center">
@@ -82,7 +82,7 @@ const Navigation: FC = () => {
                 </p>
               </div>
             </div>
-            <span className="dark:text-neutral-200">
+            <span className="dark:text-neutral-200 text-sm sm:text-base">
               보유 포인트: {currentPoints?.points}
             </span>
           </div>

@@ -78,18 +78,18 @@ const PointsLogs: FC<Props> = ({ tab, order }) => {
       <table className="table-fixed w-full">
         <thead className="border-b p-5 dark:border-neutral-600">
           <tr>
-            <th className="p-5 text-center border-r w-[30%] dark:border-neutral-600 dark:text-neutral-200">
+            <th className="p-3 sm:p-5 text-center border-r w-[30%] dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base">
               거래 날짜
             </th>
-            <th className="p-5 text-center border-r w-[30%] dark:border-neutral-600 dark:text-neutral-200">
+            <th className="p-3 sm:p-5 text-center border-r w-[30%] dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base">
               {tab === 0 ? "획득" : "소모"} 포인트
             </th>
             {tab === 0 ? (
-              <th className="p-5 text-center border-r w-[40%] dark:border-neutral-600 dark:text-neutral-200">
+              <th className="p-3 sm:p-5 text-center border-r w-[40%] dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base">
                 완료 작업명
               </th>
             ) : (
-              <th className="p-5 text-center border-r w-[40%] dark:border-neutral-600 dark:text-neutral-200">
+              <th className="p-3 sm:p-5 text-center border-r w-[40%] dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base">
                 구매 뱃지명
               </th>
             )}
@@ -98,23 +98,23 @@ const PointsLogs: FC<Props> = ({ tab, order }) => {
         <tbody>
           {logs?.map((item) => (
             <tr key={item.id}>
-              <td className="p-5 text-center border-r w-[30%] dark:border-neutral-600">
-                <span className="break-all dark:text-neutral-200">
+              <td className="p-3 sm:p-5 text-center border-r w-[30%] dark:border-neutral-600">
+                <span className="break-all dark:text-neutral-200 text-sm sm:text-base">
                   {moment.utc(item.occuredAt).format("YYYY-MM-DD")}
                 </span>
               </td>
-              <td className="p-5 text-center border-r w-[30%] dark:border-neutral-600">
-                <span className="break-all dark:text-neutral-200">
+              <td className="p-3 sm:p-5 text-center border-r w-[30%] dark:border-neutral-600">
+                <span className="break-all dark:text-neutral-200 text-sm sm:text-base">
                   {item.points}
                 </span>
               </td>
-              <td className="p-5 text-center border-l w-[40%] dark:border-neutral-600">
+              <td className="p-3 sm:p-5 text-center border-l w-[40%] dark:border-neutral-600">
                 {tab === 0 ? (
-                  <span className="break-all dark:text-neutral-200">
+                  <span className="break-all dark:text-neutral-200 text-sm sm:text-base">
                     {item.taskName}
                   </span>
                 ) : (
-                  <span className="break-all dark:text-neutral-200">
+                  <span className="break-all dark:text-neutral-200 text-sm sm:text-base">
                     {item.badgeName}
                   </span>
                 )}

@@ -264,32 +264,32 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
       <table className="table-fixed w-full">
         <thead className="border-b p-2 sm:p-5 dark:border-neutral-600">
           <tr>
-            <th className="p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[10%] dark:text-neutral-200">
+            <th className="p-2 sm:p-5 text-center border-r dark:border-neutral-600 w-[10%] dark:text-neutral-200 text-sm sm:text-base">
               완료
             </th>
             <th
-              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 w-[${
+              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업명
             </th>
             <th
-              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 w-[${
+              className={`p-2 sm:p-5 text-center border-r dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base w-[${
                 tab === 1 ? "20" : "30"
               }%]`}
             >
               작업 설명
             </th>
-            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[10%]">
+            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base w-[10%]">
               중요도
             </th>
             {tab === 1 && (
-              <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[20%]">
+              <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base w-[20%]">
                 작업 기한
               </th>
             )}
-            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 w-[20%]">
+            <th className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 dark:text-neutral-200 text-sm sm:text-base w-[20%]">
               수정/삭제
             </th>
           </tr>
@@ -328,7 +328,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 {updatedState.state && updatedState.id === item.id ? (
                   <input
                     type="text"
-                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200 text-sm sm:text-base"
                     value={updatedBody.name}
                     required
                     minLength={1}
@@ -338,7 +338,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all dark:text-neutral-200">
+                  <span className="break-all dark:text-neutral-200 text-sm sm:text-base">
                     {item.name}
                   </span>
                 )}
@@ -351,7 +351,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
               >
                 {updatedState.state && updatedState.id === item.id ? (
                   <textarea
-                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200"
+                    className="border rounded p-1 w-full dark:bg-neutral-600 dark:text-neutral-200 text-sm sm:text-base"
                     value={updatedBody.description || ""}
                     maxLength={500}
                     onChange={(e) =>
@@ -362,7 +362,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     }
                   />
                 ) : (
-                  <span className="break-all dark:text-neutral-200">
+                  <span className="break-all dark:text-neutral-200 text-sm sm:text-base">
                     {item.description || "설명이 없습니다"}
                   </span>
                 )}
@@ -370,7 +370,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
               <td className="p-2 sm:p-5 text-center border-l dark:border-neutral-600 w-[10%]">
                 {updatedState.state && updatedState.id === item.id ? (
                   <select
-                    className="w-full border p-1 rounded outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200"
+                    className="w-full border p-1 rounded outline-neutral-400 dark:bg-neutral-600 dark:text-neutral-200 text-sm sm:text-base"
                     value={updatedBody.importance}
                     onChange={(e) =>
                       setUpdatedBody({
@@ -390,7 +390,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                     </option>
                   </select>
                 ) : (
-                  <span className="dark:text-neutral-200">
+                  <span className="dark:text-neutral-200 text-sm sm:text-base">
                     {item.importance === 1
                       ? "상"
                       : item.importance === 2
@@ -413,11 +413,11 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                           setDueDate(date!);
                         }}
                         dateFormat="yyyy-MM-dd"
-                        className="dark:bg-neutral-600 dark:text-neutral-200 w-full cursor-pointer"
+                        className="dark:bg-neutral-600 dark:text-neutral-200 w-full cursor-pointer text-sm sm:text-base"
                       />
                     </div>
                   ) : (
-                    <span className="dark:text-neutral-200">{`${moment
+                    <span className="dark:text-neutral-200 text-sm sm:text-base">{`${moment
                       .utc(item.occurredAt)
                       .format("YYYY-MM-DD")} ~ ${item.dueDate}`}</span>
                   )}
@@ -427,13 +427,13 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 {updatedState.state && updatedState.id === item.id ? (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800 dark:border-0"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-700 dark:hover:bg-blue-800 dark:border-0 text-sm sm:text-base"
                       onClick={() => handleUpdate(item.id, item.taskType)}
                     >
                       완료
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-800 dark:border-0"
+                      className="border rounded px-2 py-1 mx-1 bg-red-400 text-white hover:bg-red-500 dark:bg-red-700 dark:hover:bg-red-800 dark:border-0 text-sm sm:text-base"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -448,7 +448,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                 ) : (
                   <>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-900 dark:hover:bg-blue-950 dark:border-0"
+                      className="border rounded px-2 py-1 mx-1 bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-900 dark:hover:bg-blue-950 dark:border-0 text-sm sm:text-base"
                       onClick={() => {
                         setUpdatedState({
                           ...updatedState,
@@ -466,7 +466,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
                       수정
                     </button>
                     <button
-                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400 dark:bg-red-900 dark:hover:bg-red-950 dark:border-0"
+                      className="border rounded px-2 py-1 mx-1 bg-red-300 text-white hover:bg-red-400 dark:bg-red-900 dark:hover:bg-red-950 dark:border-0 text-sm sm:text-base"
                       onClick={() =>
                         setModalState(
                           true,
