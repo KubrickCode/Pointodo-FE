@@ -24,7 +24,7 @@ const SideBar: FC<Props> = ({ menu, tab, setTab }) => {
           {menu.map((item) => (
             <li
               key={item.id}
-              className={`cursor-pointer my-5 py-3 px-8 w-full rounded-lg text-center dark:text-neutral-200 hover:bg-blue-300 hover:text-white dark:hover:bg-neutral-900 ${
+              className={`cursor-pointer my-5 py-3 px-2 sm:px-8 text-sm sm:text-base w-full rounded-lg text-center dark:text-neutral-200 hover:bg-blue-300 hover:text-white dark:hover:bg-neutral-900 ${
                 item.id === tab && "bg-blue-400 text-white dark:bg-neutral-800"
               }`}
               onClick={() => setTab(item.id)}
