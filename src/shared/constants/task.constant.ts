@@ -1,17 +1,18 @@
 import { TaskType } from "../../entities/task.entity";
 
-export const CREATE_TASK_LINK = "/task/create";
-export const UPDATE_TASK_LINK = "/task/update";
-export const DELETE_TASK_LINK = (modalTaskId: number) => `/task/${modalTaskId}`;
+export const CREATE_TASK_LINK = "/tasks/create";
+export const UPDATE_TASK_LINK = "/tasks/update";
+export const DELETE_TASK_LINK = (modalTaskId: number) =>
+  `/tasks/${modalTaskId}`;
 export const GET_TASK_LINK = (
   taskType: TaskType,
   currentPage: number,
   order: string
-) => `/task?taskType=${taskType}&page=${currentPage}&order=${order}`;
+) => `/tasks?taskType=${taskType}&page=${currentPage}&order=${order}`;
 export const GET_TASK_TOTAL_PAGE = (taskType: string) =>
-  `/task/count/${taskType}`;
-export const COMPLETE_TASK_LINK = (id: number) => `/task/complete/${id}`;
-export const CANCLE_TASK_LINK = (id: number) => `/task/cancle/${id}`;
+  `/tasks/count/${taskType}`;
+export const COMPLETE_TASK_LINK = (id: number) => `/tasks/complete/${id}`;
+export const CANCLE_TASK_LINK = (id: number) => `/tasks/cancle/${id}`;
 
 export const DAILY_TASK = "매일 작업";
 export const DUE_TASK = "기한 작업";
