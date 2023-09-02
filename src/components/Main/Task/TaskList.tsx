@@ -170,6 +170,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
           {
             link: COMPLETE_TASK_LINK(item.id),
             method: "patch",
+            body: { completion: 1 },
           },
           {
             onSuccess: async () => {
@@ -198,6 +199,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
           {
             link: CANCLE_TASK_LINK(item.id),
             method: "patch",
+            body: { completion: 0 },
           },
           {
             onSuccess: async () => {
