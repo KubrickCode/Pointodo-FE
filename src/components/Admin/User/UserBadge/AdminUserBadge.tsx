@@ -61,12 +61,8 @@ const AdminUserBadge: FC = () => {
   const handlePutBadgeToUser = useCallback(async () => {
     mutate(
       {
-        link: PUT_BADGE_TO_USER_LINK,
+        link: PUT_BADGE_TO_USER_LINK(modaluserId, selectedBadge),
         method: "put",
-        body: {
-          userId: modaluserId,
-          badgeId: selectedBadge,
-        },
       },
       {
         onSuccess: async () => {
