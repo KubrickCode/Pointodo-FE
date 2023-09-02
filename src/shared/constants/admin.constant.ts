@@ -20,6 +20,6 @@ export const GET_USER_LIST_LINK = (
 ) =>
   `/admin/users?offset=${currentPage}&limit=${USERS_LIMIT_IN_A_PAGE}&order=${order}&provider=${provider}`;
 export const GET_USER_LIST_TOTAL_PAGE_LINK = (provider: string) =>
-  `/admin/users/count/${provider}`;
+  `/admin/users/count-pages?provider=${provider}&limit=${USERS_LIMIT_IN_A_PAGE}`;
 
 export const USERS_LIMIT_IN_A_PAGE = 5;
