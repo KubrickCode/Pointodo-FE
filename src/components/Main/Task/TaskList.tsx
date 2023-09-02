@@ -220,7 +220,6 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   const handleUpdate = useCallback(
     async (id: number, taskType: string) => {
       let body = {
-        id,
         name: updatedBody.name,
         description: updatedBody.description,
         importance: updatedBody.importance,
@@ -233,7 +232,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
 
       mutate(
         {
-          link: UPDATE_TASK_LINK,
+          link: UPDATE_TASK_LINK(id),
           method: "patch",
           body,
         },

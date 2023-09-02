@@ -1,7 +1,7 @@
 import { TaskType } from "../../entities/task.entity";
 
-export const CREATE_TASK_LINK = "/tasks/create";
-export const UPDATE_TASK_LINK = "/tasks/update";
+export const CREATE_TASK_LINK = "/tasks";
+export const UPDATE_TASK_LINK = (taskId: number) => `/tasks/${taskId}`;
 export const DELETE_TASK_LINK = (modalTaskId: number) =>
   `/tasks/${modalTaskId}`;
 export const GET_TASK_LINK = (
