@@ -11,7 +11,7 @@ export const GET_TASK_LINK = (
 ) =>
   `/tasks?taskType=${taskType}&offset=${currentPage}&limit=${TASK_LIMIT_IN_A_PAGE}&order=${order}`;
 export const GET_TASK_TOTAL_PAGE = (taskType: string) =>
-  `/tasks/count/${taskType}`;
+  `/tasks/count-pages?taskType=${taskType}&limit=${TASK_LIMIT_IN_A_PAGE}`;
 export const COMPLETE_TASK_LINK = (id: number) => `/tasks/complete/${id}`;
 export const CANCLE_TASK_LINK = (id: number) => `/tasks/cancle/${id}`;
 
