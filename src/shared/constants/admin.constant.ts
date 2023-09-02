@@ -2,10 +2,7 @@ export const UPLOAD_BADGE_LINK = "/admin/badges/upload";
 export const CREATE_BADGE_LINK = "/admin/badges/create";
 export const UPDATE_BADGE_LINK = (id: number) => `/admin/badges/update/${id}`;
 export const DELETE_BADGE_LINK = (id: number) => `/admin/badges/delete/${id}`;
-export const GET_ADMIN_BADGE_LIST_LINK = (tab: number) =>
-  `/admin/badges/${
-    tab === 0 ? "normal" : tab === 1 ? "achievement" : "special"
-  }`;
+export const GET_ADMIN_BADGE_LIST_LINK = "/badges";
 
 export const NORMAL_BADGE = "일반 뱃지";
 export const ACHIEVEMENT_BADGE = "업적 뱃지";
