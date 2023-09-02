@@ -1,7 +1,7 @@
-export const UPLOAD_BADGE_LINK = "/admin/badges/upload";
-export const CREATE_BADGE_LINK = "/admin/badges/create";
-export const UPDATE_BADGE_LINK = (id: number) => `/admin/badges/update/${id}`;
-export const DELETE_BADGE_LINK = (id: number) => `/admin/badges/delete/${id}`;
+export const UPLOAD_BADGE_LINK = "/admin/badges/upload-image";
+export const CREATE_BADGE_LINK = "/admin/badges";
+export const UPDATE_BADGE_LINK = (id: number) => `/admin/badges/${id}`;
+export const DELETE_BADGE_LINK = (id: number) => `/admin/badges/${id}`;
 export const GET_ADMIN_BADGE_LIST_LINK = "/badges";
 
 export const NORMAL_BADGE = "일반 뱃지";
