@@ -9,7 +9,7 @@ export const ACHIEVEMENT_BADGE = "업적 뱃지";
 export const SPECIAL_BADGE = "특별 뱃지";
 
 export const GET_USER_BADGE_LIST_LINK = (modaluserId: string) =>
-  `/admin/users/badges/list/${modaluserId}`;
+  `/admin/users/badges/${modaluserId}`;
 export const PUT_BADGE_TO_USER_LINK = (userId: string, badgeId: number) =>
   `/admin/users/badges?userId=${userId}&badgeId=${badgeId}`;
 export const DELETE_USER_BADGE_LINK = (modaluserId: string, badgeId: number) =>
