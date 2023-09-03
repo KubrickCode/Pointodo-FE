@@ -10,7 +10,7 @@ const App: FC = () => {
   const setUser = useUserStore((state) => state.setUser);
 
   const { data: loggedInStatus } = useQueryGet("/auth/status", "getIsLoggedIn");
-  const { data: user } = useQueryGet("/user", "getUser", {
+  const { data: user } = useQueryGet("/users", "getUser", {
     enabled: !!isLoggedIn,
   });
 

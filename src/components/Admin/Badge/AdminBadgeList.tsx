@@ -2,7 +2,7 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 import { useQueryGet, useQueryMutate } from "../../../hooks/useQueryApi";
 import { useQueryClient } from "react-query";
 import { useToastStore } from "../../../store/toast.store";
-import { BadgeEntity } from "../../../entities/badge.entity";
+import { BadgeEntity, BadgeType } from "../../../entities/badge.entity";
 import {
   DELETE_BADGE_LINK,
   GET_ADMIN_BADGE_LIST_LINK,
@@ -47,13 +47,17 @@ const AdminBadgeList: FC<Props> = ({ tab }) => {
   const queryClient = useQueryClient();
 
   const { data } = useQueryGet(
-    GET_ADMIN_BADGE_LIST_LINK(tab),
+    GET_ADMIN_BADGE_LIST_LINK,
     QUERY_KEY_GET_ADMIN_BADGE_LIST
   );
 
   useEffect(() => {
-    setBadgeList(data);
-  }, [data]);
+    let type: BadgeType;
+    if (tab === 0) type = BadgeType.NORMAL;
+    if (tab === 1) type = BadgeType.ACHIEVEMENT;
+    if (tab === 2) type = BadgeType.SPECIAL;
+    setBadgeList(data?.filter((item: BadgeEntity) => item.type === type));
+  }, [data, tab]);
 
   const handleUpdate = useCallback(
     async (id: number, name: string, description: string, price: number) => {

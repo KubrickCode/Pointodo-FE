@@ -113,9 +113,8 @@ const MyBadgeList: FC<Props> = ({ tab }) => {
   const handleSelect = useCallback(async (badgeId: number) => {
     mutate(
       {
-        link: CHANGE_SELECTED_BADGE_LINK,
+        link: CHANGE_SELECTED_BADGE_LINK(badgeId),
         method: "patch",
-        body: { badgeId },
       },
       {
         onSuccess: async () => {
