@@ -1,2 +1,2 @@
-export const CHANGE_PASSWORD_LINK = "/user/password";
-export const UNREGISTER_LINK = "/user";
+export const CHANGE_PASSWORD_LINK = "/users/password";
+export const UNREGISTER_LINK = "/users";

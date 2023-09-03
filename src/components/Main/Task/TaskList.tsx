@@ -170,6 +170,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
           {
             link: COMPLETE_TASK_LINK(item.id),
             method: "patch",
+            body: { completion: 1 },
           },
           {
             onSuccess: async () => {
@@ -198,6 +199,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
           {
             link: CANCLE_TASK_LINK(item.id),
             method: "patch",
+            body: { completion: 0 },
           },
           {
             onSuccess: async () => {
@@ -220,7 +222,6 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   const handleUpdate = useCallback(
     async (id: number, taskType: string) => {
       let body = {
-        id,
         name: updatedBody.name,
         description: updatedBody.description,
         importance: updatedBody.importance,
@@ -233,7 +234,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
 
       mutate(
         {
-          link: UPDATE_TASK_LINK,
+          link: UPDATE_TASK_LINK(id),
           method: "patch",
           body,
         },

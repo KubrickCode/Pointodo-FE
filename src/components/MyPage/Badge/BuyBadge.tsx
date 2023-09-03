@@ -22,9 +22,8 @@ const BuyBadge: FC = () => {
   const handleSubmit = useCallback(async () => {
     mutate(
       {
-        link: BUY_BADGE_LINK,
-        method: "post",
-        body: { badgeId: modalBadgeId },
+        link: BUY_BADGE_LINK(modalBadgeId),
+        method: "put",
       },
       {
         onSuccess: async () => {
