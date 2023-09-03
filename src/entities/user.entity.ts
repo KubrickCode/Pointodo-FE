@@ -1,10 +1,10 @@
 export interface UserEntity {
-  id: string;
+  id?: string;
   email: string;
   provider: Provider;
   role: Role;
   selectedBadgeId: number;
-  selectedBadge?: { iconLink: string };
+  iconLink: string;
   createdAt: Date;
 }
 
