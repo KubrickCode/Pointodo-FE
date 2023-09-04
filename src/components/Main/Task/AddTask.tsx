@@ -17,8 +17,11 @@ import {
 } from "../../../shared/constants/task.constant";
 import {
   QUERY_KEY_GET_DAILY_TASKS,
+  QUERY_KEY_GET_DAILY_TOTAL_PAGES,
   QUERY_KEY_GET_DUE_TASKS,
+  QUERY_KEY_GET_DUE_TOTAL_PAGES,
   QUERY_KEY_GET_FREE_TASKS,
+  QUERY_KEY_GET_FREE_TOTAL_PAGES,
 } from "../../../shared/constants/query.constant";
 import { CREATE_TASK_MESSAGE } from "../../../shared/messages/task.message";
 import {
@@ -83,10 +86,10 @@ const AddTask: FC<Props> = ({ taskType }) => {
             );
             await queryClient.invalidateQueries(
               taskType === TaskType.DAILY
-                ? QUERY_KEY_GET_DAILY_TASKS
+                ? QUERY_KEY_GET_DAILY_TOTAL_PAGES
                 : taskType === TaskType.DUE
-                ? QUERY_KEY_GET_DUE_TASKS
-                : QUERY_KEY_GET_FREE_TASKS
+                ? QUERY_KEY_GET_DUE_TOTAL_PAGES
+                : QUERY_KEY_GET_FREE_TOTAL_PAGES
             );
             setToastState(true, CREATE_TASK_MESSAGE, "success");
           },
