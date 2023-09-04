@@ -57,7 +57,7 @@ const ProfileDropdown: FC = () => {
       >
         <img
           className="w-10 h-10 rounded-full cursor-pointer"
-          src={user?.selectedBadge?.iconLink}
+          src={user?.iconLink}
           onClick={() => setOpen(!open)}
         />
 

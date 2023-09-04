@@ -9,11 +9,12 @@ export const DELETE_TASK_LINK = (modalTaskId: number) =>
 export const GET_TASK_LINK = (
   taskType: TaskType,
   currentPage: number,
-  order: string
+  order: string,
+  completion: string
 ) =>
-  `/tasks?taskType=${taskType}&offset=${currentPage}&limit=${TASK_LIMIT_IN_A_PAGE}&order=${order}`;
-export const GET_TASK_TOTAL_PAGE = (taskType: string) =>
-  `/tasks/count-pages?taskType=${taskType}&limit=${TASK_LIMIT_IN_A_PAGE}`;
+  `/tasks?taskType=${taskType}&offset=${currentPage}&limit=${TASK_LIMIT_IN_A_PAGE}&order=${order}&completion=${completion}`;
+export const GET_TASK_TOTAL_PAGE = (taskType: string, completion: string) =>
+  `/tasks/count-pages?taskType=${taskType}&limit=${TASK_LIMIT_IN_A_PAGE}&completion=${completion}`;
 
 export const DAILY_TASK = "매일 작업";
 export const DUE_TASK = "기한 작업";
