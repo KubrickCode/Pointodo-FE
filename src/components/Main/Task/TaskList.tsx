@@ -71,7 +71,12 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   const { mutate } = useQueryMutate();
 
   const { data: dailyTasks } = useQueryGet(
-    GET_TASK_LINK(TaskType.DAILY, currentPage, order),
+    GET_TASK_LINK(
+      TaskType.DAILY,
+      currentPage,
+      order,
+      checkedCompletion ? "hide" : "show"
+    ),
     QUERY_KEY_GET_DAILY_TASKS,
     {
       enabled: tab === 0 && isLoggedIn,
@@ -79,7 +84,12 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   );
 
   const { data: dueTasks } = useQueryGet(
-    GET_TASK_LINK(TaskType.DUE, currentPage, order),
+    GET_TASK_LINK(
+      TaskType.DUE,
+      currentPage,
+      order,
+      checkedCompletion ? "hide" : "show"
+    ),
     QUERY_KEY_GET_DUE_TASKS,
     {
       enabled: tab === 1 && isLoggedIn,
@@ -87,7 +97,12 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   );
 
   const { data: freeTasks } = useQueryGet(
-    GET_TASK_LINK(TaskType.FREE, currentPage, order),
+    GET_TASK_LINK(
+      TaskType.FREE,
+      currentPage,
+      order,
+      checkedCompletion ? "hide" : "show"
+    ),
     QUERY_KEY_GET_FREE_TASKS,
     {
       enabled: tab === 2 && isLoggedIn,
@@ -95,7 +110,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   );
 
   const { data: dailyTotalPage } = useQueryGet(
-    GET_TASK_TOTAL_PAGE("daily"),
+    GET_TASK_TOTAL_PAGE("daily", checkedCompletion ? "hide" : "show"),
     QUERY_KEY_GET_DAILY_TOTAL_PAGES,
     {
       enabled: tab === 0 && isLoggedIn,
@@ -103,7 +118,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   );
 
   const { data: dueTotalPage } = useQueryGet(
-    GET_TASK_TOTAL_PAGE("due"),
+    GET_TASK_TOTAL_PAGE("due", checkedCompletion ? "hide" : "show"),
     QUERY_KEY_GET_DUE_TOTAL_PAGES,
     {
       enabled: tab === 1 && isLoggedIn,
@@ -111,7 +126,7 @@ const TaskList: FC<Props> = ({ tab, order, checkedCompletion }) => {
   );
 
   const { data: freeTotalPage } = useQueryGet(
-    GET_TASK_TOTAL_PAGE("free"),
+    GET_TASK_TOTAL_PAGE("free", checkedCompletion ? "hide" : "show"),
     QUERY_KEY_GET_FREE_TOTAL_PAGES,
     {
       enabled: tab === 2 && isLoggedIn,
