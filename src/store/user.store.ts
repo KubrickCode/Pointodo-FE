@@ -10,7 +10,7 @@ const userStore: StateCreator<UserStoreType> = (set) => ({
     provider: Provider.LOCAL,
     role: Role.USER,
     selectedBadgeId: 1,
-    selectedBadge: { iconLink: "" },
+    iconLink: "",
     createdAt: new Date(),
   },
   isLoggedIn: false,
