@@ -32,7 +32,7 @@ const adminUserTabList = [
   },
   {
     id: 1,
-    name: "이달의 유저",
+    name: "상위 유저",
   },
 ];
 
