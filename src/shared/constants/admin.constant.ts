@@ -23,4 +23,7 @@ export const GET_USER_LIST_LINK = (
 export const GET_USER_LIST_TOTAL_PAGE_LINK = (provider: string) =>
   `/admin/users/count-pages?provider=${provider}&limit=${USERS_LIMIT_IN_A_PAGE}`;
 
+export const GET_TOP_USERS = (startDate: string, endDate: string) =>
+  `/admin/users/top-users?startDate=${startDate}&endDate=${endDate}`;
+
 export const USERS_LIMIT_IN_A_PAGE = 5;
